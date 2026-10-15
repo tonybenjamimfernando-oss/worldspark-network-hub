@@ -14,16 +14,326 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      affiliate_links: {
+        Row: {
+          affiliate_id: string
+          clicks: number
+          code: string
+          created_at: string
+          id: string
+          listing_id: string
+        }
+        Insert: {
+          affiliate_id: string
+          clicks?: number
+          code?: string
+          created_at?: string
+          id?: string
+          listing_id: string
+        }
+        Update: {
+          affiliate_id?: string
+          clicks?: number
+          code?: string
+          created_at?: string
+          id?: string
+          listing_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_links_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affiliate_links_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listings: {
+        Row: {
+          affiliate_commission: number | null
+          affiliate_enabled: boolean
+          brand: string | null
+          category: string
+          city: string | null
+          condition: string | null
+          country: string | null
+          created_at: string
+          currency: string
+          delivery: string | null
+          description: string
+          features: string | null
+          id: string
+          images: string[]
+          kind: Database["public"]["Enums"]["listing_kind"]
+          owner_id: string
+          price: number | null
+          returns_policy: string | null
+          status: string
+          stock: number | null
+          terms: string | null
+          title: string
+          updated_at: string
+          variants: string | null
+          video_url: string | null
+          warranty: string | null
+        }
+        Insert: {
+          affiliate_commission?: number | null
+          affiliate_enabled?: boolean
+          brand?: string | null
+          category?: string
+          city?: string | null
+          condition?: string | null
+          country?: string | null
+          created_at?: string
+          currency?: string
+          delivery?: string | null
+          description?: string
+          features?: string | null
+          id?: string
+          images?: string[]
+          kind?: Database["public"]["Enums"]["listing_kind"]
+          owner_id: string
+          price?: number | null
+          returns_policy?: string | null
+          status?: string
+          stock?: number | null
+          terms?: string | null
+          title: string
+          updated_at?: string
+          variants?: string | null
+          video_url?: string | null
+          warranty?: string | null
+        }
+        Update: {
+          affiliate_commission?: number | null
+          affiliate_enabled?: boolean
+          brand?: string | null
+          category?: string
+          city?: string | null
+          condition?: string | null
+          country?: string | null
+          created_at?: string
+          currency?: string
+          delivery?: string | null
+          description?: string
+          features?: string | null
+          id?: string
+          images?: string[]
+          kind?: Database["public"]["Enums"]["listing_kind"]
+          owner_id?: string
+          price?: number | null
+          returns_policy?: string | null
+          status?: string
+          stock?: number | null
+          terms?: string | null
+          title?: string
+          updated_at?: string
+          variants?: string | null
+          video_url?: string | null
+          warranty?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listings_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          account_type: Database["public"]["Enums"]["account_type"]
+          avatar_url: string | null
+          bio: string | null
+          city: string | null
+          company_name: string | null
+          country: string | null
+          created_at: string
+          display_name: string
+          id: string
+          is_public: boolean
+          is_verified: boolean
+          public_email: string | null
+          public_phone: string | null
+          services: string[]
+          tax_id: string | null
+          updated_at: string
+          username: string | null
+          website: string | null
+        }
+        Insert: {
+          account_type?: Database["public"]["Enums"]["account_type"]
+          avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          company_name?: string | null
+          country?: string | null
+          created_at?: string
+          display_name?: string
+          id: string
+          is_public?: boolean
+          is_verified?: boolean
+          public_email?: string | null
+          public_phone?: string | null
+          services?: string[]
+          tax_id?: string | null
+          updated_at?: string
+          username?: string | null
+          website?: string | null
+        }
+        Update: {
+          account_type?: Database["public"]["Enums"]["account_type"]
+          avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          company_name?: string | null
+          country?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          is_public?: boolean
+          is_verified?: boolean
+          public_email?: string | null
+          public_phone?: string | null
+          services?: string[]
+          tax_id?: string | null
+          updated_at?: string
+          username?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      review_reports: {
+        Row: {
+          created_at: string
+          id: string
+          reason: string
+          reporter_id: string
+          review_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reason: string
+          reporter_id: string
+          review_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reason?: string
+          reporter_id?: string
+          review_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_reports_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_reports_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          author_id: string
+          comment: string
+          created_at: string
+          id: string
+          listing_id: string
+          rating: number
+          status: string
+        }
+        Insert: {
+          author_id: string
+          comment?: string
+          created_at?: string
+          id?: string
+          listing_id: string
+          rating: number
+          status?: string
+        }
+        Update: {
+          author_id?: string
+          comment?: string
+          created_at?: string
+          id?: string
+          listing_id?: string
+          rating?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      track_affiliate_click: { Args: { _code: string }; Returns: undefined }
     }
     Enums: {
-      [_ in never]: never
+      account_type: "personal" | "business" | "provider"
+      app_role: "admin" | "moderator" | "user"
+      listing_kind: "product" | "service" | "request" | "opportunity"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +460,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      account_type: ["personal", "business", "provider"],
+      app_role: ["admin", "moderator", "user"],
+      listing_kind: ["product", "service", "request", "opportunity"],
+    },
   },
 } as const
