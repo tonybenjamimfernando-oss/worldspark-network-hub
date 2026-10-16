@@ -61,21 +61,32 @@ export type Database = {
           affiliate_commission: number | null
           affiliate_enabled: boolean
           brand: string | null
+          budget_max: number | null
           category: string
           city: string | null
           condition: string | null
+          contact_visibility: string
           country: string | null
           created_at: string
           currency: string
+          deadline: string | null
           delivery: string | null
           description: string
           features: string | null
           id: string
           images: string[]
+          is_external: boolean
           kind: Database["public"]["Enums"]["listing_kind"]
+          outbound_clicks: number
           owner_id: string
           price: number | null
+          publisher_relation: string
+          quantity: number | null
           returns_policy: string | null
+          source_checked_at: string | null
+          source_platform: string | null
+          source_store: string | null
+          source_url: string | null
           status: string
           stock: number | null
           terms: string | null
@@ -83,27 +94,39 @@ export type Database = {
           updated_at: string
           variants: string | null
           video_url: string | null
+          views: number
           warranty: string | null
         }
         Insert: {
           affiliate_commission?: number | null
           affiliate_enabled?: boolean
           brand?: string | null
+          budget_max?: number | null
           category?: string
           city?: string | null
           condition?: string | null
+          contact_visibility?: string
           country?: string | null
           created_at?: string
           currency?: string
+          deadline?: string | null
           delivery?: string | null
           description?: string
           features?: string | null
           id?: string
           images?: string[]
+          is_external?: boolean
           kind?: Database["public"]["Enums"]["listing_kind"]
+          outbound_clicks?: number
           owner_id: string
           price?: number | null
+          publisher_relation?: string
+          quantity?: number | null
           returns_policy?: string | null
+          source_checked_at?: string | null
+          source_platform?: string | null
+          source_store?: string | null
+          source_url?: string | null
           status?: string
           stock?: number | null
           terms?: string | null
@@ -111,27 +134,39 @@ export type Database = {
           updated_at?: string
           variants?: string | null
           video_url?: string | null
+          views?: number
           warranty?: string | null
         }
         Update: {
           affiliate_commission?: number | null
           affiliate_enabled?: boolean
           brand?: string | null
+          budget_max?: number | null
           category?: string
           city?: string | null
           condition?: string | null
+          contact_visibility?: string
           country?: string | null
           created_at?: string
           currency?: string
+          deadline?: string | null
           delivery?: string | null
           description?: string
           features?: string | null
           id?: string
           images?: string[]
+          is_external?: boolean
           kind?: Database["public"]["Enums"]["listing_kind"]
+          outbound_clicks?: number
           owner_id?: string
           price?: number | null
+          publisher_relation?: string
+          quantity?: number | null
           returns_policy?: string | null
+          source_checked_at?: string | null
+          source_platform?: string | null
+          source_store?: string | null
+          source_url?: string | null
           status?: string
           stock?: number | null
           terms?: string | null
@@ -139,6 +174,7 @@ export type Database = {
           updated_at?: string
           variants?: string | null
           video_url?: string | null
+          views?: number
           warranty?: string | null
         }
         Relationships: [
@@ -213,6 +249,57 @@ export type Database = {
           website?: string | null
         }
         Relationships: []
+      }
+      proposals: {
+        Row: {
+          created_at: string
+          currency: string
+          delivery_days: number | null
+          id: string
+          message: string
+          price: number | null
+          request_id: string
+          status: string
+          supplier_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          delivery_days?: number | null
+          id?: string
+          message: string
+          price?: number | null
+          request_id: string
+          status?: string
+          supplier_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          delivery_days?: number | null
+          id?: string
+          message?: string
+          price?: number | null
+          request_id?: string
+          status?: string
+          supplier_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposals_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proposals_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       review_reports: {
         Row: {
@@ -329,6 +416,10 @@ export type Database = {
         Returns: boolean
       }
       track_affiliate_click: { Args: { _code: string }; Returns: undefined }
+      track_listing: {
+        Args: { _id: string; _kind: string }
+        Returns: undefined
+      }
     }
     Enums: {
       account_type: "personal" | "business" | "provider"
