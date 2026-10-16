@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ExplorarRouteImport } from './routes/explorar'
 import { Route as AuthenticatedPublicarRouteImport } from './routes/_authenticated/publicar'
+import { Route as AnuncioIdRouteImport } from './routes/anuncio.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,18 +40,25 @@ const AuthenticatedPublicarRoute = AuthenticatedPublicarRouteImport.update({
   path: '/publicar',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AnuncioIdRoute = AnuncioIdRouteImport.update({
+  id: '/anuncio/$id',
+  path: '/anuncio/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/explorar': typeof ExplorarRoute
   '/publicar': typeof AuthenticatedPublicarRoute
+  '/anuncio/$id': typeof AnuncioIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/explorar': typeof ExplorarRoute
   '/publicar': typeof AuthenticatedPublicarRoute
+  '/anuncio/$id': typeof AnuncioIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +67,13 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/explorar': typeof ExplorarRoute
   '/_authenticated/publicar': typeof AuthenticatedPublicarRoute
+  '/anuncio/$id': typeof AnuncioIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/explorar' | '/publicar'
+  fullPaths: '/' | '/auth' | '/explorar' | '/publicar' | '/anuncio/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/explorar' | '/publicar'
+  to: '/' | '/auth' | '/explorar' | '/publicar' | '/anuncio/$id'
   id:
     | '__root__'
     | '/'
@@ -72,6 +81,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/explorar'
     | '/_authenticated/publicar'
+    | '/anuncio/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -79,6 +89,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ExplorarRoute: typeof ExplorarRoute
+  AnuncioIdRoute: typeof AnuncioIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -118,6 +129,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPublicarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/anuncio/$id': {
+      id: '/anuncio/$id'
+      path: '/anuncio/$id'
+      fullPath: '/anuncio/$id'
+      preLoaderRoute: typeof AnuncioIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -137,6 +155,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ExplorarRoute: ExplorarRoute,
+  AnuncioIdRoute: AnuncioIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
