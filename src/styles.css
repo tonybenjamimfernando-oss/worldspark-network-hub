@@ -66,6 +66,7 @@
   --brand-soft: oklch(0.95 0.04 55);
   --success: oklch(0.6 0.13 160);
   --star: oklch(0.78 0.16 75);
+  --globe-gold: #f2b84b;
 }
 
 @layer base {
