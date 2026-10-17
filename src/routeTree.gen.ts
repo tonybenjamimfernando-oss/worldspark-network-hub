@@ -12,9 +12,17 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as EmpresasRouteImport } from './routes/empresas'
 import { Route as ExplorarRouteImport } from './routes/explorar'
+import { Route as FreelancersRouteImport } from './routes/freelancers'
+import { Route as MapaRouteImport } from './routes/mapa'
+import { Route as MensagensRouteImport } from './routes/mensagens'
+import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as RegrasRouteImport } from './routes/regras'
+import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedPublicarRouteImport } from './routes/_authenticated/publicar'
 import { Route as AnuncioIdRouteImport } from './routes/anuncio.$id'
+import { Route as UIdRouteImport } from './routes/u.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -30,10 +38,45 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmpresasRoute = EmpresasRouteImport.update({
+  id: '/empresas',
+  path: '/empresas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExplorarRoute = ExplorarRouteImport.update({
   id: '/explorar',
   path: '/explorar',
   getParentRoute: () => rootRouteImport,
+} as any)
+const FreelancersRoute = FreelancersRouteImport.update({
+  id: '/freelancers',
+  path: '/freelancers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapaRoute = MapaRouteImport.update({
+  id: '/mapa',
+  path: '/mapa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MensagensRoute = MensagensRouteImport.update({
+  id: '/mensagens',
+  path: '/mensagens',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanosRoute = PlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegrasRoute = RegrasRouteImport.update({
+  id: '/regras',
+  path: '/regras',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPublicarRoute = AuthenticatedPublicarRouteImport.update({
   id: '/publicar',
@@ -45,51 +88,121 @@ const AnuncioIdRoute = AnuncioIdRouteImport.update({
   path: '/anuncio/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UIdRoute = UIdRouteImport.update({
+  id: '/u/$id',
+  path: '/u/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
+  '/freelancers': typeof FreelancersRoute
+  '/mapa': typeof MapaRoute
+  '/mensagens': typeof MensagensRoute
+  '/planos': typeof PlanosRoute
+  '/regras': typeof RegrasRoute
+  '/painel': typeof AuthenticatedPainelRoute
   '/publicar': typeof AuthenticatedPublicarRoute
   '/anuncio/$id': typeof AnuncioIdRoute
+  '/u/$id': typeof UIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
+  '/freelancers': typeof FreelancersRoute
+  '/mapa': typeof MapaRoute
+  '/mensagens': typeof MensagensRoute
+  '/planos': typeof PlanosRoute
+  '/regras': typeof RegrasRoute
+  '/painel': typeof AuthenticatedPainelRoute
   '/publicar': typeof AuthenticatedPublicarRoute
   '/anuncio/$id': typeof AnuncioIdRoute
+  '/u/$id': typeof UIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
+  '/freelancers': typeof FreelancersRoute
+  '/mapa': typeof MapaRoute
+  '/mensagens': typeof MensagensRoute
+  '/planos': typeof PlanosRoute
+  '/regras': typeof RegrasRoute
+  '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/publicar': typeof AuthenticatedPublicarRoute
   '/anuncio/$id': typeof AnuncioIdRoute
+  '/u/$id': typeof UIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/explorar' | '/publicar' | '/anuncio/$id'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/empresas'
+    | '/explorar'
+    | '/freelancers'
+    | '/mapa'
+    | '/mensagens'
+    | '/planos'
+    | '/regras'
+    | '/painel'
+    | '/publicar'
+    | '/anuncio/$id'
+    | '/u/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/explorar' | '/publicar' | '/anuncio/$id'
+  to:
+    | '/'
+    | '/auth'
+    | '/empresas'
+    | '/explorar'
+    | '/freelancers'
+    | '/mapa'
+    | '/mensagens'
+    | '/planos'
+    | '/regras'
+    | '/painel'
+    | '/publicar'
+    | '/anuncio/$id'
+    | '/u/$id'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/empresas'
     | '/explorar'
+    | '/freelancers'
+    | '/mapa'
+    | '/mensagens'
+    | '/planos'
+    | '/regras'
+    | '/_authenticated/painel'
     | '/_authenticated/publicar'
     | '/anuncio/$id'
+    | '/u/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  EmpresasRoute: typeof EmpresasRoute
   ExplorarRoute: typeof ExplorarRoute
+  FreelancersRoute: typeof FreelancersRoute
+  MapaRoute: typeof MapaRoute
+  MensagensRoute: typeof MensagensRoute
+  PlanosRoute: typeof PlanosRoute
+  RegrasRoute: typeof RegrasRoute
   AnuncioIdRoute: typeof AnuncioIdRoute
+  UIdRoute: typeof UIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -115,12 +228,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/empresas': {
+      id: '/empresas'
+      path: '/empresas'
+      fullPath: '/empresas'
+      preLoaderRoute: typeof EmpresasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/explorar': {
       id: '/explorar'
       path: '/explorar'
       fullPath: '/explorar'
       preLoaderRoute: typeof ExplorarRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/freelancers': {
+      id: '/freelancers'
+      path: '/freelancers'
+      fullPath: '/freelancers'
+      preLoaderRoute: typeof FreelancersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mapa': {
+      id: '/mapa'
+      path: '/mapa'
+      fullPath: '/mapa'
+      preLoaderRoute: typeof MapaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mensagens': {
+      id: '/mensagens'
+      path: '/mensagens'
+      fullPath: '/mensagens'
+      preLoaderRoute: typeof MensagensRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planos': {
+      id: '/planos'
+      path: '/planos'
+      fullPath: '/planos'
+      preLoaderRoute: typeof PlanosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/regras': {
+      id: '/regras'
+      path: '/regras'
+      fullPath: '/regras'
+      preLoaderRoute: typeof RegrasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/painel': {
+      id: '/_authenticated/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof AuthenticatedPainelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/publicar': {
       id: '/_authenticated/publicar'
@@ -136,14 +298,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnuncioIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/u/$id': {
+      id: '/u/$id'
+      path: '/u/$id'
+      fullPath: '/u/$id'
+      preLoaderRoute: typeof UIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedPublicarRoute: typeof AuthenticatedPublicarRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedPublicarRoute: AuthenticatedPublicarRoute,
 }
 
@@ -154,8 +325,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  EmpresasRoute: EmpresasRoute,
   ExplorarRoute: ExplorarRoute,
+  FreelancersRoute: FreelancersRoute,
+  MapaRoute: MapaRoute,
+  MensagensRoute: MensagensRoute,
+  PlanosRoute: PlanosRoute,
+  RegrasRoute: RegrasRoute,
   AnuncioIdRoute: AnuncioIdRoute,
+  UIdRoute: UIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
