@@ -139,7 +139,7 @@ function ListingPage() {
 }
 
 type Owner = { id: string; display_name: string; is_verified: boolean; city: string | null; country: string | null; public_phone: string | null; public_email: string | null } | null;
-function SellerCard({ owner, avatar, showContact }: { owner: Owner; avatar?: string; showContact: boolean }) {
+function SellerCard({ owner, avatar, showContact }: { owner: Owner; avatar?: string | undefined; showContact: boolean }) {
   if (!owner) return null;
   return (
     <div className="flex items-center gap-3 rounded-2xl border bg-card p-4">
@@ -165,7 +165,7 @@ function Stars({ value, onChange }: { value: number; onChange?: (v: number) => v
   );
 }
 
-function Reviews({ listingId, isOwner, userId }: { listingId: string; isOwner: boolean; userId?: string }) {
+function Reviews({ listingId, isOwner, userId }: { listingId: string; isOwner: boolean; userId?: string | undefined }) {
   const qc = useQueryClient();
   const { data } = useQuery({
     queryKey: ["reviews", listingId],
@@ -222,7 +222,7 @@ function Reviews({ listingId, isOwner, userId }: { listingId: string; isOwner: b
   );
 }
 
-function Proposals({ requestId, isOwner, userId, currency }: { requestId: string; isOwner: boolean; userId?: string; currency: string }) {
+function Proposals({ requestId, isOwner, userId, currency }: { requestId: string; isOwner: boolean; userId?: string | undefined; currency: string }) {
   const qc = useQueryClient();
   const { data } = useQuery({
     queryKey: ["proposals", requestId, userId],
@@ -276,7 +276,7 @@ function Proposals({ requestId, isOwner, userId, currency }: { requestId: string
   );
 }
 
-function AffiliateBox({ listingId, commission, userId }: { listingId: string; commission: number | null; userId?: string }) {
+function AffiliateBox({ listingId, commission, userId }: { listingId: string; commission: number | null; userId?: string | undefined }) {
   const qc = useQueryClient();
   const { data: link } = useQuery({
     queryKey: ["aff", listingId, userId], enabled: !!userId,

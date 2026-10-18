@@ -62,7 +62,7 @@ export function SiteHeader() {
           <Link
             key={n.label}
             to={n.to}
-            search={"search" in n ? n.search : undefined}
+            search={("search" in n ? n.search : {}) as never}
             className="flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-sm hover:bg-secondary"
           >
             <n.icon className="h-4 w-4" />{n.label}
