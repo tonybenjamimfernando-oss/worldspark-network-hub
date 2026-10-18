@@ -1,5 +1,12 @@
 # GCNM Roadmap
 
+## Current — Integral visual redesign (18 Oct)
+- [ ] Audit all existing pages and functional contracts
+- [ ] Renew shared visual system, navigation and discovery pages
+- [ ] Apply presentation updates to details, profiles, forms and informational pages
+- [ ] Validate existing tests, navigation, authenticated pages and mobile/desktop layouts
+- [ ] Document verified flows and pre-existing limitations
+
 ## Stage 1 (in progress)
 - [x] Design base, header/nav, home, explore
 - [x] Auth (email + Google), public profiles, profile editor
