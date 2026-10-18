@@ -19,7 +19,7 @@ export function Globe({ className = "" }: { className?: string }) {
       for (let lon = -180; lon < 180; lon += step) pts.push([lat, lon]);
     }
     const hubs: [number, number][] = [[38.7, -9.1], [-19.8, 34.8], [-23.5, -46.6], [40.7, -74], [51.5, -0.1], [31.2, 121.5], [25.2, 55.3], [-8.8, 13.2], [1.3, 103.8], [6.5, 3.4]];
-    const arcs = [[0, 1], [1, 7], [0, 2], [3, 4], [4, 5], [5, 8], [6, 1], [9, 4], [2, 3]];
+    const arcs: [number, number][] = [[0, 1], [1, 7], [0, 2], [3, 4], [4, 5], [5, 8], [6, 1], [9, 4], [2, 3]];
 
     let raf = 0, rot = 0, w = 0, h = 0;
     const resize = () => {
@@ -53,7 +53,7 @@ export function Globe({ className = "" }: { className?: string }) {
       }
       ctx.globalAlpha = 1; ctx.strokeStyle = gold; ctx.lineWidth = 1.2;
       for (const [a, b] of arcs) {
-        const A = project(...hubs[a], R, cx, cy), B = project(...hubs[b], R, cx, cy);
+        const A = project(hubs[a]![0], hubs[a]![1], R, cx, cy), B = project(hubs[b]![0], hubs[b]![1], R, cx, cy);
         if (A.z < 0 || B.z < 0) continue;
         const mx = (A.x + B.x) / 2 + (A.x + B.x - 2 * cx) * 0.25, my = (A.y + B.y) / 2 + (A.y + B.y - 2 * cy) * 0.25;
         ctx.globalAlpha = Math.min(A.z, B.z) * 0.9;

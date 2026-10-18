@@ -37,7 +37,7 @@ export function ListingGrid({ items }: { items: ListingRow[] }) {
   );
 }
 
-export function EmptyListings({ kind = "product" }: { kind?: Kind }) {
+export function EmptyListings({ kind = "product" }: { kind?: Kind | undefined }) {
   return (
     <div className="rounded-2xl border border-dashed bg-card px-6 py-12 text-center">
       <PackageOpen className="mx-auto h-10 w-10 text-primary" />

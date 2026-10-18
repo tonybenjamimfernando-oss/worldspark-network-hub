@@ -139,7 +139,7 @@ function ListingPage() {
 }
 
 type Owner = { id: string; display_name: string; is_verified: boolean; city: string | null; country: string | null; public_phone: string | null; public_email: string | null } | null;
-function SellerCard({ owner, avatar, showContact }: { owner: Owner; avatar?: string; showContact: boolean }) {
+function SellerCard({ owner, avatar, showContact }: { owner: Owner; avatar?: string | undefined; showContact: boolean }) {
   if (!owner) return null;
   return (
     <div className="flex items-center gap-3 rounded-2xl border bg-card p-4">
@@ -165,7 +165,7 @@ function Stars({ value, onChange }: { value: number; onChange?: (v: number) => v
   );
 }
 
-function Reviews({ listingId, isOwner, userId }: { listingId: string; isOwner: boolean; userId?: string }) {
+function Reviews({ listingId, isOwner, userId }: { listingId: string; isOwner: boolean; userId?: string | undefined }) {
   const qc = useQueryClient();
   const { data } = useQuery({
     queryKey: ["reviews", listingId],
@@ -182,16 +182,16 @@ function Reviews({ listingId, isOwner, userId }: { listingId: string; isOwner: b
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!userId) return;
+    if (!userId) { return; }
     const { error } = await supabase.from("reviews").insert({ listing_id: listingId, author_id: userId, rating, comment: comment.trim() });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setComment(""); toast.success("Avaliação publicada");
     qc.invalidateQueries({ queryKey: ["reviews", listingId] });
   }
   async function report(id: string) {
-    if (!userId) return toast.error("Entra para denunciar");
+    if (!userId) { toast.error("Entra para denunciar"); return; }
     const reason = window.prompt("Motivo da denúncia");
-    if (!reason || reason.trim().length < 3) return;
+    if (!reason || reason.trim().length < 3) { return; }
     const { error } = await supabase.from("review_reports").insert({ review_id: id, reporter_id: userId, reason: reason.trim() });
     toast[error ? "error" : "success"](error ? "Já denunciaste este comentário" : "Denúncia enviada para moderação");
   }
@@ -222,7 +222,7 @@ function Reviews({ listingId, isOwner, userId }: { listingId: string; isOwner: b
   );
 }
 
-function Proposals({ requestId, isOwner, userId, currency }: { requestId: string; isOwner: boolean; userId?: string; currency: string }) {
+function Proposals({ requestId, isOwner, userId, currency }: { requestId: string; isOwner: boolean; userId?: string | undefined; currency: string }) {
   const qc = useQueryClient();
   const { data } = useQuery({
     queryKey: ["proposals", requestId, userId],
@@ -237,7 +237,7 @@ function Proposals({ requestId, isOwner, userId, currency }: { requestId: string
   async function send(e: React.FormEvent) {
     e.preventDefault();
     const { error } = await supabase.from("proposals").insert({ request_id: requestId, supplier_id: userId!, price: price ? Number(price) : null, currency, delivery_days: days ? Number(days) : null, message: msg.trim() });
-    if (error) return toast.error(error.message.includes("duplicate") ? "Já enviaste uma proposta" : error.message);
+    if (error) { toast.error(error.message.includes("duplicate") ? "Já enviaste uma proposta" : error.message); return; }
     toast.success("Proposta enviada"); qc.invalidateQueries({ queryKey: ["proposals", requestId] });
   }
   async function setStatus(id: string, status: "accepted" | "declined") {
@@ -276,7 +276,7 @@ function Proposals({ requestId, isOwner, userId, currency }: { requestId: string
   );
 }
 
-function AffiliateBox({ listingId, commission, userId }: { listingId: string; commission: number | null; userId?: string }) {
+function AffiliateBox({ listingId, commission, userId }: { listingId: string; commission: number | null; userId?: string | undefined }) {
   const qc = useQueryClient();
   const { data: link } = useQuery({
     queryKey: ["aff", listingId, userId], enabled: !!userId,
@@ -284,7 +284,7 @@ function AffiliateBox({ listingId, commission, userId }: { listingId: string; co
   });
   async function create() {
     const { error } = await supabase.from("affiliate_links").insert({ listing_id: listingId, affiliate_id: userId! });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     qc.invalidateQueries({ queryKey: ["aff", listingId] });
   }
   const url = link ? `${typeof window !== "undefined" ? window.location.origin : ""}/anuncio/${listingId}?ref=${link.code}` : "";

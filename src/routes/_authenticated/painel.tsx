@@ -58,7 +58,7 @@ function Dashboard() {
       services: f.services.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 20), public_phone: n(f.public_phone), public_email: n(f.public_email),
       website: n(f.website), city: n(f.city), country: n(f.country), avatar_url: f.avatar_url, is_public: f.is_public,
     }).eq("id", user.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Perfil guardado"); qc.invalidateQueries({ queryKey: ["me"] });
   }
   async function toggle(id: string, status: string) {

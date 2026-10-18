@@ -5,6 +5,7 @@ import { Search, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { CATEGORIES, type Kind } from "@/lib/catalog";
+import { Globe } from "@/components/Globe";
 import { ListingGrid, EmptyListings, type ListingRow } from "@/components/ListingCard";
 
 export const Route = createFileRoute("/")({
@@ -33,7 +34,9 @@ function Index() {
   const [q, setQ] = useState("");
   return (
     <div className="mx-auto max-w-7xl px-4 py-5">
-      <section className="hero-glow rounded-3xl px-6 py-12 text-navy-foreground sm:px-10 sm:py-14">
+      <section className="hero-glow relative overflow-hidden rounded-3xl px-6 py-12 text-navy-foreground sm:px-10 sm:py-14">
+        <Globe className="pointer-events-none absolute -right-24 top-1/2 h-[520px] w-[520px] -translate-y-1/2 opacity-70 sm:right-0" />
+        <div className="relative">
         <p className="text-sm opacity-80">Olá ☀</p>
         <h1 className="mt-1 text-4xl font-extrabold tracking-tight sm:text-5xl">O que procuras hoje?</h1>
         <p className="mt-3 max-w-xl opacity-85">Produtos, serviços, empresas, profissionais e pedidos de compra — perto de ti ou em qualquer parte do mundo.</p>
@@ -52,6 +55,7 @@ function Index() {
           ))}
           <Link to="/empresas" className="rounded-full bg-navy-soft px-3 py-1 hover:bg-primary">Empresas</Link>
           <Link to="/freelancers" className="rounded-full bg-navy-soft px-3 py-1 hover:bg-primary">Freelancers</Link>
+        </div>
         </div>
       </section>
 
