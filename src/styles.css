@@ -70,6 +70,9 @@
   --success: oklch(0.6 0.13 160);
   --star: oklch(0.78 0.16 75);
   --globe-gold: #f2b84b;
+  --globe-illumination: rgba(242, 184, 75, 0.28);
+  --globe-transparent: rgba(242, 184, 75, 0);
+  --shadow-mobile-navigation: 0 -8px 24px oklch(0.25 0.035 255 / 0.08);
   --gold: oklch(0.79 0.13 80);
   --overlay: oklch(0.15 0.03 255 / 0.65);
   --shadow-elevated: 0 14px 36px oklch(0.25 0.035 255 / 0.09);
@@ -224,7 +227,26 @@ input, textarea, select {
 .brand-mark {
   font-family: "Manrope", sans-serif;
 }
+.mobile-shortcuts {
+  box-shadow: var(--shadow-mobile-navigation);
+}
+.hero-signature {
+  position: absolute;
+  right: 6%;
+  top: 8%;
+  width: 350px;
+  height: 350px;
+  opacity: 0.85;
+  pointer-events: none;
+}
 @media (max-width: 640px) {
+  .hero-signature {
+    right: -70px;
+    top: -20px;
+    width: 250px;
+    height: 250px;
+    opacity: 0.28;
+  }
   .commerce-hero {
     min-height: 470px;
   }

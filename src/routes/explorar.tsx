@@ -6,8 +6,9 @@ import { CATEGORIES, KINDS, categoryLabel, type Kind } from "@/lib/catalog";
 import { ListingGrid, EmptyListings, type ListingRow } from "@/components/ListingCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useState } from "react";
+import { Sheet, SheetContent, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 
 const searchSchema = z.object({
   q: z.string().optional(),
@@ -40,6 +41,7 @@ function Explore() {
   const { q, kind, category } = Route.useSearch();
   const navigate = Route.useNavigate();
   const [text, setText] = useState(q ?? "");
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["explore", q, kind, category],
     queryFn: async () => {
@@ -100,16 +102,26 @@ function Explore() {
           </Chip>
         ))}
       </div>
-      <div className="mb-6 flex flex-wrap gap-2">
-        {CATEGORIES.map((c) => (
-          <Chip
-            key={c.id}
-            active={category === c.id}
-            to={{ q, kind, category: category === c.id ? undefined : c.id }}
-          >
-            {c.label}
-          </Chip>
-        ))}
+      <div className="mb-6 flex flex-wrap items-center gap-3 border-y py-4">
+        <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+          <SheetTrigger asChild>
+            <Button variant="outline"><SlidersHorizontal />Categorias{category ? " (1)" : ""}</Button>
+          </SheetTrigger>
+          <SheetContent className="w-[min(92vw,440px)] overflow-y-auto sm:max-w-md">
+            <SheetTitle>Categorias comerciais</SheetTitle>
+            <SheetDescription>Mercado GCNM</SheetDescription>
+            <div className="mt-6 grid grid-cols-2 gap-2">
+              {CATEGORIES.map((c) => (
+                <Button key={c.id} asChild variant={category === c.id ? "secondary" : "ghost"} className="h-auto min-h-12 justify-start whitespace-normal text-left text-xs">
+                  <Link to="/explorar" search={{ q, kind, category: category === c.id ? undefined : c.id }} onClick={() => setFiltersOpen(false)}>
+                    <c.icon className="shrink-0 text-primary" />{c.label}
+                  </Link>
+                </Button>
+              ))}
+            </div>
+          </SheetContent>
+        </Sheet>
+        {category && <Button asChild variant="secondary" size="sm"><Link to="/explorar" search={{ q, kind }}>{categoryLabel(category)}<X /></Link></Button>}
       </div>
       <p aria-live="polite" className="mb-5 text-xs text-muted-foreground">
         {isLoading

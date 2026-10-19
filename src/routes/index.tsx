@@ -72,20 +72,18 @@ function Index() {
           height={1024}
           fetchPriority="high"
         />
-        <div className="mx-auto w-full max-w-7xl">
+        <Globe className="hero-signature" />
+        <div className="relative mx-auto w-full max-w-7xl">
           <p className="eyebrow flex items-center gap-2 text-gold">
             <span className="h-1.5 w-1.5 rounded-full bg-gold" /> GLOBAL COMMERCE NETWORK MAP
           </p>
           <h1 className="mt-5 max-w-xl text-4xl font-bold leading-[1.15] sm:text-5xl">
-            <span className="brand-mark">GCNM.</span>
-            <br />O teu mercado,
-            <br />
-            sem fronteiras.
+            <span className="brand-mark">GCNM<span className="text-primary">.</span></span>
           </h1>
           <p className="mt-5 max-w-md text-sm leading-6 text-navy-foreground/85">
-            Produtos, serviços e oportunidades.
+            <span className="text-xl font-semibold">O teu mercado, sem fronteiras.</span>
             <br />
-            Encontra a oferta certa. Cria a próxima ligação.
+            Produtos, serviços e oportunidades. Encontra a oferta certa.
           </p>
           <form
             className="mt-7 flex max-w-xl items-center gap-2 rounded-lg bg-card p-2"
