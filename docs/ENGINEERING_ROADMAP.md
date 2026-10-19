@@ -3,9 +3,9 @@
 **Branch de trabalho:** `plan/worldspark-engineering-audit`  
 **Repositório:** `tonybenjamimfernando-oss/worldspark-network-hub`  
 **Supabase atualmente acessível:** `cdauhpfszqhlojcafulo` (`worldspark-network-hub`)  
-**Estado verificado:** projeto ACTIVE_HEALTHY; zero tabelas e zero funções no esquema `public`; nenhuma migração devolvida pelo histórico do conector; zero buckets de Storage.  
-**ID antigo referido no código:** `vrwutsbnciyqdhuscylh` — não acessível na ligação atual.  
-**Regra de segurança:** não aplicar DDL em produção até confirmar a correspondência entre configuração do código e o projeto autorizado.
+**Estado inicial verificado:** projeto ACTIVE_HEALTHY e vazio antes das alterações. **Estado após Fase 2:** migrações `0000`–`0013` aplicadas e confirmadas no histórico; oito tabelas principais com RLS activo; bucket `media` criado e verificado.  
+**Configuração do repositório:** `supabase/config.toml` foi alinhado para `cdauhpfszqhlojcafulo` no ramo de trabalho; ainda não foi fundido na branch principal.  
+**Regra de segurança:** alterações no Supabase foram aplicadas apenas depois de confirmar que o projecto autorizado estava vazio; as novas alterações do repositório continuam isoladas num ramo/PR.
 
 ## Objetivo
 
@@ -18,10 +18,10 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 - Fluxos já implementados no código: listagens, pesquisa, perfis, publicação, importação CSV e por URL, propostas para pedidos, avaliações/denúncias, links de afiliado e correspondência local de ofertas.
 - As páginas `/mapa` e `/mensagens` são, por enquanto, páginas informativas; não constituem mapa GPS nem chat operacional. Os planos pagos também estão identificados como em preparação.
 - As migrações versionadas em `drizzle/migrations/` são `0000`–`0011`; o diário Drizzle lista 12 entradas. A presença no Git não prova execução no Supabase.
-- A configuração `supabase/config.toml` ainda aponta para o ID antigo `vrwutsbnciyqdhuscylh`, divergente do projeto atual acessível.
+- A configuração `supabase/config.toml` foi actualizada no ramo de auditoria para apontar para o projecto actual acessível.
 - A migração `0006_enforce_media_bucket_limits.sql` apenas atualiza o bucket `media` se já existir. No projeto atual não há buckets; é necessário planear a criação segura do bucket e os limites, sem modificar o histórico já publicado.
 - `0005_isolate_private_profile_data.sql` move o identificador fiscal para `profile_private`; o painel já depende dessa tabela. A sequência completa das migrações é, portanto, necessária antes de validar o fluxo de perfil.
-- A migração base define políticas para `storage.objects`, mas não cria o bucket `media`.
+- A migração base define políticas para `storage.objects`, mas não cria o bucket `media`; foi acrescentada a migração `0012_ensure_media_bucket.sql` para o criar/normalizar com limite de 10 MiB e MIME types permitidos.
 - O cliente privilegiado está em `src/integrations/supabase/client.server.ts`. Confirmar que nunca é importado por módulos enviados ao navegador e que nenhuma chave privilegiada está no bundle.
 - CI já inclui lint, testes e build. O histórico recente indica que estes passaram no PR #24; isso não valida o esquema remoto nem todas as jornadas reais.
 
@@ -43,13 +43,15 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 **Saída/aceitação:** ambiente reproduzível e ausência de segredos privados no código cliente/repositório.
 
 ### Fase 2 — base de dados e migrações
-1. Guardar evidência de que o projeto autorizado está vazio e confirmar se existe qualquer dado a preservar.
-2. Preparar execução ordenada de `0000`–`0011` no projeto vazio, validando cada etapa e interrompendo ao primeiro erro.
-3. Criar uma migração nova e versionada para inicializar o bucket `media` com limite de 10 MiB e MIME types suportados; não reescrever migrações antigas já publicadas.
-4. Confirmar todas as tabelas, enums, índices, triggers, funções RPC, grants e políticas RLS.
-5. Gerar tipos TypeScript a partir do banco e comparar com `src/integrations/supabase/types.ts`.
-6. Testar permissões com papéis anon/authenticated e com dois utilizadores distintos; não usar dados reais para testes destrutivos.
-**Saída/aceitação:** migrações aplicadas com histórico rastreável, schema alinhado e testes de isolamento aprovados.
+**Progresso actual: esquema base inicializado; validação de permissões e tipos ainda pendente.**
+1. Confirmado que o projecto Supabase seleccionado estava vazio antes da inicialização.
+2. Aplicadas e verificadas, por ordem, as migrações `0000`–`0013`; o histórico remoto contém as 14 migrações.
+3. Criada `0012_ensure_media_bucket.sql` sem alterar migrações antigas; bucket confirmado como público para leitura, limite 10 MiB e MIME types JPEG/PNG/WebP/GIF.
+4. Criada `0013_harden_function_access_and_indexes.sql`: revoga execução directa de funções privilegiadas usadas apenas por triggers, converte `has_role` para `SECURITY INVOKER` e adiciona cinco índices de chaves estrangeiras.
+5. Verificado que as oito tabelas principais têm RLS activo e zero linhas no momento da verificação.
+6. Os advisors deixaram de assinalar as funções de trigger como publicamente executáveis; permanecem avisos intencionais nas RPCs de métricas `track_listing` e `track_affiliate_click`, e avisos de optimização de políticas RLS ainda por tratar.
+7. Ainda falta comparar integralmente os tipos TypeScript com o esquema remoto e executar testes de autorização reais com utilizadores de teste.
+**Saída/aceitação:** migrações aplicadas e rastreáveis; restantes verificações de segurança/permissões permanecem abertas.
 
 ### Fase 3 — segurança e privacidade
 1. Verificar RLS em todas as tabelas do esquema exposto e políticas de Storage.
@@ -115,3 +117,16 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 - Depois de cada mudança: executar testes relevantes, lint e build; registar o resultado real.
 - Não declarar uma fase concluída se houver testes pendentes, dependências externas não configuradas ou riscos críticos sem mitigação.
 - Aplicar mudanças de produção somente depois de validar projeto, histórico e esquema; interromper e investigar qualquer divergência.
+
+
+## Diário de execução — 2026-10-19
+
+- [x] Criado ramo isolado `plan/worldspark-engineering-audit` e plano técnico.
+- [x] Alinhado `supabase/config.toml` com o projecto Supabase autorizado.
+- [x] Aplicadas e verificadas migrações `0000`–`0013` no projecto inicialmente vazio.
+- [x] Criada migração para garantir o bucket de media em projectos limpos.
+- [x] Corrigido acesso directo a funções privilegiadas de trigger e acrescentados índices identificados pelos advisors.
+- [x] Executados novamente os advisors de segurança e desempenho.
+- [ ] Tratar os avisos restantes das RPCs de métricas e optimizar políticas RLS sem alterar as regras de acesso.
+- [ ] Executar lint, testes e build na branch e validar CI do pull request.
+- [ ] Rever a compatibilidade dos tipos TypeScript gerados com o schema real.
