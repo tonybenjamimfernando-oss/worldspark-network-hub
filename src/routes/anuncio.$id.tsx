@@ -70,21 +70,21 @@ function ListingPage() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
+    <div className="mx-auto max-w-6xl px-5 py-10">
       <nav className="mb-4 text-sm text-muted-foreground">
         <Link to="/explorar" search={{ kind: l.kind }} className="hover:text-primary">{KINDS[l.kind]}</Link> / <Link to="/explorar" search={{ category: l.category }} className="hover:text-primary">{categoryLabel(l.category)}</Link>
       </nav>
       <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
         <div>
-          <div className="aspect-[4/3] overflow-hidden rounded-3xl border bg-muted">
+          <div className="aspect-[4/3] overflow-hidden rounded-lg border bg-card">
             {img && urls[img] ? <img src={urls[img]} alt={l.title} className="h-full w-full object-contain" /> : <div className="grid h-full place-items-center text-muted-foreground">Sem imagem</div>}
           </div>
           {l.images.length > 1 && (
             <div className="mt-3 flex gap-2 overflow-x-auto">
               {l.images.map((p, i) => (
-                <button key={p} onClick={() => setActive(i)} aria-label={`Imagem ${i + 1}`} className={`h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 ${i === active ? "border-primary" : "border-transparent"}`}>
+                <Button key={p} variant="ghost" onClick={() => setActive(i)} aria-label={`Imagem ${i + 1}`} aria-pressed={i === active} className={`h-16 w-16 shrink-0 overflow-hidden rounded-md border-2 p-0 ${i === active ? "border-primary" : "border-transparent"}`}>
                   {urls[p] && <img src={urls[p]} alt="" className="h-full w-full object-cover" />}
-                </button>
+                </Button>
               ))}
             </div>
           )}
@@ -101,7 +101,7 @@ function ListingPage() {
           </div>
 
           {l.is_external && l.source_url && (
-            <div className="rounded-2xl border bg-secondary p-4 text-sm">
+            <div className="border-l-2 border-primary bg-secondary p-5 text-sm">
               <p className="flex items-center gap-2 font-semibold"><Store className="h-4 w-4" />Vendido em {l.source_platform ?? "loja externa"}{l.source_store ? ` · ${l.source_store}` : ""}</p>
               <p className="mt-1 text-muted-foreground">{RELATION[l.publisher_relation as keyof typeof RELATION]}. A compra é feita na loja original.</p>
               {l.source_checked_at && <p className="mt-1 text-xs text-muted-foreground">Dados atualizados em {new Date(l.source_checked_at).toLocaleDateString("pt-PT")} — confirma o preço na loja.</p>}
@@ -119,7 +119,7 @@ function ListingPage() {
           <dl className="grid grid-cols-2 gap-3 text-sm">
             {[["Marca", l.brand], ["Estado", l.condition], ["Stock", l.stock], ["Quantidade", l.quantity], ["Variantes", l.variants], ["Entrega", l.delivery], ["Garantia", l.warranty], ["Devoluções", l.returns_policy], ["Prazo", l.deadline && new Date(l.deadline).toLocaleDateString("pt-PT")]]
               .filter(([, v]) => v != null && v !== "")
-              .map(([k, v]) => <div key={k as string} className="rounded-xl border bg-card p-3"><dt className="text-xs text-muted-foreground">{k}</dt><dd className="font-medium">{String(v)}</dd></div>)}
+              .map(([k, v]) => <div key={k as string} className="border-b py-3"><dt className="text-xs text-muted-foreground">{k}</dt><dd className="mt-1 font-medium">{String(v)}</dd></div>)}
           </dl>
         </div>
       </div>
@@ -142,7 +142,7 @@ type Owner = { id: string; display_name: string; is_verified: boolean; city: str
 function SellerCard({ owner, avatar, showContact }: { owner: Owner; avatar?: string | undefined; showContact: boolean }) {
   if (!owner) return null;
   return (
-    <div className="flex items-center gap-3 rounded-2xl border bg-card p-4">
+    <div className="flex items-center gap-3 border-y py-5">
       <div className="h-12 w-12 overflow-hidden rounded-full bg-brand-soft">{avatar && <img src={avatar} alt="" className="h-full w-full object-cover" />}</div>
       <div className="min-w-0 flex-1">
         <Link to="/u/$id" params={{ id: owner.id }} className="flex items-center gap-1 font-semibold hover:text-primary">{owner.display_name || "Utilizador"}{owner.is_verified && <BadgeCheck className="h-4 w-4 text-primary" />}</Link>
@@ -157,9 +157,9 @@ function Stars({ value, onChange }: { value: number; onChange?: (v: number) => v
   return (
     <div className="flex">
       {[1, 2, 3, 4, 5].map((i) => (
-        <button key={i} type="button" disabled={!onChange} onClick={() => onChange?.(i)} aria-label={`${i} estrelas`}>
+        <Button key={i} type="button" variant="ghost" className="h-10 w-8 p-0 disabled:opacity-100" disabled={!onChange} onClick={() => onChange?.(i)} aria-label={`${i} estrelas`}>
           <Star className={`h-5 w-5 ${i <= value ? "fill-star text-star" : "text-border"}`} />
-        </button>
+        </Button>
       ))}
     </div>
   );
@@ -200,7 +200,7 @@ function Reviews({ listingId, isOwner, userId }: { listingId: string; isOwner: b
     <div>
       <h2 className="flex items-center gap-3 text-xl font-bold">Avaliações {data?.length ? <span className="flex items-center gap-1 text-base"><Stars value={Math.round(avg)} />{avg.toFixed(1)} ({data.length})</span> : null}</h2>
       {userId && !isOwner && !mine && (
-        <form onSubmit={submit} className="mt-3 space-y-2 rounded-2xl border bg-card p-4">
+        <form onSubmit={submit} className="mt-4 space-y-3 border-y py-5">
           <Stars value={rating} onChange={setRating} />
           <Textarea maxLength={2000} placeholder="Partilha a tua experiência" value={comment} onChange={(e) => setComment(e.target.value)} />
           <Button type="submit" size="sm">Publicar avaliação</Button>
@@ -209,11 +209,11 @@ function Reviews({ listingId, isOwner, userId }: { listingId: string; isOwner: b
       {!userId && <p className="mt-2 text-sm text-muted-foreground"><Link to="/auth" className="text-primary">Entra</Link> para avaliar.</p>}
       <ul className="mt-4 space-y-3">
         {data?.map((r) => (
-          <li key={r.id} className="rounded-2xl border bg-card p-4">
-            <div className="flex items-center justify-between"><span className="font-semibold">{r.author?.display_name ?? "Utilizador"}</span><Stars value={r.rating} /></div>
+          <li key={r.id} className="border-b py-4">
+            <div className="flex flex-wrap items-center justify-between gap-2"><span className="font-semibold">{r.author?.display_name ?? "Utilizador"}</span><Stars value={r.rating} /></div>
             {r.comment && <p className="mt-1 text-sm text-muted-foreground">{r.comment}</p>}
             <div className="mt-2 flex justify-between text-xs text-muted-foreground"><span>{new Date(r.created_at).toLocaleDateString("pt-PT")}</span>
-              <button onClick={() => report(r.id)} className="flex items-center gap-1 hover:text-destructive"><Flag className="h-3 w-3" />Denunciar</button></div>
+              <Button variant="ghost" size="sm" onClick={() => report(r.id)} className="flex items-center gap-1 hover:text-destructive"><Flag className="h-3 w-3" />Denunciar</Button></div>
           </li>
         ))}
         {data?.length === 0 && <li className="text-sm text-muted-foreground">Ainda sem avaliações.</li>}
@@ -249,7 +249,7 @@ function Proposals({ requestId, isOwner, userId, currency }: { requestId: string
       <h2 className="text-xl font-bold">Propostas de fornecedores</h2>
       {!userId && <p className="mt-2 text-sm text-muted-foreground"><Link to="/auth" className="text-primary">Entra</Link> para enviar uma proposta.</p>}
       {userId && !isOwner && !data?.length && (
-        <form onSubmit={send} className="mt-3 space-y-2 rounded-2xl border bg-card p-4">
+        <form onSubmit={send} className="mt-4 space-y-3 border-y py-5">
           <div className="grid grid-cols-2 gap-2">
             <Input type="number" min="0" step="0.01" placeholder={`Preço (${currency})`} value={price} onChange={(e) => setPrice(e.target.value)} />
             <Input type="number" min="0" placeholder="Prazo (dias)" value={days} onChange={(e) => setDays(e.target.value)} />
@@ -260,8 +260,8 @@ function Proposals({ requestId, isOwner, userId, currency }: { requestId: string
       )}
       <ul className="mt-4 space-y-3">
         {data?.map((p) => (
-          <li key={p.id} className="rounded-2xl border bg-card p-4 text-sm">
-            <div className="flex justify-between font-semibold"><span>{p.supplier?.display_name}</span><span className="text-primary">{formatPrice(p.price, p.currency)}{p.delivery_days != null && ` · ${p.delivery_days} dias`}</span></div>
+          <li key={p.id} className="rounded-lg border bg-card p-4 text-sm">
+            <div className="flex flex-wrap justify-between gap-2 font-semibold"><span>{p.supplier?.display_name}</span><span className="text-primary">{formatPrice(p.price, p.currency)}{p.delivery_days != null && ` · ${p.delivery_days} dias`}</span></div>
             <p className="mt-1 text-muted-foreground">{p.message}</p>
             {isOwner && p.supplier && (p.supplier.public_phone || p.supplier.public_email) && <p className="mt-1 text-xs">{[p.supplier.public_phone, p.supplier.public_email].filter(Boolean).join(" · ")}</p>}
             <div className="mt-2 flex items-center gap-2 text-xs">
@@ -289,7 +289,7 @@ function AffiliateBox({ listingId, commission, userId }: { listingId: string; co
   }
   const url = link ? `${typeof window !== "undefined" ? window.location.origin : ""}/anuncio/${listingId}?ref=${link.code}` : "";
   return (
-    <div className="rounded-2xl border bg-card p-5">
+    <div className="border-l-2 border-primary bg-secondary p-5">
       <h3 className="font-bold">Promover como afiliado</h3>
       <p className="mt-1 text-sm text-muted-foreground">O vendedor propõe {commission ?? 0}% de comissão. Os cliques são contados; conversões e pagamentos de comissões ficarão disponíveis quando os pagamentos estiverem ativos.</p>
       {!userId ? <Button asChild className="mt-3" size="sm"><Link to="/auth">Entrar para gerar link</Link></Button>
