@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Search,
   Home,
@@ -17,6 +18,7 @@ import {
   ArrowUpRight,
   MessageSquare,
   Command,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +29,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useUser } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import { Globe as BrandGlobe } from "@/components/Globe";
 
 const NAV = [
@@ -42,6 +45,20 @@ const NAV = [
 
 export function SiteHeader() {
   const { user } = useUser();
+  const { data: isAdmin = false } = useQuery({
+    queryKey: ["header-admin-role", user?.id],
+    enabled: Boolean(user),
+    queryFn: async () => {
+      if (!user) return false;
+      const { data, error } = await supabase.rpc("has_role", {
+        _user_id: user.id,
+        _role: "admin",
+      });
+      if (error) return false;
+      return data === true;
+    },
+    retry: false,
+  });
   const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
@@ -82,6 +99,16 @@ export function SiteHeader() {
                   {n.label}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 rounded-md px-3 py-3 text-sm font-semibold text-primary hover:bg-secondary"
+                >
+                  <ShieldCheck className="h-5 w-5" />
+                  Centro administrativo
+                </Link>
+              )}
               <Link
                 to="/mensagens"
                 onClick={() => setOpen(false)}
@@ -145,6 +172,14 @@ export function SiteHeader() {
               <MessageSquare />
             </Link>
           </Button>
+          {isAdmin && (
+            <Button asChild size="sm" variant="secondary" className="hidden xl:inline-flex">
+              <Link to="/admin">
+                <ShieldCheck />
+                Administração
+              </Link>
+            </Button>
+          )}
           {user ? (
             <Button asChild size="sm" variant="outline">
               <Link to="/painel">
@@ -183,6 +218,15 @@ export function SiteHeader() {
             {n.label}
           </Link>
         ))}
+        {isAdmin && (
+          <Link
+            to="/admin"
+            className="flex items-center gap-2 border-b-2 border-transparent px-3 py-3 text-xs font-semibold text-primary transition hover:border-primary"
+          >
+            <ShieldCheck className="h-4 w-4" />
+            Administração
+          </Link>
+        )}
       </nav>
     </header>
     <nav aria-label="Atalhos móveis" className="mobile-shortcuts fixed inset-x-0 bottom-0 z-50 grid grid-cols-6 border-t bg-card/95 px-1 pb-[env(safe-area-inset-bottom)] pt-1 backdrop-blur-md md:hidden">
