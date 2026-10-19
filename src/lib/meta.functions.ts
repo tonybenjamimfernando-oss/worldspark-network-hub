@@ -49,7 +49,8 @@ export const fetchUrlMeta = createServerFn({ method: "POST" })
       });
       if (res.status >= 300 && res.status < 400) {
         return { ok: false as const, platform, error: "A loja redireccionou o link. Por segurança, preencha os dados manualmente com o endereço final." };
-      }\n      if (!res.ok) return { ok: false as const, platform, error: `A loja respondeu com o estado ${res.status}. Preencha os dados manualmente.` };
+      }
+      if (!res.ok) return { ok: false as const, platform, error: `A loja respondeu com o estado ${res.status}. Preencha os dados manualmente.` };
       const html = (await res.text()).slice(0, 400_000);
       return {
         ok: true as const,
