@@ -497,16 +497,14 @@ function Proposals({
   const [msg, setMsg] = useState("");
   async function send(e: React.FormEvent) {
     e.preventDefault();
-    const { error } = await supabase
-      .from("proposals")
-      .insert({
-        request_id: requestId,
-        supplier_id: userId!,
-        price: price ? Number(price) : null,
-        currency,
-        delivery_days: days ? Number(days) : null,
-        message: msg.trim(),
-      });
+    const { error } = await supabase.from("proposals").insert({
+      request_id: requestId,
+      supplier_id: userId!,
+      price: price ? Number(price) : null,
+      currency,
+      delivery_days: days ? Number(days) : null,
+      message: msg.trim(),
+    });
     if (error) {
       toast.error(error.message.includes("duplicate") ? "Já enviaste uma proposta" : error.message);
       return;
