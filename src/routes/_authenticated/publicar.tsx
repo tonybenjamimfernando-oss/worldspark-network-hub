@@ -121,7 +121,18 @@ function Publish() {
   async function importCsvOffers() {
     if (!csvOffers.length) return;
     setCsvBusy(true);
-    const rows = csvOffers.map((offer) => ({
+    const uniqueOffers = Array.from(new Map(csvOffers.map((offer) => [offer.source_url, offer])).values());
+    const { data: existing, error: lookupError } = await supabase
+      .from("listings")
+      .select("source_url")
+      .in("source_url", uniqueOffers.map((offer) => offer.source_url));
+    if (lookupError) {
+      setCsvBusy(false);
+      toast.error("Não foi possível verificar ofertas duplicadas. Tenta novamente.");
+      return;
+    }
+    const existingUrls = new Set((existing ?? []).map((row) => row.source_url).filter(Boolean));
+    const rows = uniqueOffers.filter((offer) => !existingUrls.has(offer.source_url)).map((offer) => ({
       owner_id: user.id,
       kind: "product" as const,
       title: offer.title,
@@ -137,15 +148,19 @@ function Publish() {
       publisher_relation: "sharer" as const,
       source_checked_at: new Date().toISOString(),
     }));
+    if (!rows.length) {
+      setCsvBusy(false);
+      toast.warning("Todas as ofertas selecionadas já estão publicadas.");
+      return;
+    }
     const { error } = await supabase.from("listings").insert(rows);
     setCsvBusy(false);
     if (error) {
-      toast.error(error.message.includes("listings_source_url_unique")
-        ? "Uma ou mais ofertas já estão publicadas. Remove duplicados e tenta novamente."
-        : "Não foi possível importar as ofertas. Verifica os dados e tenta novamente.");
+      toast.error("Não foi possível importar as ofertas. Verifica os dados e tenta novamente.");
       return;
     }
-    toast.success(`${rows.length} ofertas importadas com sucesso.`);
+    const skipped = uniqueOffers.length - rows.length;
+    toast.success(`${rows.length} ofertas importadas${skipped ? `; ${skipped} duplicadas ignoradas` : ""}.`);
     setCsvOffers([]);
     setCsvErrors([]);
   }
