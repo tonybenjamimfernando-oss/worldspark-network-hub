@@ -72,7 +72,7 @@ function Publish() {
   const navigate = useNavigate();
   const fetchMeta = useServerFn(fetchUrlMeta);
   const [kind, setKind] = useState<Kind>(search.kind ?? "product");
-  const [external, setExternal] = useState(!!search.external);
+  const [external, setExternal] = useState(search.kind !== "request" && !!search.external);
   const [relation, setRelation] = useState<"owner" | "representative" | "sharer">("owner");
   const [contactVis, setContactVis] = useState<"public" | "proposers" | "private">("proposers");
   const [f, setF] = useState(empty);
