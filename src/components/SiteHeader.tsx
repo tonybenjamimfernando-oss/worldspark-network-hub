@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Search,
+  Home,
   Globe,
   ShoppingBag,
   Wrench,
@@ -42,6 +43,7 @@ export function SiteHeader() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   return (
+    <>
     <header className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur-md">
       <div className="hidden border-b bg-secondary md:block">
         <div className="mx-auto flex max-w-7xl justify-between px-6 py-2 text-[11px] text-muted-foreground">
@@ -126,8 +128,8 @@ export function SiteHeader() {
           />
         </form>
         <div className="ml-auto flex items-center gap-3">
-          <span className="hidden items-center gap-1.5 text-xs font-medium lg:flex">
-            <Globe className="h-4 w-4" /> PT · EUR
+          <span className="hidden items-center gap-1.5 text-xs font-semibold text-muted-foreground lg:flex">
+            <Globe className="h-4 w-4 text-primary" /> Mercado global
           </span>
           <Button
             asChild
@@ -163,6 +165,27 @@ export function SiteHeader() {
           </Button>
         </div>
       </div>
+      <form
+        className="mx-4 mb-3 flex items-center gap-2 md:hidden"
+        onSubmit={(e) => {
+          e.preventDefault();
+          navigate({ to: "/explorar", search: { q } });
+        }}
+      >
+        <div className="relative min-w-0 flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            aria-label="Pesquisar produtos, serviços e empresas"
+            placeholder="O que procuras hoje?"
+            className="h-10 w-full rounded-md border bg-secondary pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+          />
+        </div>
+        <Button type="submit" size="icon" aria-label="Pesquisar">
+          <Search className="h-4 w-4" />
+        </Button>
+      </form>
       <nav
         aria-label="Navegação principal"
         className="mx-auto hidden max-w-7xl items-center gap-1 px-4 md:flex md:px-6"
@@ -180,6 +203,26 @@ export function SiteHeader() {
         ))}
       </nav>
     </header>
+    <nav aria-label="Atalhos móveis" className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t bg-card/95 px-1 pb-[env(safe-area-inset-bottom)] pt-1 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-md md:hidden">
+      {([
+        { label: "Início", to: "/", icon: Home },
+        { label: "Comprar", to: "/explorar", search: { kind: "product" }, icon: ShoppingBag },
+        { label: "Pedidos", to: "/explorar", search: { kind: "request" }, icon: Megaphone },
+        { label: "Publicar", to: "/publicar", search: { kind: "product" }, icon: Plus },
+        { label: user ? "Painel" : "Entrar", to: user ? "/painel" : "/auth", icon: UserIcon },
+      ] as const).map((item) => (
+        <Link
+          key={item.label}
+          to={item.to}
+          search={("search" in item ? item.search : {}) as never}
+          className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-md px-1 py-1 text-[10px] font-semibold text-muted-foreground transition hover:bg-secondary hover:text-primary"
+        >
+          <item.icon className="h-5 w-5" />
+          <span>{item.label}</span>
+        </Link>
+      ))}
+    </nav>
+    </>
   );
 }
 

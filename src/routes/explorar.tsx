@@ -45,7 +45,7 @@ function Explore() {
     queryFn: async () => {
       let query = supabase
         .from("listings")
-        .select("id,kind,title,category,images,price,currency,city,country")
+        .select("id,kind,title,category,images,price,currency,city,country,is_external,source_platform")
         .eq("status", "active")
         .order("created_at", { ascending: false })
         .limit(60);

@@ -273,7 +273,7 @@ function KindSection({ kind, title, subtitle }: { kind: Kind; title: string; sub
     queryFn: async () => {
       const { data, error } = await supabase
         .from("listings")
-        .select("id,kind,title,category,images,price,currency,city,country")
+        .select("id,kind,title,category,images,price,currency,city,country,is_external,source_platform")
         .eq("kind", kind)
         .eq("status", "active")
         .order("created_at", { ascending: false })

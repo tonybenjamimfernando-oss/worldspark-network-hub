@@ -72,7 +72,7 @@
   --globe-gold: #f2b84b;
   --gold: oklch(0.79 0.13 80);
   --overlay: oklch(0.15 0.03 255 / 0.65);
-  --shadow-elevated: 0 12px 32px oklch(0.25 0.035 255 / 0.07);
+  --shadow-elevated: 0 14px 36px oklch(0.25 0.035 255 / 0.09);
   --hero-overlay: linear-gradient(
     90deg,
     oklch(0.19 0.045 250 / 0.94),
@@ -189,11 +189,28 @@
   font-size: 18px;
 }
 .listing-card {
-  box-shadow: none;
+  box-shadow: 0 1px 2px oklch(0.25 0.035 255 / 0.035);
+  border-color: oklch(0.9 0.01 250);
 }
 .listing-card:hover {
   transform: translateY(-3px);
+  border-color: oklch(0.78 0.06 45);
   box-shadow: var(--shadow-elevated);
+}
+.listing-card:focus-visible,
+.category-link:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 3px;
+}
+button, [role="button"] {
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+input, textarea, select {
+  border-radius: calc(var(--radius) - 1px);
+}
+::selection {
+  background: var(--brand-soft);
+  color: var(--navy);
 }
 .category-link {
   transition:
