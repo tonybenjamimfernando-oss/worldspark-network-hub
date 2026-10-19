@@ -3,7 +3,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Link2, Upload, X } from "lucide-react";
+import { FileSpreadsheet, Link2, Upload, X } from "lucide-react";
+import { parseExternalOffersCsv, type CsvExternalOffer } from "@/lib/external-offers-csv";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -77,6 +78,9 @@ function Publish() {
   const [affiliate, setAffiliate] = useState(false);
   const [busy, setBusy] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [csvOffers, setCsvOffers] = useState<CsvExternalOffer[]>([]);
+  const [csvErrors, setCsvErrors] = useState<string[]>([]);
+  const [csvBusy, setCsvBusy] = useState(false);
   const { data: urls } = useSignedUrls(images);
   const set =
     (k: keyof typeof empty) =>
@@ -93,6 +97,57 @@ function Publish() {
         toast.error(e instanceof Error ? e.message : "Falha no envio");
       }
     }
+  }
+
+  async function readCsv(file: File | undefined) {
+    if (!file) return;
+    if (file.size > 1024 * 1024) {
+      setCsvOffers([]);
+      setCsvErrors(["O ficheiro não pode ultrapassar 1 MB."]);
+      return;
+    }
+    try {
+      const result = parseExternalOffersCsv(await file.text());
+      setCsvOffers(result.offers);
+      setCsvErrors(result.errors);
+      if (result.offers.length) toast.success(`${result.offers.length} ofertas válidas prontas para revisão.`);
+      if (!result.offers.length && !result.errors.length) setCsvErrors(["Não foram encontradas ofertas válidas."]);
+    } catch {
+      setCsvOffers([]);
+      setCsvErrors(["Não foi possível ler o ficheiro CSV."]);
+    }
+  }
+
+  async function importCsvOffers() {
+    if (!csvOffers.length) return;
+    setCsvBusy(true);
+    const rows = csvOffers.map((offer) => ({
+      owner_id: user.id,
+      kind: "product" as const,
+      title: offer.title,
+      description: offer.description || "",
+      category: CATEGORIES.some((category) => category.id === offer.category) ? offer.category : "other",
+      images: [],
+      price: offer.price,
+      currency: CURRENCIES.includes(offer.currency) ? offer.currency : "USD",
+      is_external: true,
+      source_url: offer.source_url,
+      source_platform: offer.source_platform,
+      source_store: offer.source_store,
+      publisher_relation: "sharer" as const,
+      source_checked_at: new Date().toISOString(),
+    }));
+    const { error } = await supabase.from("listings").insert(rows);
+    setCsvBusy(false);
+    if (error) {
+      toast.error(error.message.includes("listings_source_url_unique")
+        ? "Uma ou mais ofertas já estão publicadas. Remove duplicados e tenta novamente."
+        : "Não foi possível importar as ofertas. Verifica os dados e tenta novamente.");
+      return;
+    }
+    toast.success(`${rows.length} ofertas importadas com sucesso.`);
+    setCsvOffers([]);
+    setCsvErrors([]);
   }
 
   async function importUrl() {
@@ -199,6 +254,68 @@ function Publish() {
           </Button>
         ))}
       </div>
+
+      <Section title="Importar ofertas em lote (CSV)">
+        <p className="text-sm text-muted-foreground">
+          Importa até 100 ofertas de um ficheiro CSV. Cada oferta deve ter título e link HTTPS.
+          Os dados são pré-visualizados antes da publicação.
+        </p>
+        <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed p-4 text-sm hover:border-primary">
+          <FileSpreadsheet className="h-5 w-5" />
+          <span>Escolher ficheiro CSV (máximo 1 MB)</span>
+          <input
+            type="file"
+            accept=".csv,text/csv"
+            className="sr-only"
+            onChange={(e) => {
+              void readCsv(e.target.files?.[0]);
+              e.currentTarget.value = "";
+            }}
+          />
+        </label>
+        {csvErrors.length > 0 && (
+          <div role="status" className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
+            <p className="font-semibold">Avisos de importação</p>
+            <ul className="mt-1 list-disc pl-5">
+              {csvErrors.slice(0, 8).map((error, i) => <li key={i}>{error}</li>)}
+            </ul>
+            {csvErrors.length > 8 && <p className="mt-1">E mais {csvErrors.length - 8} avisos.</p>}
+          </div>
+        )}
+        {csvOffers.length > 0 && (
+          <div className="space-y-3">
+            <p className="text-sm font-medium">{csvOffers.length} ofertas válidas para importar</p>
+            <div className="max-h-56 overflow-auto rounded-md border">
+              <table className="w-full text-left text-xs">
+                <thead className="sticky top-0 bg-muted">
+                  <tr><th className="p-2">Título</th><th className="p-2">Preço</th><th className="p-2">Loja</th></tr>
+                </thead>
+                <tbody>
+                  {csvOffers.slice(0, 20).map((offer, i) => (
+                    <tr key={offer.source_url} className="border-t">
+                      <td className="p-2">{offer.title}</td>
+                      <td className="p-2">{offer.price ?? "—"} {offer.currency}</td>
+                      <td className="p-2">{offer.source_store ?? offer.source_platform ?? new URL(offer.source_url).hostname}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {csvOffers.length > 20 && <p className="p-2 text-muted-foreground">A mostrar 20 de {csvOffers.length} ofertas.</p>}
+            </div>
+            <Button type="button" onClick={importCsvOffers} disabled={csvBusy}>
+              {csvBusy ? "A importar…" : `Importar ${csvOffers.length} ofertas`}
+            </Button>
+            <Button type="button" variant="outline" onClick={() => { setCsvOffers([]); setCsvErrors([]); }} disabled={csvBusy}>
+              Limpar pré-visualização
+            </Button>
+          </div>
+        )}
+        <p className="text-xs text-muted-foreground">
+          Colunas aceites: title/título, source_url/link, description/descrição, category/categoria,
+          price/preço, currency/moeda, source_platform/plataforma e source_store/loja.
+          Também aceita CSV separado por ponto e vírgula.
+        </p>
+      </Section>
 
       <form onSubmit={submit} className="mt-6 space-y-6">
         {!isRequest && (
