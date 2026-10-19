@@ -166,27 +166,6 @@ export function SiteHeader() {
           </Button>
         </div>
       </div>
-      <form
-        className="mx-4 mb-3 flex items-center gap-2 md:hidden"
-        onSubmit={(e) => {
-          e.preventDefault();
-          navigate({ to: "/explorar", search: { q } });
-        }}
-      >
-        <div className="relative min-w-0 flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            aria-label="Pesquisar produtos, serviços e empresas"
-            placeholder="O que procuras hoje?"
-            className="h-10 w-full rounded-md border bg-secondary pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-ring"
-          />
-        </div>
-        <Button type="submit" size="icon" aria-label="Pesquisar">
-          <Search className="h-4 w-4" />
-        </Button>
-      </form>
       <nav
         aria-label="Navegação principal"
         className="mx-auto hidden max-w-7xl items-center gap-1 px-4 md:flex md:px-6"
