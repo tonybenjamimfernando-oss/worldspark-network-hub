@@ -14,6 +14,8 @@ export type ListingRow = {
   currency: string;
   city: string | null;
   country: string | null;
+  is_external?: boolean | null;
+  source_platform?: string | null;
 };
 
 export function ListingGrid({ items }: { items: ListingRow[] }) {
@@ -40,12 +42,18 @@ export function ListingGrid({ items }: { items: ListingRow[] }) {
                 <PackageOpen className="h-8 w-8" />
               </div>
             )}
-            <span className="absolute left-3 top-3 rounded bg-card/95 px-2 py-1 text-[10px] font-bold text-foreground">
+            <span className="absolute left-3 top-3 rounded-full border border-white/60 bg-card/95 px-2.5 py-1 text-[10px] font-bold text-foreground shadow-sm">
               {KINDS[l.kind]}
             </span>
+            {l.is_external && (
+              <span className="absolute right-3 top-3 max-w-[58%] truncate rounded-full bg-navy/95 px-2.5 py-1 text-[10px] font-semibold text-navy-foreground shadow-sm">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-gold align-middle mr-1.5" />
+                {l.source_platform || "Loja externa"}
+              </span>
+            )}
           </div>
           <div className="space-y-2 p-4">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               {categoryLabel(l.category)}
             </p>
             <h3 className="line-clamp-2 min-h-10 text-sm font-semibold group-hover:text-primary">
