@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: z.object({
-    next: z.enum(["publish-product", "publish-service", "publish-request", "panel"]).optional(),
+    next: z.enum(["publish-product", "publish-service", "publish-request", "messages", "panel"]).optional(),
   }),
   head: () => ({
     meta: [
@@ -47,6 +47,9 @@ function AuthPage() {
         break;
       case "publish-request":
         navigate({ to: "/publicar", search: { kind: "request" } });
+        break;
+      case "messages":
+        navigate({ to: "/mensagens" });
         break;
       default:
         navigate({ to: "/painel" });
