@@ -37,10 +37,10 @@ jobs:
 
       - name: Build production app
         env:
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
-          SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-          SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_SUPABASE_URL: https://cdauhpfszqhlojcafulo.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_VjW2Xo-nVaXUQuE-1bWFKg_wpCLrG1q
+          SUPABASE_URL: https://cdauhpfszqhlojcafulo.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_VjW2Xo-nVaXUQuE-1bWFKg_wpCLrG1q
         run: bun run build
 
       - name: Deploy to Cloudflare Workers
