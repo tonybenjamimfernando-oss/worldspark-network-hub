@@ -14,3 +14,4 @@
 - Media bucket is private; images are shown through signed URLs (useSignedUrls), external https image URLs pass through. Why: workspace blocks public buckets.
 - External offers are listings with is_external + source_url (unique) and outbound clicks tracked via a security-definer RPC. Why: attribution without exposing private stats.
 - Counters (views, clicks, affiliate clicks) change only through security-definer functions, never direct updates. Why: prevents tampering.
+- Presentation uses centralized CSS tokens, shared shadcn controls and reusable page sections; redesigns preserve route/data contracts. Why: consistent visuals without changing operational behavior.
