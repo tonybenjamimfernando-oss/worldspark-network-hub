@@ -64,6 +64,13 @@
       "when": 1792410360000,
       "tag": "0008_restrict_role_checks",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792410420000,
+      "tag": "0009_validate_external_link_updates",
+      "breakpoints": true
     }
   ]
 }
