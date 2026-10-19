@@ -128,11 +128,20 @@ function Dashboard() {
     qc.invalidateQueries({ queryKey: ["me"] });
   }
   async function toggle(id: string, status: string) {
-    await supabase
+    const nextStatus = status === "active" ? "hidden" : "active";
+    const { error } = await supabase
       .from("listings")
-      .update({ status: status === "active" ? "hidden" : "active" })
-      .eq("id", id);
-    qc.invalidateQueries({ queryKey: ["my-listings"] });
+      .update({ status: nextStatus })
+      .eq("id", id)
+      .eq("owner_id", user.id);
+
+    if (error) {
+      toast.error("Não foi possível atualizar o anúncio. Verifica a ligação e tenta novamente.");
+      return;
+    }
+
+    toast.success(nextStatus === "active" ? "Anúncio reactivado." : "Anúncio ocultado.");
+    await qc.invalidateQueries({ queryKey: ["my-listings", user.id] });
   }
   async function signOut() {
     await qc.cancelQueries();
