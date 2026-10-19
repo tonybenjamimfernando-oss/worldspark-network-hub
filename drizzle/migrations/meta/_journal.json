@@ -71,6 +71,13 @@
       "when": 1792410420000,
       "tag": "0009_validate_external_link_updates",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792410480000,
+      "tag": "0010_restrict_review_moderation_updates",
+      "breakpoints": true
     }
   ]
 }
