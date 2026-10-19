@@ -164,3 +164,8 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 - A migração 0017 restringe leitura e envio aos participantes, cria a conversa por RPC autenticada e publica mensagens no Supabase Realtime.
 - Voz, ficheiros e chamadas continuam fora deste MVP; exigem armazenamento, permissões e infraestrutura de chamadas próprias.
 - A mesma PR acrescenta coordenadas aproximadas opcionais, arredondadas no navegador, e um mapa OpenStreetMap com marcadores; não armazena a morada exacta nem recolhe localização sem consentimento.
+
+
+## Hardening follow-up — PR #33
+- The conversation starter RPC is changed to SECURITY INVOKER and uses explicit participant-only INSERT RLS, removing its SECURITY DEFINER advisor warning.
+- Rate-limit state gets an explicit deny policy and a cleanup index to keep pruning expired buckets efficient.

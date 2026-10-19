@@ -134,6 +134,13 @@
       "when": 1792410960000,
       "tag": "0018_listing_approximate_coordinates",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1792411020000,
+      "tag": "0019_harden_chat_rpc_and_rate_limit_rls",
+      "breakpoints": true
     }
   ]
 }
