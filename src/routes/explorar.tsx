@@ -7,7 +7,7 @@ import { ListingGrid, EmptyListings, type ListingRow } from "@/components/Listin
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, SlidersHorizontal, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 
 const searchSchema = z.object({
@@ -42,6 +42,10 @@ function Explore() {
   const navigate = Route.useNavigate();
   const [text, setText] = useState(q ?? "");
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  useEffect(() => {
+    setText(q ?? "");
+  }, [q]);
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["explore", q, kind, category],
     queryFn: async () => {
