@@ -3,6 +3,18 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const PRIVATE_HOST = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|0\.|169\.254\.|\[?::1\]?)/i;
+const NON_PUBLIC_SUFFIX = /\.(local|internal|localhost|test|invalid)$/i;
+const IP_LITERAL = /^(?:\d{1,3}\.){3}\d{1,3}$|^\[.*\]$/;
+
+function isAllowedPublicUrl(url: URL) {
+  const host = url.hostname.toLowerCase().replace(/\.$/, "");
+  return url.protocol === "https:"
+    && !url.username
+    && !url.password
+    && !PRIVATE_HOST.test(host)
+    && !NON_PUBLIC_SUFFIX.test(host)
+    && !IP_LITERAL.test(host);
+}
 
 const KNOWN: Record<string, string> = {
   "amazon.": "Amazon", "aliexpress.": "AliExpress", "alibaba.": "Alibaba", "ebay.": "eBay",
@@ -23,7 +35,7 @@ export const fetchUrlMeta = createServerFn({ method: "POST" })
   .inputValidator((d) => z.object({ url: z.string().url().max(2000) }).parse(d))
   .handler(async ({ data }) => {
     const u = new URL(data.url);
-    if (u.protocol !== "https:" || PRIVATE_HOST.test(u.hostname)) {
+    if (!isAllowedPublicUrl(u)) {
       return { ok: false as const, error: "Só são aceites links https públicos." };
     }
     const host = u.hostname.toLowerCase();
@@ -31,10 +43,10 @@ export const fetchUrlMeta = createServerFn({ method: "POST" })
     try {
       const res = await fetch(u.toString(), {
         headers: { "user-agent": "Mozilla/5.0 (compatible; GCNMBot/1.0)", accept: "text/html" },
-        redirect: "follow",
+        // Never follow redirects automatically: a public URL could redirect to a private network host.\n        redirect: "manual",
         signal: AbortSignal.timeout(8000),
       });
-      if (!res.ok) return { ok: false as const, platform, error: `A loja respondeu com o estado ${res.status}. Preencha os dados manualmente.` };
+      if (res.status >= 300 && res.status < 400) {\n        return { ok: false as const, platform, error: "A loja redireccionou o link. Por segurança, preencha os dados manualmente com o endereço final." };\n      }\n      if (!res.ok) return { ok: false as const, platform, error: `A loja respondeu com o estado ${res.status}. Preencha os dados manualmente.` };
       const html = (await res.text()).slice(0, 400_000);
       return {
         ok: true as const,
