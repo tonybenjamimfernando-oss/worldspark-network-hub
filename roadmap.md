@@ -5,6 +5,7 @@
 - [x] Renew shared visual system, navigation and discovery pages
 - [x] Apply presentation updates to details, profiles, forms and informational pages
 - [x] Validate existing routing test, public navigation, search, registration form toggle and mobile/desktop layouts
+- [x] Add persistent mobile quick navigation, mobile search, source-platform labels and accessibility polish; CI tests and production build passed
 - [ ] Validate authenticated publication, profile saving and populated detail flows — blocked: no auth users or active session; requesting user must sign in
 - [x] Document verified flows and pre-existing limitations in REDESIGN-REPORT.md
 
