@@ -113,6 +113,13 @@
       "when": 1792410780000,
       "tag": "0015_rate_limit_public_metrics",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1792410840000,
+      "tag": "0016_revoke_legacy_metrics_rpc",
+      "breakpoints": true
     }
   ]
 }
