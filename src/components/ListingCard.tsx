@@ -42,7 +42,7 @@ export function ListingGrid({ items }: { items: ListingRow[] }) {
                 <PackageOpen className="h-8 w-8" />
               </div>
             )}
-            <span className="absolute left-3 top-3 rounded-full border border-white/60 bg-card/95 px-2.5 py-1 text-[10px] font-bold text-foreground shadow-sm">
+            <span className="absolute bottom-3 left-3 rounded-md border border-border bg-card/95 px-2.5 py-1 text-[10px] font-bold text-foreground shadow-sm">
               {KINDS[l.kind]}
             </span>
             {l.is_external && (
@@ -53,7 +53,7 @@ export function ListingGrid({ items }: { items: ListingRow[] }) {
             )}
           </div>
           <div className="space-y-2 p-4">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            <p className="text-[10px] font-bold uppercase text-muted-foreground">
               {categoryLabel(l.category)}
             </p>
             <h3 className="line-clamp-2 min-h-10 text-sm font-semibold group-hover:text-primary">
@@ -74,14 +74,20 @@ export function ListingGrid({ items }: { items: ListingRow[] }) {
 }
 
 export function EmptyListings({ kind = "product" }: { kind?: Kind | undefined }) {
+  const empty = {
+    product: { title: "Ainda não há produtos publicados", action: "Publicar produto" },
+    service: { title: "Ainda não há serviços publicados", action: "Oferecer serviço" },
+    request: { title: "Ainda não há pedidos de compra", action: "Criar pedido" },
+    opportunity: { title: "Ainda não há oportunidades publicadas", action: "Publicar oportunidade" },
+  }[kind];
   return (
-    <div className="flex flex-col items-start justify-between gap-5 border-l-2 border-primary bg-secondary px-5 py-6 sm:flex-row sm:items-center">
+    <div className="flex flex-col items-start justify-between gap-4 border-t border-dashed py-5 sm:flex-row sm:items-center">
       <div className="flex items-start gap-4">
         <PackageOpen className="mt-1 h-6 w-6 shrink-0 text-primary" />
         <div>
-          <h3 className="text-base font-bold">A próxima oferta pode ser a tua</h3>
+          <h3 className="text-sm font-semibold">{empty.title}</h3>
           <p className="mt-2 text-xs leading-5 text-muted-foreground">
-            Ainda não há anúncios aqui. Publica uma oferta ou explora o mercado.
+            {kind === "request" ? "Diz o que procuras e recebe propostas de fornecedores." : "As novas publicações aparecerão aqui."}
           </p>
         </div>
       </div>
@@ -95,7 +101,7 @@ export function EmptyListings({ kind = "product" }: { kind?: Kind | undefined })
         <Button asChild size="sm">
           <Link to="/publicar" search={{ kind }}>
             <Plus />
-            Publicar
+            {empty.action}
           </Link>
         </Button>
       </div>

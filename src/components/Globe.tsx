@@ -11,7 +11,9 @@ export function Globe({ className = "" }: { className?: string }) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const css = getComputedStyle(document.documentElement);
-    const gold = css.getPropertyValue("--globe-gold").trim() || "#f2b84b";
+    const gold = css.getPropertyValue("--globe-gold").trim();
+    const illumination = css.getPropertyValue("--globe-illumination").trim();
+    const transparent = css.getPropertyValue("--globe-transparent").trim();
 
     const pts: [number, number][] = [];
     for (let lat = -80; lat <= 80; lat += 6) {
@@ -43,7 +45,7 @@ export function Globe({ className = "" }: { className?: string }) {
       ctx.clearRect(0, 0, w, h);
       const R = Math.min(w, h) * 0.46, cx = w / 2, cy = h / 2;
       const g = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.4, R * 0.1, cx, cy, R * 1.1);
-      g.addColorStop(0, "rgba(242,184,75,0.28)"); g.addColorStop(1, "rgba(242,184,75,0)");
+      g.addColorStop(0, illumination); g.addColorStop(1, transparent);
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R * 1.1, 0, Math.PI * 2); ctx.fill();
       for (const [la, lo] of pts) {
         const p = project(la, lo, R, cx, cy);
@@ -53,7 +55,9 @@ export function Globe({ className = "" }: { className?: string }) {
       }
       ctx.globalAlpha = 1; ctx.strokeStyle = gold; ctx.lineWidth = 1.2;
       for (const [a, b] of arcs) {
-        const A = project(hubs[a]![0], hubs[a]![1], R, cx, cy), B = project(hubs[b]![0], hubs[b]![1], R, cx, cy);
+        const from = hubs[a], to = hubs[b];
+        if (!from || !to) continue;
+        const A = project(from[0], from[1], R, cx, cy), B = project(to[0], to[1], R, cx, cy);
         if (A.z < 0 || B.z < 0) continue;
         const mx = (A.x + B.x) / 2 + (A.x + B.x - 2 * cx) * 0.25, my = (A.y + B.y) / 2 + (A.y + B.y - 2 * cy) * 0.25;
         ctx.globalAlpha = Math.min(A.z, B.z) * 0.9;

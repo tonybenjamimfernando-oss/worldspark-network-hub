@@ -28,23 +28,24 @@ describe("rankListingMatches", () => {
       candidate({ id: "unrelated", category: "fashion", city: "Nampula", country: "Moçambique", price: 140 }),
       candidate({ id: "best" }),
     ]);
-    expect(ranked[0].listing.id).toBe("best");
-    expect(ranked[0].score).toBe(95);
-    expect(ranked[0].reasons).toContain("Dentro do orçamento");
+    expect(ranked[0]?.listing.id).toBe("best");
+    expect(ranked[0]?.score).toBe(95);
+    expect(ranked[0]?.reasons).toContain("Dentro do orçamento");
   });
 
   it("does not compare prices across different currencies", () => {
     const ranked = rankListingMatches(request, [candidate({ currency: "USD", price: 2 })]);
-    expect(ranked[0].reasons).not.toContain("Dentro do orçamento");
-    expect(ranked[0].reasons).not.toContain("Acima do orçamento");
+    expect(ranked).toHaveLength(1);
+    expect(ranked[0]?.reasons).not.toContain("Dentro do orçamento");
+    expect(ranked[0]?.reasons).not.toContain("Acima do orçamento");
   });
 
   it("normalizes accents and case for location comparisons", () => {
     const ranked = rankListingMatches(request, [
       candidate({ city: "MAPUTO", country: "Mocambique" }),
     ]);
-    expect(ranked[0].reasons).toContain("Mesma cidade");
-    expect(ranked[0].reasons).toContain("Mesmo país");
+    expect(ranked[0]?.reasons).toContain("Mesma cidade");
+    expect(ranked[0]?.reasons).toContain("Mesmo país");
   });
 
   it("uses rating as a small tie-breaker and returns a stable price preference", () => {
@@ -52,7 +53,7 @@ describe("rankListingMatches", () => {
       { ...request, city: null, country: null, budget_max: null },
       [candidate({ id: "expensive", price: 90 }), candidate({ id: "rated", price: 70, rating: 5 })],
     );
-    expect(ranked[0].listing.id).toBe("rated");
-    expect(ranked[0].reasons).toContain("Boa avaliação");
+    expect(ranked[0]?.listing.id).toBe("rated");
+    expect(ranked[0]?.reasons).toContain("Boa avaliação");
   });
 });

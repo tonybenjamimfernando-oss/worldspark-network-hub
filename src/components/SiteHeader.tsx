@@ -26,6 +26,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useUser } from "@/lib/auth";
+import { Globe as BrandGlobe } from "@/components/Globe";
 
 const NAV = [
   { to: "/explorar", search: { kind: "product" }, label: "Comprar", icon: ShoppingBag },
@@ -101,8 +102,8 @@ export function SiteHeader() {
           className="brand-mark flex shrink-0 items-center gap-2.5"
           aria-label="GCNM — Início"
         >
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-[10px] font-extrabold text-primary-foreground">
-            GCNM
+          <span className="grid h-11 w-11 place-items-center rounded-full bg-navy">
+            <BrandGlobe className="h-10 w-10" />
           </span>
           <span className="leading-tight">
             <span className="block text-xl font-extrabold text-navy">GCNM</span>
@@ -203,7 +204,7 @@ export function SiteHeader() {
         ))}
       </nav>
     </header>
-    <nav aria-label="Atalhos móveis" className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t bg-card/95 px-1 pb-[env(safe-area-inset-bottom)] pt-1 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-md md:hidden">
+    <nav aria-label="Atalhos móveis" className="mobile-shortcuts fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t bg-card/95 px-1 pb-[env(safe-area-inset-bottom)] pt-1 backdrop-blur-md md:hidden">
       {([
         { label: "Início", to: "/", icon: Home },
         { label: "Comprar", to: "/explorar", search: { kind: "product" }, icon: ShoppingBag },

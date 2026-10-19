@@ -1,5 +1,13 @@
 # GCNM — Visual redesign report
 
+## Preview reconciliation — 19 October 2026
+- Confirmed the current redesign is served in the local test site; no publication was requested or performed.
+- Fixed compilation errors in CSV header narrowing and matching test indexing; preview reports build OK.
+- Restored a golden canvas-globe brand mark and home signature, made GCNM the primary heading, and replaced repetitive shaded empty panels with distinct compact states.
+- Moved the 32 search categories into an accessible drawer, preserving existing query filters; adjusted listing labels to prevent overlapping badges.
+- All 10 existing tests pass. Browser checks confirmed home search to `/explorar?q=computador`, category selection to `category=computing`, drawer closure, mobile Services navigation and public page rendering without page errors.
+- Existing unimplemented map, chat and payment functionality was not replaced with simulations. Authenticated transaction flows remain outside this preview-only reconciliation.
+
 ## Implemented
 - Centralized semantic colors, typography, radii, elevation, focus and reduced-motion styling.
 - Preserved existing GCNM wordmark/mark, characteristic orange, navy and animated golden canvas globe; the globe remains a secondary visual rather than a replacement for the map.
