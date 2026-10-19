@@ -1,9 +1,9 @@
 # GCNM Roadmap
 
 ## Current — Preview reconciliation (19 Oct)
-- [ ] Fix compilation errors preventing the updated code from validating
-- [ ] Reconcile visible brand, repeated empty sections and crowded search filters with the redesign
-- [ ] Verify the updated test site, navigation and search without publishing
+- [x] Fix compilation errors preventing the updated code from validating
+- [x] Reconcile visible brand, repeated empty sections and crowded search filters with the redesign
+- [x] Verify the updated test site, navigation and search without publishing — build OK, 10 tests passed, desktop/mobile browser checks passed
 
 ## Current — Integral visual redesign (18 Oct)
 - [x] Audit all existing pages and functional contracts
