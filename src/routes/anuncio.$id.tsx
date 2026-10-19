@@ -526,8 +526,13 @@ function Proposals({
     qc.invalidateQueries({ queryKey: ["proposals", requestId] });
   }
   async function setStatus(id: string, status: "accepted" | "declined") {
-    await supabase.from("proposals").update({ status }).eq("id", id);
-    qc.invalidateQueries({ queryKey: ["proposals", requestId] });
+    const { error } = await supabase.from("proposals").update({ status }).eq("id", id);
+    if (error) {
+      toast.error("Não foi possível atualizar a proposta. Tenta novamente.");
+      return;
+    }
+    toast.success(status === "accepted" ? "Proposta aceite" : "Proposta recusada");
+    await qc.invalidateQueries({ queryKey: ["proposals", requestId] });
   }
   return (
     <div>
