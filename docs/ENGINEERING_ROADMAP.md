@@ -127,6 +127,16 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 - [x] Criada migração para garantir o bucket de media em projectos limpos.
 - [x] Corrigido acesso directo a funções privilegiadas de trigger e acrescentados índices identificados pelos advisors.
 - [x] Executados novamente os advisors de segurança e desempenho.
-- [ ] Tratar os avisos restantes das RPCs de métricas e optimizar políticas RLS sem alterar as regras de acesso.
+- [x] Optimizar políticas RLS com `(select auth.uid())` via migração `0014_optimize_rls_auth_uid.sql`; o advisor deixou de apresentar `auth_rls_initplan`.
+- [ ] Rever os avisos das RPCs de métricas `track_listing` e `track_affiliate_click`, que permanecem como funções `SECURITY DEFINER` acessíveis para tracking público.
+- [ ] Reavaliar índices assinalados como não utilizados após haver tráfego real; a base recém-inicializada ainda não permite concluir se são desnecessários.
 - [ ] Executar lint, testes e build na branch e validar CI do pull request.
 - [ ] Rever a compatibilidade dos tipos TypeScript gerados com o schema real.
+
+
+### Validação adicional — migração 0014
+
+- [x] Adicionada migração forward-only para substituir chamadas directas a `auth.uid()` em políticas RLS por `(select auth.uid())`, preservando as condições e permissões existentes.
+- [x] Aplicada ao projecto Supabase e validada com o advisor de desempenho; o aviso `auth_rls_initplan` deixou de aparecer.
+- [x] O pipeline de CI da branch de origem passou em ESLint, testes unitários e build de produção.
+- [ ] A migração e o journal precisam de permanecer integrados na branch principal para que o repositório reflicta o esquema remoto.
