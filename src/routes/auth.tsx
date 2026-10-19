@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { z } from "zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,9 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: z.object({
+    next: z.enum(["publish-product", "publish-service", "publish-request", "panel"]).optional(),
+  }),
   head: () => ({
     meta: [
       { title: "Entrar — GCNM" },
@@ -25,12 +29,29 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"in" | "up" | "reset">("in");
   const [recovery, setRecovery] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+
+  const navigateAfterAuth = useCallback(() => {
+    switch (next) {
+      case "publish-product":
+        navigate({ to: "/publicar", search: { kind: "product" } });
+        break;
+      case "publish-service":
+        navigate({ to: "/publicar", search: { kind: "service" } });
+        break;
+      case "publish-request":
+        navigate({ to: "/publicar", search: { kind: "request" } });
+        break;
+      default:
+        navigate({ to: "/painel" });
+    }
+  }, [navigate, next]);
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event) => {
@@ -39,11 +60,11 @@ function AuthPage() {
         setMode("in");
         setPassword("");
       } else if (event === "SIGNED_IN") {
-        navigate({ to: "/painel" });
+        navigateAfterAuth();
       }
     });
     return () => data.subscription.unsubscribe();
-  }, []);
+  }, [navigateAfterAuth]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -55,10 +76,10 @@ function AuthPage() {
         setRecovery(false);
         setPassword("");
         toast.success("Palavra-passe alterada. Já podes continuar.");
-        navigate({ to: "/painel" });
+        navigateAfterAuth();
       } else if (mode === "reset") {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/auth`,
+          redirectTo: `${window.location.origin}/auth?next=${next ?? "panel"}`,
         });
         if (error) throw error;
         toast.success("Se existir uma conta com esse email, receberás instruções para recuperar o acesso.");
@@ -66,15 +87,15 @@ function AuthPage() {
       } else if (mode === "in") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate({ to: "/painel" });
+        navigateAfterAuth();
       } else {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin, data: { full_name: name } },
+          options: { emailRedirectTo: `${window.location.origin}/auth?next=${next ?? "panel"}`, data: { full_name: name } },
         });
         if (error) throw error;
-        if (data.session) navigate({ to: "/painel" });
+        if (data.session) navigateAfterAuth();
         else toast.success("Conta criada. Confirma o teu email para entrar.");
       }
     } catch (err) {
@@ -89,7 +110,7 @@ function AuthPage() {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: `${window.location.origin}/auth` },
+        options: { redirectTo: `${window.location.origin}/auth?next=${next ?? "panel"}` },
       });
       if (error) throw error;
     } catch (err) {
