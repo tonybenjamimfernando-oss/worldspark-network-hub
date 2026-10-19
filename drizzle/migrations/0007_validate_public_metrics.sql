@@ -52,7 +52,8 @@ begin
     and a.code = _code
     and l.status = 'active'
     and l.affiliate_enabled = true
-    and l.owner_id is distinct from auth.uid();
+    and l.owner_id is distinct from auth.uid()
+    and a.affiliate_id is distinct from auth.uid();
 end;
 $$;
 
