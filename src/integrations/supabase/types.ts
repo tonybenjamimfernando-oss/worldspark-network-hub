@@ -251,6 +251,8 @@ export type Database = {
           features?: string | null
           id?: string
           images?: string[]
+          latitude?: number | null
+          longitude?: number | null
           is_external?: boolean
           kind?: Database["public"]["Enums"]["listing_kind"]
           outbound_clicks?: number
