@@ -52,6 +52,18 @@ function Dashboard() {
     queryFn: async () =>
       (await supabase.from("profiles").select("*").eq("id", user.id).single()).data,
   });
+  const { data: privateProfile, isLoading: privateProfileLoading, isError: privateProfileError } = useQuery({
+    queryKey: ["private-profile", user.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profile_private")
+        .select("tax_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
   const { data: listings } = useQuery({
     queryKey: ["my-listings", user.id],
     queryFn: async () =>
@@ -75,13 +87,13 @@ function Dashboard() {
   });
   const [f, setF] = useState<ProfileForm | null>(null);
   useEffect(() => {
-    if (profile)
+    if (profile && !privateProfileLoading && !privateProfileError)
       setF({
         display_name: profile.display_name,
         account_type: profile.account_type,
         bio: profile.bio ?? "",
         company_name: profile.company_name ?? "",
-        tax_id: profile.tax_id ?? "",
+        tax_id: privateProfile?.tax_id ?? "",
         services: profile.services.join(", "),
         public_phone: profile.public_phone ?? "",
         public_email: profile.public_email ?? "",
@@ -91,7 +103,7 @@ function Dashboard() {
         avatar_url: profile.avatar_url,
         is_public: profile.is_public,
       });
-  }, [profile]);
+  }, [profile, privateProfile, privateProfileLoading, privateProfileError]);
   const { data: urls } = useSignedUrls([f?.avatar_url]);
 
   async function save(e: React.FormEvent) {
@@ -105,7 +117,6 @@ function Dashboard() {
         account_type: f.account_type,
         bio: n(f.bio),
         company_name: n(f.company_name),
-        tax_id: n(f.tax_id),
         services: f.services
           .split(",")
           .map((s) => s.trim())
@@ -124,8 +135,16 @@ function Dashboard() {
       toast.error(error.message);
       return;
     }
+    const { error: privateError } = await supabase
+      .from("profile_private")
+      .upsert({ user_id: user.id, tax_id: n(f.tax_id) }, { onConflict: "user_id" });
+    if (privateError) {
+      toast.error("O perfil foi guardado, mas não foi possível guardar o NIF privado.");
+      return;
+    }
     toast.success("Perfil guardado");
     qc.invalidateQueries({ queryKey: ["me"] });
+    qc.invalidateQueries({ queryKey: ["private-profile", user.id] });
   }
   async function toggle(id: string, status: string) {
     const nextStatus = status === "active" ? "hidden" : "active";
@@ -171,7 +190,12 @@ function Dashboard() {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
-        {f && (
+        {privateProfileError && (
+          <p role="alert" className="text-sm text-destructive">
+            Não foi possível carregar os dados privados do perfil. Actualiza a página antes de editar.
+          </p>
+        )}
+        {f && !privateProfileLoading && !privateProfileError && (
           <form onSubmit={save} className="space-y-4 lg:border-r lg:pr-6">
             <h2 className="font-bold">O meu perfil</h2>
             <div className="flex items-center gap-3">
