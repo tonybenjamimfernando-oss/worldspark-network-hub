@@ -127,6 +127,15 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 - [x] Criada migração para garantir o bucket de media em projectos limpos.
 - [x] Corrigido acesso directo a funções privilegiadas de trigger e acrescentados índices identificados pelos advisors.
 - [x] Executados novamente os advisors de segurança e desempenho.
-- [ ] Tratar os avisos restantes das RPCs de métricas e optimizar políticas RLS sem alterar as regras de acesso.
+- [x] Optimizar políticas RLS com `(select auth.uid())` via migração `0014_optimize_rls_auth_uid.sql`; o advisor já não apresenta o aviso `auth_rls_initplan`.
+- [ ] Rever os avisos restantes das RPCs de métricas `track_listing` e `track_affiliate_click`; são endpoints de tracking deliberadamente acessíveis, mas continuam a exigir monitorização/mitigação de abuso.
+- [ ] Avaliar os índices marcados como ainda não utilizados após a base ter tráfego real; a ausência de uso num banco recém-inicializado não prova que sejam desnecessários.
 - [ ] Executar lint, testes e build na branch e validar CI do pull request.
 - [ ] Rever a compatibilidade dos tipos TypeScript gerados com o schema real.
+
+
+### Continuação da auditoria — migração 0014
+
+- [x] Recriar políticas do esquema `public` preservando tabela, nome, comando, roles, expressão e modo permissive/restrictive, mas envolvendo chamadas `auth.uid()` em subconsulta para evitar reavaliação por linha.
+- [x] Aplicar migração `0014_optimize_rls_auth_uid` no projecto Supabase e executar novamente o advisor de desempenho.
+- [x] Confirmado: o aviso de desempenho `auth_rls_initplan` deixou de aparecer; os avisos actuais são de índices ainda não utilizados num banco sem tráfego, não falhas de execução.
