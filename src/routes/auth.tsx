@@ -108,20 +108,6 @@ function AuthPage() {
     }
   }
 
-  async function google() {
-    setBusy(true);
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: `${window.location.origin}/auth?next=${next ?? "panel"}` },
-      });
-      if (error) throw error;
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Não foi possível entrar com Google");
-      setBusy(false);
-    }
-  }
-
   const heading = recovery
     ? "Escolher nova palavra-passe"
     : mode === "reset"
@@ -142,14 +128,6 @@ function AuthPage() {
               ? "Indica o email da tua conta para receberes as instruções de recuperação."
               : "Publica, avalia e liga-te a compradores e vendedores."}
         </p>
-        {!recovery && mode !== "reset" && (
-          <>
-            <Button variant="outline" className="mt-6 w-full" onClick={google} disabled={busy}>
-              Continuar com Google
-            </Button>
-            <div className="my-5 text-center text-xs text-muted-foreground">ou com email</div>
-          </>
-        )}
         <form onSubmit={submit} className="space-y-4">
           {mode === "up" && !recovery && (
             <div>
