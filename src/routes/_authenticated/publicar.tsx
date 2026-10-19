@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { FileSpreadsheet, Link2, Upload, X } from "lucide-react";
+import { FileSpreadsheet, Link2, LocateFixed, Upload, X } from "lucide-react";
 import { parseExternalOffersCsv, type CsvExternalOffer } from "@/lib/external-offers-csv";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,6 +50,8 @@ const empty = {
   features: "",
   city: "",
   country: "",
+  latitude: "",
+  longitude: "",
   delivery: "",
   warranty: "",
   returns_policy: "",
@@ -86,6 +88,25 @@ function Publish() {
     (k: keyof typeof empty) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setF({ ...f, [k]: e.target.value });
+
+  function useCurrentLocation() {
+    if (!navigator.geolocation) {
+      toast.error("Este navegador não disponibiliza geolocalização.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        setF((current) => ({
+          ...current,
+          latitude: (Math.round(coords.latitude * 100) / 100).toFixed(2),
+          longitude: (Math.round(coords.longitude * 100) / 100).toFixed(2),
+        }));
+        toast.success("Localização aproximada preenchida; a precisão foi reduzida para proteger a tua privacidade.");
+      },
+      () => toast.error("Não foi possível obter a localização. Permite o acesso ou preenche a cidade manualmente."),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
+    );
+  }
 
   async function onFiles(files: FileList | null) {
     if (!files) return;
@@ -217,6 +238,8 @@ function Publish() {
         features: f.features || null,
         city: f.city || null,
         country: f.country || null,
+        latitude: num(f.latitude),
+        longitude: num(f.longitude),
         delivery: f.delivery || null,
         warranty: f.warranty || null,
         returns_policy: f.returns_policy || null,
@@ -545,6 +568,23 @@ function Publish() {
             <Field label="País">
               <Input value={f.country} onChange={set("country")} />
             </Field>
+          </div>
+          <div className="space-y-3 rounded-xl border p-4">
+            <div>
+              <p className="font-medium">Localização aproximada no mapa</p>
+              <p className="mt-1 text-xs text-muted-foreground">Opcional. A posição é arredondada para cerca de 1 km; não publiques a morada exacta.</p>
+            </div>
+            <Button type="button" variant="outline" onClick={useCurrentLocation}>
+              <LocateFixed className="mr-2 h-4 w-4" />Usar localização actual
+            </Button>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label="Latitude (opcional)">
+                <Input type="number" min="-90" max="90" step="0.01" value={f.latitude} onChange={set("latitude")} />
+              </Field>
+              <Field label="Longitude (opcional)">
+                <Input type="number" min="-180" max="180" step="0.01" value={f.longitude} onChange={set("longitude")} />
+              </Field>
+            </div>
           </div>
           {!isRequest && (
             <>
