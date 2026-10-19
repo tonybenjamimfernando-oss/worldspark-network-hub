@@ -15,3 +15,4 @@
 - External offers are listings with is_external + source_url (unique) and outbound clicks tracked via a security-definer RPC. Why: attribution without exposing private stats.
 - Counters (views, clicks, affiliate clicks) change only through security-definer functions, never direct updates. Why: prevents tampering.
 - Presentation uses centralized CSS tokens, shared shadcn controls and reusable page sections; redesigns preserve route/data contracts. Why: consistent visuals without changing operational behavior.
+- Reuse the canvas globe for brand signatures and keep category selection in an accessible drawer backed by existing search parameters. Why: preserve brand continuity and search contracts without adding dependencies.

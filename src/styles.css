@@ -138,6 +138,7 @@
 
 .commerce-hero {
   isolation: isolate;
+  overflow: hidden;
   min-height: 440px;
 }
 .commerce-hero::after {
