@@ -163,4 +163,4 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 - A página de mensagens deixa de ser apenas informativa: o MVP cria conversas ligadas a anúncios, mensagens de texto, lista de conversas e actualização em tempo real.
 - A migração 0017 restringe leitura e envio aos participantes, cria a conversa por RPC autenticada e publica mensagens no Supabase Realtime.
 - Voz, ficheiros e chamadas continuam fora deste MVP; exigem armazenamento, permissões e infraestrutura de chamadas próprias.
-- O mapa GPS continua por implementar: o esquema actual só armazena cidade e país, sem coordenadas de anúncios. A próxima fase deve acrescentar localização aproximada consentida e mapa, sem expor moradas exactas por defeito.
+- A mesma PR acrescenta coordenadas aproximadas opcionais, arredondadas no navegador, e um mapa OpenStreetMap com marcadores; não armazena a morada exacta nem recolhe localização sem consentimento.
