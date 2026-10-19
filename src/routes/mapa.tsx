@@ -87,7 +87,7 @@ function GlobalMap() {
         const rawX = Math.floor(centerWorld.x) + dx;
         const wrappedX = ((rawX % count) + count) % count;
         tiles.push({
-          key: `${zoom}-${wrappedX}-${rawY}`,
+          key: `${zoom}-${rawX}-${rawY}`,
           x: wrappedX,
           y: rawY,
           left: (rawX - centerWorld.x) * 256,
