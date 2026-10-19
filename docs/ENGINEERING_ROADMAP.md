@@ -156,4 +156,4 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 - A Edge Function `track-metrics` valida os eventos, resolve a identidade a partir do token assinado, aplica limites atómicos por IP anonimizado e só então actualiza os contadores.
 - A migração `0015_rate_limit_public_metrics.sql` cria o armazenamento privado de limites e restringe RPCs privilegiadas.
 - O frontend deixa de invocar directamente RPCs de contagem e passa a usar a Edge Function.
-- Aceitação final: deploy da função, migração aplicada e verificada, CI verde e advisor sem avisos de execução pública destas funções.
+- Rollout em duas fases: 0015 cria o endpoint e as funções novas sem interromper a versão antiga; depois da Edge Function estar disponível e o frontend migrar, 0016 revoga as RPCs antigas. Aceitação final: deploy da função, ambas as migrações aplicadas e verificadas, CI verde e advisor sem avisos de execução pública destas funções.
