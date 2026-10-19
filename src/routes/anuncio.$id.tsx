@@ -99,10 +99,10 @@ function ListingPage() {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    supabase.rpc("track_listing", { _id: id, _kind: "view" });
+    void supabase.functions.invoke("track-metrics", { body: { kind: "view", id } });
     if (ref && !sessionStorage.getItem(`ref-${ref}`)) {
       sessionStorage.setItem(`ref-${ref}`, "1");
-      supabase.rpc("track_affiliate_click", { _code: ref });
+      void supabase.functions.invoke("track-metrics", { body: { kind: "affiliate", code: ref } });
     }
   }, [id, ref]);
 
@@ -133,7 +133,7 @@ function ListingPage() {
     }
   };
   const goExternal = () => {
-    supabase.rpc("track_listing", { _id: l.id, _kind: "out" });
+    void supabase.functions.invoke("track-metrics", { body: { kind: "out", id: l.id } });
     window.open(l.source_url!, "_blank", "noopener,noreferrer");
   };
 
