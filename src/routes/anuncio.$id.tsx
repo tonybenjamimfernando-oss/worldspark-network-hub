@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/lib/auth";
 import { KINDS, categoryLabel, formatPrice } from "@/lib/catalog";
 import { useSignedUrls } from "@/lib/media";
+import { RequestMatches } from "@/components/RequestMatches";
 
 export const Route = createFileRoute("/anuncio/$id")({
   validateSearch: z.object({ ref: z.string().max(20).optional() }),
@@ -254,6 +255,18 @@ function ListingPage() {
             >
               Ver vídeo <ExternalLink className="h-4 w-4" />
             </a>
+          )}
+          {l.kind === "request" && (
+            <RequestMatches
+              request={{
+                id: l.id,
+                category: l.category,
+                budget_max: l.budget_max,
+                currency: l.currency,
+                city: l.city,
+                country: l.country,
+              }}
+            />
           )}
           {l.kind === "request" ? (
             <Proposals requestId={l.id} isOwner={isOwner} userId={user?.id} currency={l.currency} />
