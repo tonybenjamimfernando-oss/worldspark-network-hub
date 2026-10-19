@@ -204,13 +204,13 @@ export function SiteHeader() {
       </nav>
     </header>
     <nav aria-label="Atalhos móveis" className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t bg-card/95 px-1 pb-[env(safe-area-inset-bottom)] pt-1 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-md md:hidden">
-      {[
+      {([
         { label: "Início", to: "/", icon: Home },
         { label: "Comprar", to: "/explorar", search: { kind: "product" }, icon: ShoppingBag },
         { label: "Pedidos", to: "/explorar", search: { kind: "request" }, icon: Megaphone },
         { label: "Publicar", to: "/publicar", search: { kind: "product" }, icon: Plus },
         { label: user ? "Painel" : "Entrar", to: user ? "/painel" : "/auth", icon: UserIcon },
-      ].map((item) => (
+      ] as const).map((item) => (
         <Link
           key={item.label}
           to={item.to}
