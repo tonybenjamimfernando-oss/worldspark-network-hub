@@ -16,23 +16,95 @@ export type Database = {
     Tables: {
 
       conversations: {
-        Row: { created_at: string; id: string; last_message_at: string; listing_id: string; participant_a: string; participant_b: string; updated_at: string }
-        Insert: { created_at?: string; id?: string; last_message_at?: string; listing_id: string; participant_a: string; participant_b: string; updated_at?: string }
-        Update: { created_at?: string; id?: string; last_message_at?: string; listing_id?: string; participant_a?: string; participant_b?: string; updated_at?: string }
+        Row: {
+          created_at: string;
+          id: string;
+          last_message_at: string;
+          listing_id: string;
+          participant_a: string;
+          participant_b: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          last_message_at?: string;
+          listing_id: string;
+          participant_a: string;
+          participant_b: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          last_message_at?: string;
+          listing_id?: string;
+          participant_a?: string;
+          participant_b?: string;
+          updated_at?: string;
+        };
         Relationships: [
-          { foreignKeyName: "conversations_listing_id_fkey"; columns: ["listing_id"]; isOneToOne: false; referencedRelation: "listings"; referencedColumns: ["id"] },
-          { foreignKeyName: "conversations_participant_a_fkey"; columns: ["participant_a"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-          { foreignKeyName: "conversations_participant_b_fkey"; columns: ["participant_b"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] }
-        ]
+          {
+            foreignKeyName: "conversations_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "conversations_participant_a_fkey";
+            columns: ["participant_a"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "conversations_participant_b_fkey";
+            columns: ["participant_b"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
       }
       messages: {
-        Row: { body: string; conversation_id: string; created_at: string; id: string; sender_id: string }
-        Insert: { body: string; conversation_id: string; created_at?: string; id?: string; sender_id: string }
-        Update: { body?: string; conversation_id?: string; created_at?: string; id?: string; sender_id?: string }
+        Row: {
+          body: string;
+          conversation_id: string;
+          created_at: string;
+          id: string;
+          sender_id: string;
+        };
+        Insert: {
+          body: string;
+          conversation_id: string;
+          created_at?: string;
+          id?: string;
+          sender_id: string;
+        };
+        Update: {
+          body?: string;
+          conversation_id?: string;
+          created_at?: string;
+          id?: string;
+          sender_id?: string;
+        };
         Relationships: [
-          { foreignKeyName: "messages_conversation_id_fkey"; columns: ["conversation_id"]; isOneToOne: false; referencedRelation: "conversations"; referencedColumns: ["id"] },
-          { foreignKeyName: "messages_sender_id_fkey"; columns: ["sender_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] }
-        ]
+          {
+            foreignKeyName: "messages_conversation_id_fkey";
+            columns: ["conversation_id"];
+            isOneToOne: false;
+            referencedRelation: "conversations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey";
+            columns: ["sender_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
       }
       affiliate_links: {
         Row: {
