@@ -2,61 +2,14 @@
   "version": "7",
   "dialect": "postgresql",
   "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1792053904324,
-      "tag": "0000_migration",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1792130527155,
-      "tag": "0001_universal_market",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1792410000000,
-      "tag": "0002_proposal_update_permissions",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1792410060000,
-      "tag": "0003_protect_listing_metrics",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1792410120000,
-      "tag": "0004_protect_profile_verification",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1792410180000,
-      "tag": "0005_isolate_private_profile_data",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1792410240000,
-      "tag": "0006_enforce_media_bucket_limits",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1792410300000,
-      "tag": "0007_validate_public_metrics",
-      "breakpoints": true
-    }
+    { "idx": 0, "version": "7", "when": 1792053904324, "tag": "0000_migration", "breakpoints": true },
+    { "idx": 1, "version": "7", "when": 1792130527155, "tag": "0001_universal_market", "breakpoints": true },
+    { "idx": 2, "version": "7", "when": 1792410000000, "tag": "0002_proposal_update_permissions", "breakpoints": true },
+    { "idx": 3, "version": "7", "when": 1792410060000, "tag": "0003_protect_listing_metrics", "breakpoints": true },
+    { "idx": 4, "version": "7", "when": 1792410120000, "tag": "0004_protect_profile_verification", "breakpoints": true },
+    { "idx": 5, "version": "7", "when": 1792410180000, "tag": "0005_isolate_private_profile_data", "breakpoints": true },
+    { "idx": 6, "version": "7", "when": 1792410240000, "tag": "0006_enforce_media_bucket_limits", "breakpoints": true },
+    { "idx": 7, "version": "7", "when": 1792410300000, "tag": "0007_validate_public_metrics", "breakpoints": true },
+    { "idx": 8, "version": "7", "when": 1792410360000, "tag": "0008_restrict_role_checks", "breakpoints": true }
   ]
 }
