@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -39,6 +38,8 @@ function AuthPage() {
         setRecovery(true);
         setMode("in");
         setPassword("");
+      } else if (event === "SIGNED_IN") {
+        navigate({ to: "/painel" });
       }
     });
     return () => data.subscription.unsubscribe();
@@ -84,11 +85,17 @@ function AuthPage() {
   }
 
   async function google() {
-    const r = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (r.error) toast.error("Não foi possível entrar com Google");
-    else if (!r.redirected) navigate({ to: "/painel" });
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}/auth` },
+      });
+      if (error) throw error;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Não foi possível entrar com Google");
+      setBusy(false);
+    }
   }
 
   const heading = recovery
