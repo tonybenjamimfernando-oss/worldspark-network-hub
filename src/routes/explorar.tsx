@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { sanitizeListingSearchTerm } from "@/lib/search-query";
 import { CATEGORIES, KINDS, categoryLabel, type Kind } from "@/lib/catalog";
 import { ListingGrid, EmptyListings, type ListingRow } from "@/components/ListingCard";
 import { Button } from "@/components/ui/button";
@@ -58,7 +59,7 @@ function Explore() {
       if (kind) query = query.eq("kind", kind);
       if (category) query = query.eq("category", category);
       if (q) {
-        const safe = q.replace(/[%,()]/g, " ").trim();
+        const safe = sanitizeListingSearchTerm(q);
         if (safe) query = query.or(`title.ilike.%${safe}%,description.ilike.%${safe}%`);
       }
       const { data, error } = await query;
@@ -90,6 +91,7 @@ function Explore() {
             onChange={(e) => setText(e.target.value)}
             aria-label="Pesquisar ofertas"
             placeholder="Pesquisar no mercado"
+            maxLength={120}
           />
           <Button type="submit" aria-label="Pesquisar ofertas">
             <Search />
