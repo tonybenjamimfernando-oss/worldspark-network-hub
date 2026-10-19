@@ -45,17 +45,54 @@ function ListingPage() {
   const { ref } = Route.useSearch();
   const { user } = useUser();
   const { data: l, isLoading } = useQuery({
-    queryKey: ["listing", id],
+    queryKey: ["listing", id, user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("listings")
         .select(
-          "*, owner:profiles!listings_owner_id_fkey(id,display_name,avatar_url,is_verified,account_type,city,country,public_phone,public_email)",
+          "*, owner:profiles!listings_owner_id_fkey(id,display_name,avatar_url,is_verified,account_type,city,country)",
         )
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
-      return data;
+      if (!data) return null;
+
+      // Do not fetch the request owner's contact details unless this viewer is
+      // allowed to see them. The query key also separates results by viewer.
+      let canSeeRequestContact =
+        data.kind !== "request" || data.contact_visibility === "public";
+      const { data: authData } = await supabase.auth.getUser();
+      const viewerId = authData.user?.id;
+      if (data.kind === "request" && viewerId) {
+        if (viewerId === data.owner_id) {
+          canSeeRequestContact = true;
+        } else if (data.contact_visibility === "proposers") {
+          const { data: proposal, error: proposalError } = await supabase
+            .from("proposals")
+            .select("id")
+            .eq("request_id", data.id)
+            .eq("supplier_id", viewerId)
+            .maybeSingle();
+          if (proposalError) throw proposalError;
+          canSeeRequestContact = Boolean(proposal);
+        }
+      }
+
+      if (!canSeeRequestContact || !data.owner) {
+        return { ...data, canSeeRequestContact };
+      }
+
+      const { data: contact, error: contactError } = await supabase
+        .from("profiles")
+        .select("public_phone,public_email")
+        .eq("id", data.owner_id)
+        .maybeSingle();
+      if (contactError) throw contactError;
+      return {
+        ...data,
+        owner: { ...data.owner, ...(contact ?? {}) },
+        canSeeRequestContact,
+      };
     },
   });
   const { data: urls } = useSignedUrls([...(l?.images ?? []), l?.owner?.avatar_url]);
@@ -193,7 +230,7 @@ function ListingPage() {
           <SellerCard
             owner={l.owner}
             avatar={l.owner?.avatar_url ? urls[l.owner.avatar_url] : undefined}
-            showContact={l.kind !== "request" || l.contact_visibility === "public"}
+            showContact={l.kind !== "request" || l.canSeeRequestContact}
           />
 
           <dl className="grid grid-cols-2 gap-3 text-sm">
