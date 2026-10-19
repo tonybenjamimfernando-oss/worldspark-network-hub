@@ -93,8 +93,10 @@ export function parseExternalOffersCsv(input: string): CsvOfferParseResult {
     return { offers: [], errors: ["O CSV deve conter um cabeçalho e pelo menos uma oferta."] };
   }
 
-  const delimiter = detectDelimiter(lines[0]);
-  const headers = splitRow(lines[0], delimiter).map(normalizeHeader);
+  const header = lines[0];
+  if (!header) return { offers: [], errors: ["O ficheiro está vazio."] };
+  const delimiter = detectDelimiter(header);
+  const headers = splitRow(header, delimiter).map(normalizeHeader);
   const mapped = headers.map((header) => HEADER_ALIASES[header] ?? null);
   const titleIndex = mapped.indexOf("title");
   const urlIndex = mapped.indexOf("source_url");
