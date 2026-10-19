@@ -99,6 +99,13 @@
       "when": 1792410660000,
       "tag": "0013_harden_function_access_and_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1792410720000,
+      "tag": "0014_optimize_rls_auth_uid",
+      "breakpoints": true
     }
   ]
 }
