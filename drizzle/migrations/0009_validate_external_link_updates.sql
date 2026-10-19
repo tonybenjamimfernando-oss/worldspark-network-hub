@@ -18,7 +18,7 @@ $$;
 
 drop trigger if exists listings_validate_external_url on public.listings;
 create trigger listings_validate_external_url
-before insert or update of is_external, source_url on public.listings
+before insert or update on public.listings
 for each row execute function public.validate_external_listing_url();
 
 comment on function public.validate_external_listing_url() is
