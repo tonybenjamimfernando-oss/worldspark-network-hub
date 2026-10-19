@@ -181,6 +181,14 @@ function CommandCenter() {
             const isExplore = command.to === "/explorar";
             const requiresAuth = command.to === "/painel" || command.to === "/publicar";
             const target = requiresAuth && !user ? "/auth" : command.to;
+            const authNext =
+              command.to === "/publicar" && "search" in command
+                ? command.search.kind === "product"
+                  ? "publish-product"
+                  : command.search.kind === "service"
+                    ? "publish-service"
+                    : "publish-request"
+                : "panel";
             const authLabel =
               command.to === "/publicar"
                 ? "search" in command && command.search.kind === "request"
@@ -200,7 +208,7 @@ function CommandCenter() {
                   className="mt-4 -ml-3 w-fit justify-start px-3 text-primary hover:text-primary"
                 >
                   {target === "/auth" ? (
-                    <Link to="/auth">{authLabel}<ArrowRight className="ml-2 h-4 w-4" /></Link>
+                    <Link to="/auth" search={{ next: authNext }}>{authLabel}<ArrowRight className="ml-2 h-4 w-4" /></Link>
                   ) : isPublish ? (
                     <Link to="/publicar" search={command.search}>{command.label}<ArrowRight className="ml-2 h-4 w-4" /></Link>
                   ) : isExplore ? (
