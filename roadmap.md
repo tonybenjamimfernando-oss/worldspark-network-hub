@@ -17,10 +17,10 @@
 
 ## Stage 2 — Universal market (user brief 16 Oct)
 - [x] External offers: link import with source platform/store/URL attribution, outbound redirect, last-updated date, duplicate detection
-- [ ] CSV import of external offers
+- [x] CSV import of external offers (preview, validation, duplicate check, and 100-row limit)
 - [x] Purchase requests (RFQ) with supplier proposals, privacy of contact
 - [~] Partner portal (dashboard with views/outbound clicks done; verification requests, store pages pending): stores, views/clicks stats, verification request
-- [ ] Matching/ranking (relevance by budget, location, reputation) with explanation
+- [x] Initial explainable matching/ranking for buyer requests (category, city, country, same-currency budget, visible review rating)
 - [x] Animated golden globe hero (lightweight, reduced-motion fallback)
 - [ ] Sponsored placement labels, premium plans structure
 
@@ -29,3 +29,9 @@
 - [ ] Currency converter, payments (PayPal/bank/mobile wallets) — need credentials
 - [ ] Multilingual UI
 - [ ] Map + GPS
+
+
+## Validation
+- [x] GitHub Actions: `bun run test`
+- [x] GitHub Actions: `bun run build`
+- [ ] Authenticated end-to-end verification against live Supabase data
