@@ -13,7 +13,7 @@ import { ACCOUNT_TYPES, KINDS } from "@/lib/catalog";
 import { uploadImage, useSignedUrls } from "@/lib/media";
 
 export const Route = createFileRoute("/_authenticated/painel")({
-  head: () => ({ meta: [{ title: "Painel — GCNM" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Painel de parceiro — GCNM" }, { name: "description", content: "Gere o teu perfil, ofertas e links de afiliado no GCNM." }, { property: "og:title", content: "Painel de parceiro — GCNM" }, { property: "og:description", content: "O teu perfil e as tuas ofertas no mercado global." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
   component: Dashboard,
 });
 
@@ -71,8 +71,8 @@ function Dashboard() {
 
   const s = (k: keyof ProfileForm) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => f && setF({ ...f, [k]: e.target.value });
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="mx-auto max-w-6xl px-5 py-10">
+      <div className="page-heading flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-3xl font-extrabold">Painel de parceiro</h1>
         <div className="flex gap-2">
           <Button asChild variant="outline"><Link to="/u/$id" params={{ id: user.id }}>Ver perfil público</Link></Button>
@@ -82,7 +82,7 @@ function Dashboard() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
         {f && (
-          <form onSubmit={save} className="space-y-3 rounded-2xl border bg-card p-5">
+          <form onSubmit={save} className="space-y-4 lg:border-r lg:pr-6">
             <h2 className="font-bold">O meu perfil</h2>
             <div className="flex items-center gap-3">
               <div className="h-16 w-16 overflow-hidden rounded-full bg-brand-soft">{f.avatar_url && urls[f.avatar_url] && <img src={urls[f.avatar_url]} alt="" className="h-full w-full object-cover" />}</div>
@@ -111,9 +111,9 @@ function Dashboard() {
         )}
 
         <div className="space-y-6">
-          <div className="rounded-2xl border bg-card p-5">
-            <div className="flex items-center justify-between"><h2 className="font-bold">As minhas ofertas</h2>
-              <div className="flex gap-2">
+          <section className="border-b pb-6">
+            <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-bold">As minhas ofertas</h2>
+              <div className="flex flex-wrap gap-2">
                 <Button asChild size="sm" variant="outline"><Link to="/publicar" search={{ kind: "product", external: true }}>Importar link externo</Link></Button>
                 <Button asChild size="sm"><Link to="/publicar" search={{ kind: "product" }}><Plus className="h-4 w-4" />Nova</Link></Button>
               </div></div>
@@ -129,8 +129,8 @@ function Dashboard() {
               ))}
               {listings?.length === 0 && <li className="py-3 text-sm text-muted-foreground">Ainda não publicaste nada.</li>}
             </ul>
-          </div>
-          <div className="rounded-2xl border bg-card p-5">
+          </section>
+          <section className="py-2">
             <h2 className="font-bold">Links de afiliado</h2>
             <ul className="mt-3 divide-y text-sm">
               {affLinks?.map((a) => (
@@ -138,7 +138,7 @@ function Dashboard() {
               ))}
               {affLinks?.length === 0 && <li className="py-2 text-muted-foreground">Gera links nas páginas de anúncios com afiliação ativa.</li>}
             </ul>
-          </div>
+          </section>
         </div>
       </div>
     </div>

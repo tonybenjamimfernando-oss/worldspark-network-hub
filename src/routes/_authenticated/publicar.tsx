@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/publicar")({
     kind: z.enum(["product", "service", "request", "opportunity"]).optional(),
     external: z.boolean().optional(),
   }),
-  head: () => ({ meta: [{ title: "Publicar — GCNM" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Publicar uma oferta — GCNM" }, { name: "description", content: "Publica produtos, serviços, ofertas externas e pedidos de compra no GCNM." }, { property: "og:title", content: "Publicar uma oferta — GCNM" }, { property: "og:description", content: "Apresenta a tua oferta ao mercado GCNM." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
   component: Publish,
 });
 
@@ -103,11 +103,11 @@ function Publish() {
 
   const isRequest = kind === "request";
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="text-3xl font-extrabold">Publicar</h1>
+    <div className="mx-auto max-w-3xl px-5 py-10">
+      <div className="page-heading"><p className="eyebrow mb-3 text-primary">ABRE AS PORTAS AO MERCADO</p><h1 className="text-3xl font-bold">Publicar</h1></div>
       <div className="mt-4 flex flex-wrap gap-2">
         {(Object.keys(KINDS) as Kind[]).map((k) => (
-          <button key={k} type="button" onClick={() => setKind(k)} className={`rounded-full border px-4 py-1.5 text-sm ${kind === k ? "border-primary bg-primary text-primary-foreground" : "bg-card"}`}>{KINDS[k]}</button>
+          <Button key={k} type="button" variant={kind === k ? "default" : "outline"} aria-pressed={kind === k} onClick={() => setKind(k)}>{KINDS[k]}</Button>
         ))}
       </div>
 
@@ -195,7 +195,7 @@ function Publish() {
             {images.map((p) => (
               <div key={p} className="relative h-24 w-24 overflow-hidden rounded-xl border bg-muted">
                 {urls[p] && <img src={urls[p]} alt="" className="h-full w-full object-cover" />}
-                <button type="button" aria-label="Remover" onClick={() => setImages(images.filter((x) => x !== p))} className="absolute right-1 top-1 rounded-full bg-card p-1"><X className="h-3 w-3" /></button>
+                <Button type="button" size="icon" variant="secondary" aria-label="Remover" onClick={() => setImages(images.filter((x) => x !== p))} className="absolute right-1 top-1 h-8 w-8"><X className="h-3 w-3" /></Button>
               </div>
             ))}
             {images.length < 8 && (
@@ -239,7 +239,7 @@ function Publish() {
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return <section className="space-y-3 rounded-2xl border bg-card p-5"><h2 className="font-bold">{title}</h2>{children}</section>;
+  return <section className="editor-section space-y-4"><h2 className="font-bold">{title}</h2>{children}</section>;
 }
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <div className="space-y-1.5"><Label>{label}</Label>{children}</div>;

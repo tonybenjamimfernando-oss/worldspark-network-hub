@@ -46,7 +46,7 @@ function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <section className="hero-glow flex flex-col gap-5 rounded-3xl p-8 text-navy-foreground sm:flex-row sm:items-center">
+      <section className="hero-glow flex flex-col gap-5 border-b-4 border-primary p-6 text-navy-foreground sm:flex-row sm:items-center sm:p-8">
         <div className="h-24 w-24 shrink-0 overflow-hidden rounded-full border-4 border-primary bg-navy-soft">{p.avatar_url && urls[p.avatar_url] && <img src={urls[p.avatar_url]} alt={p.display_name} className="h-full w-full object-cover" />}</div>
         <div>
           <span className="rounded-full bg-navy-soft px-3 py-1 text-xs">{ACCOUNT_TYPES[p.account_type]}</span>
@@ -58,7 +58,7 @@ function ProfilePage() {
         </div>
       </section>
       <div className="mt-6 grid gap-6 md:grid-cols-[1fr_2fr]">
-        <aside className="space-y-3 rounded-2xl border bg-card p-5 text-sm">
+        <aside className="space-y-4 border-t pt-5 text-sm md:border-r md:border-t-0 md:pr-6">
           {p.bio && <p className="text-muted-foreground">{p.bio}</p>}
           {p.services.length > 0 && <div className="flex flex-wrap gap-1">{p.services.map((s) => <span key={s} className="rounded-full bg-brand-soft px-2 py-0.5 text-xs text-accent-foreground">{s}</span>)}</div>}
           {p.public_phone && <a href={`tel:${p.public_phone}`} className="flex items-center gap-2 hover:text-primary"><Phone className="h-4 w-4" />{p.public_phone}</a>}

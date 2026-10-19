@@ -60,8 +60,9 @@ function AuthPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md px-4 py-12">
-      <div className="rounded-3xl border bg-card p-8 shadow-sm">
+    <div className="mx-auto max-w-md px-5 py-14">
+      <div className="border-t-2 border-primary py-7">
+        <p className="eyebrow mb-4 text-primary">A TUA LIGAÇÃO AO MUNDO</p>
         <h1 className="text-2xl font-extrabold">{mode === "in" ? "Entrar no GCNM" : "Criar conta"}</h1>
         <p className="mt-1 text-sm text-muted-foreground">Publica, avalia e liga-te a compradores e vendedores.</p>
         <Button variant="outline" className="mt-6 w-full" onClick={google}>Continuar com Google</Button>
@@ -74,9 +75,9 @@ function AuthPage() {
           <div><Label htmlFor="p">Palavra-passe</Label><Input id="p" type="password" minLength={8} required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
           <Button type="submit" className="w-full" disabled={busy}>{mode === "in" ? "Entrar" : "Criar conta"}</Button>
         </form>
-        <button className="mt-4 w-full text-sm text-primary" onClick={() => setMode(mode === "in" ? "up" : "in")}>
+        <Button variant="link" className="mt-4 h-auto w-full whitespace-normal text-sm" onClick={() => setMode(mode === "in" ? "up" : "in")}>
           {mode === "in" ? "Ainda não tens conta? Regista-te" : "Já tens conta? Entra"}
-        </button>
+        </Button>
       </div>
     </div>
   );
