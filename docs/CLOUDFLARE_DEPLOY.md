@@ -4,17 +4,14 @@ O projeto usa TanStack Start com renderização no servidor. Por isso, a publica
 
 ## Preparar uma única vez
 
-1. Abre o painel Cloudflare: https://dash.cloudflare.com/ e selecciona a conta de destino.
+1. Abre https://dash.cloudflare.com/ e selecciona a conta de destino.
 2. Em **Manage account → Account API tokens**, cria um token com permissões mínimas para editar Workers e acesso apenas à conta de destino.
-3. No GitHub, abre **Settings → Secrets and variables → Actions** do repositório.
-4. Em **Variables**, cria as variáveis públicas de configuração Supabase:
-   - `VITE_SUPABASE_URL` = `https://cdauhpfszqhlojcafulo.supabase.co`
-   - `VITE_SUPABASE_PUBLISHABLE_KEY` = chave publishable do projecto `worldspark-network-hub` no Supabase.
-5. Em **Secrets**, cria:
-   - `CLOUDFLARE_API_TOKEN` = token criado no passo 2.
+3. No GitHub, abre **Settings → Secrets and variables → Actions → New repository secret** do repositório.
+4. Cria estes dois secrets:
+   - `CLOUDFLARE_API_TOKEN` = token Cloudflare criado no passo 2.
    - `CLOUDFLARE_ACCOUNT_ID` = ID da conta Cloudflare de destino.
 
-A chave `publishable` é destinada ao cliente e não substitui as políticas RLS do Supabase. Nunca coloques tokens privados, chaves `service_role` ou palavras-passe no repositório.
+A URL e a chave Supabase publishable do projecto `worldspark-network-hub` já são fornecidas ao passo de build do workflow. A chave publishable é pública por definição; a segurança dos dados continua a depender das políticas RLS. Nunca coloques tokens privados, chaves `service_role` ou palavras-passe no repositório.
 
 ## Publicar
 
@@ -24,7 +21,7 @@ O primeiro deploy bem-sucedido apresentará o URL `*.workers.dev` nos logs/na co
 
 ## Bloqueios que exigem acesso do proprietário
 
-- Os secrets Cloudflare têm de ser adicionados por alguém com permissão de administrador do repositório; não são valores que se possam inferir.
+- Os dois secrets Cloudflare têm de ser adicionados por alguém com permissão de administrador do repositório; não são valores que se possam inferir.
 - O workflow tem de estar na branch `main` para publicar em produção. O PR de preparação precisa de ser integrado.
 - Se o build/deploy indicar configuração Nitro/Wrangler em falta ou incompatível, corrige essa saída específica antes de anunciar o site como publicado.
 
