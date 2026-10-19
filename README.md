@@ -1,66 +1,73 @@
 # Worldspark Network Hub
 
-https://worldspark-network.lovable.app
+**Worldspark Network Hub (GCNM)** é uma aplicação de descoberta e comércio que reúne anúncios de produtos, serviços, oportunidades, pedidos de compra e ofertas externas, mantendo a identificação da loja ou plataforma de origem quando disponível.
 
-Replique este site com os seguintes fatores:
+## Estado actual
 
+O projecto já inclui:
+- Catálogo de anúncios e pesquisa/exploração.
+- Perfis públicos e painel autenticado do vendedor.
+- Publicação de produtos, serviços, oportunidades e pedidos de compra.
+- Importação de ofertas externas por URL e CSV.
+- Propostas de fornecedores para pedidos de compra.
+- Avaliações, denúncias e links de afiliado.
+- Migrações SQL e validação automática com GitHub Actions.
 
+Algumas áreas, como chat completo, mapa com GPS, pagamentos e planos pagos, ainda dependem de implementação e/ou de serviços externos. Não presumir que estão operacionais só porque aparecem na navegação.
 
-Reabilita, aperfeiçoa e expande o GLOBAL COMMERCE NETWORK MAP (GCNM), preservando rigorosamente a identidade visual, o layout, as cores, a estrutura, a navegação e a aparência atual do site. Não redesenhes nem substituas componentes existentes sem necessidade. Implementa melhorias funcionais, profissionais, responsivas, seguras e integradas à arquitetura atual.
+## Requisitos
 
+- [Bun](https://bun.sh/) (versão compatível com o workflow de CI).
+- Um projecto Supabase com as tabelas, políticas RLS e bucket de armazenamento necessários.
+- Variáveis de ambiente configuradas para o ambiente de execução.
 
+## Desenvolvimento local
 
-1. Perfis públicos inteligentes: Cria perfis completos, elegantes e personalizáveis para utilizadores pessoais, empresas e prestadores de serviços, com campos específicos para cada modalidade, biografia, fotografia, contactos, localização, produtos, serviços, reputação, avaliações, verificação e configurações de privacidade.
-
-
-
-2. Produtos e vendas: Desenvolve uma página completa para cada produto, com formulário detalhado de publicação: título, descrição, categoria, imagens, vídeos, preço, moeda, stock, variantes, características, marca, estado, localização, entrega, garantia, devoluções e condições comerciais. Cada produto deve possuir URL pública única, partilhável e permanente. Implementa avaliações, classificações e comentários públicos, com moderação e proteção contra abuso. Permite ao vendedor ativar opcionalmente um link de afiliação, com identificação do afiliado, rastreamento de cliques, conversões e comissões, sem expor dados privados.
-
-
-
-3. Mensagens e comunicação: Expande o chat existente com mensagens de texto, notas de voz, envio de imagens, vídeos, ficheiros de diferentes formatos, documentos e áudio, gravação e reprodução de mensagens de voz, chamadas de áudio e videochamadas. Implementa indicadores de entrega e leitura, notificações, pesquisa, partilha de ficheiros e permissões de acesso. Utiliza serviços compatíveis com comunicação em tempo real e WebRTC ou soluções equivalentes, incluindo os respetivos requisitos de infraestrutura.
-
-
-
-4. Moedas e pagamentos internacionais: Implementa conversor de moedas com taxas atualizadas, indicação da fonte e data da cotação, conversão automática conforme o país e a moeda selecionados. Prepara integrações seguras com PayPal, contas bancárias e carteiras móveis compatíveis com cada país, permitindo pagamentos, recebimentos e levantamentos apenas onde os fornecedores os suportem. Não simules transações nem declares pagamentos concluídos sem confirmação real do fornecedor. Protege credenciais e implementa validação de transações, webhooks e registos financeiros.
-
-
-
-5. Multilinguismo e localização inteligente: Disponibiliza várias línguas, selecionáveis nas configurações do utilizador e do proprietário. Deteta o idioma preferido do dispositivo e, quando autorizado e tecnicamente disponível, a região da conta, sugerindo automaticamente a língua adequada. Traduz integralmente a interface, menus, formulários, notificações, mensagens do sistema e conteúdos estáticos, preservando a escolha manual do idioma. Suporta formatos locais de moeda, datas, números e endereços, sem presumir a nacionalidade pela localização.
-
-
-
-6. Mapa e GPS: Liga o mapa à geolocalização do dispositivo através das APIs adequadas, solicitando autorização explícita ao utilizador. Implementa localização atual, marcador dinâmico, pesquisa por lugares, navegação e rotas quando suportadas, filtros geográficos para produtos, empresas e serviços, e atualização da posição conforme as permissões. Mantém uma alternativa manual quando o GPS estiver indisponível ou for recusado.
-
-
-
-7. Segurança, integração e qualidade: Antes de modificar o projeto, analisa a aplicação, a base de dados, a autenticação, as políticas RLS, as APIs e os componentes existentes. Reutiliza a infraestrutura atual e evita duplicações, perda de dados ou alterações destrutivas. Implementa permissões por função, validação no servidor, proteção de ficheiros, privacidade por defeito, prevenção de fraude, moderação, acessibilidade e compatibilidade com dispositivos móveis. Utiliza serviços reais, APIs oficiais e variáveis de ambiente para credenciais; identifica claramente qualquer serviço externo que exija configuração, subscrição ou custos.
-
-
-
-8. Execução e preservação: Implementa as funcionalidades progressivamente, com prioridade para perfis, publicação de produtos, avaliações, links de afiliação, chat, pagamentos, idiomas e GPS. Mantém intacta a aparência atual, salvo ajustes mínimos necessários à integração. Não substituas funcionalidades existentes por demonstrações, dados fictícios, botões sem ação ou integrações simuladas.
-
-
-
-Primeiro, audita a estrutura existente; depois, implementa as melhorias por etapas, verifica cada fluxo funcional e executa testes de segurança, integração e responsividade. No final, apresenta um relatório objetivo com as funcionalidades concluídas, as pendentes, as integrações que exigem credenciais ou serviços externos e os custos previsíveis. Preserva todos os dados e garante que a aplicação existente continua operacional.
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/166bd1ab-fa29-4c6a-8ad7-f3504d31b14d).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+```bash
+bun install --frozen-lockfile
+bun run dev
 ```
+
+Validar antes de propor alterações:
+
+```bash
+bun run test
+bun run build
+bun run lint
+```
+
+O workflow de GitHub Actions executa os testes e a compilação de produção em pushes para `main`, branches `feature/**` e pull requests dirigidos a `main`.
+
+## Variáveis de ambiente
+
+Consulta `.env.example` para os nomes das variáveis. Nunca coloques chaves secretas, tokens de acesso, palavras-passe ou credenciais de serviço no Git.
+
+- `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY`: configuração pública usada no cliente.
+- `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY`: configuração usada pelo servidor em operações autenticadas.
+- `SUPABASE_SERVICE_ROLE_KEY`: chave privilegiada do servidor, se necessária; nunca pode ser exposta ao navegador nem adicionada ao repositório.
+
+As variáveis `VITE_*` são incorporadas no bundle do cliente e não devem conter segredos. A chave publicável do Supabase é destinada a ser usada no cliente; a segurança dos dados deve ser garantida com políticas RLS e permissões de base de dados.
+
+## Migrações de base de dados
+
+As migrações versionadas encontram-se em `drizzle/migrations/`. Antes de aplicar uma migração a um projecto Supabase existente:
+
+1. Confirma a versão e o histórico real da base de dados.
+2. Faz uma cópia de segurança apropriada.
+3. Revê a migração e confirma que não repete alterações já aplicadas manualmente.
+4. Aplica-a num ambiente de teste e valida as permissões RLS.
+5. Só depois planeia a aplicação em produção.
+
+**A presença de uma migração no GitHub não significa que ela já foi executada na base de dados alojada.** As migrações de segurança devem ser confirmadas no Supabase antes de se considerar as respectivas protecções activas em produção.
+
+## Contribuição segura
+
+- Trabalha numa branch e abre um pull request.
+- Mantém as alterações pequenas e específicas.
+- Não comitas ficheiros `.env` nem credenciais.
+- Acrescenta testes para novas regras de negócio e segurança.
+- Não simules pagamentos, conversões, mensagens ou integrações externas como se fossem reais.
+
+## Construção e alojamento
+
+O código está versionado neste repositório. O alojamento e a configuração de variáveis de ambiente são tarefas separadas da validação do código e devem ser confirmados no fornecedor escolhido antes de anunciar a aplicação como disponível em produção.
