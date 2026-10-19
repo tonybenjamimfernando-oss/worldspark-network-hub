@@ -172,6 +172,12 @@ function CommandCenter() {
             const isExplore = command.to === "/explorar";
             const requiresAuth = command.to === "/painel" || command.to === "/publicar";
             const target = requiresAuth && !user ? "/auth" : command.to;
+            const authLabel =
+              command.to === "/publicar"
+                ? "search" in command && command.search.kind === "request"
+                  ? "Entrar para criar pedido"
+                  : "Entrar para publicar"
+                : "Entrar no painel";
             return (
               <article key={command.title} className="group flex min-h-52 flex-col rounded-xl border bg-card p-5 transition duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
                 <div className={`grid h-11 w-11 place-items-center rounded-xl ${command.tone}`}>
@@ -185,7 +191,7 @@ function CommandCenter() {
                   className="mt-4 -ml-3 w-fit justify-start px-3 text-primary hover:text-primary"
                 >
                   {target === "/auth" ? (
-                    <Link to="/auth">{command.label}<ArrowRight className="ml-2 h-4 w-4" /></Link>
+                    <Link to="/auth">{authLabel}<ArrowRight className="ml-2 h-4 w-4" /></Link>
                   ) : isPublish ? (
                     <Link to="/publicar" search={command.search}>{command.label}<ArrowRight className="ml-2 h-4 w-4" /></Link>
                   ) : isExplore ? (
