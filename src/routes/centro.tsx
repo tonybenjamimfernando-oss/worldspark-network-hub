@@ -179,7 +179,7 @@ function CommandCenter() {
             const Icon = command.icon;
             const isPublish = command.to === "/publicar";
             const isExplore = command.to === "/explorar";
-            const requiresAuth = command.to === "/painel" || command.to === "/publicar";
+            const requiresAuth = command.to === "/painel" || command.to === "/publicar" || command.to === "/mensagens";
             const target = requiresAuth && !user ? "/auth" : command.to;
             const authNext =
               command.to === "/publicar" && "search" in command
@@ -188,13 +188,17 @@ function CommandCenter() {
                   : command.search.kind === "service"
                     ? "publish-service"
                     : "publish-request"
-                : "panel";
+                : command.to === "/mensagens"
+                  ? "messages"
+                  : "panel";
             const authLabel =
               command.to === "/publicar"
                 ? "search" in command && command.search.kind === "request"
                   ? "Entrar para criar pedido"
                   : "Entrar para publicar"
-                : "Entrar no painel";
+                : command.to === "/mensagens"
+                  ? "Entrar para ver mensagens"
+                  : "Entrar no painel";
             return (
               <article key={command.title} className="group flex min-h-52 flex-col rounded-xl border bg-card p-5 transition duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
                 <div className={`grid h-11 w-11 place-items-center rounded-xl ${command.tone}`}>
