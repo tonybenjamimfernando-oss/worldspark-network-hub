@@ -74,18 +74,19 @@ function MessagesPage() {
     },
   });
 
+  const userId = user?.id;
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
     const channel = supabase
-      .channel(`marketplace-messages-${user.id}`)
+      .channel(`marketplace-messages-${userId}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, (payload) => {
         const row = payload.new as { conversation_id?: string };
         if (row.conversation_id) void queryClient.invalidateQueries({ queryKey: ["messages", row.conversation_id] });
-        void queryClient.invalidateQueries({ queryKey: ["conversations", user.id] });
+        void queryClient.invalidateQueries({ queryKey: ["conversations", userId] });
       })
       .subscribe();
     return () => { void supabase.removeChannel(channel); };
-  }, [user?.id, queryClient]);
+  }, [userId, queryClient]);
 
   async function sendMessage(event: React.FormEvent) {
     event.preventDefault();
