@@ -286,7 +286,15 @@ function Publish() {
             type="button"
             variant={kind === k ? "default" : "outline"}
             aria-pressed={kind === k}
-            onClick={() => setKind(k)}
+            onClick={() => {
+              setKind(k);
+              // A purchase request is not an external store listing or an affiliate offer.
+              // Clear hidden options when switching modes so stale state cannot be submitted.
+              if (k === "request") {
+                setExternal(false);
+                setAffiliate(false);
+              }
+            }}
           >
             {KINDS[k]}
           </Button>
