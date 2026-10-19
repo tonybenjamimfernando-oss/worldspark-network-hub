@@ -43,10 +43,13 @@ export const fetchUrlMeta = createServerFn({ method: "POST" })
     try {
       const res = await fetch(u.toString(), {
         headers: { "user-agent": "Mozilla/5.0 (compatible; GCNMBot/1.0)", accept: "text/html" },
-        // Never follow redirects automatically: a public URL could redirect to a private network host.\n        redirect: "manual",
+        // Never follow redirects automatically: a public URL could redirect to a private network host.
+        redirect: "manual",
         signal: AbortSignal.timeout(8000),
       });
-      if (res.status >= 300 && res.status < 400) {\n        return { ok: false as const, platform, error: "A loja redireccionou o link. Por segurança, preencha os dados manualmente com o endereço final." };\n      }\n      if (!res.ok) return { ok: false as const, platform, error: `A loja respondeu com o estado ${res.status}. Preencha os dados manualmente.` };
+      if (res.status >= 300 && res.status < 400) {
+        return { ok: false as const, platform, error: "A loja redireccionou o link. Por segurança, preencha os dados manualmente com o endereço final." };
+      }\n      if (!res.ok) return { ok: false as const, platform, error: `A loja respondeu com o estado ${res.status}. Preencha os dados manualmente.` };
       const html = (await res.text()).slice(0, 400_000);
       return {
         ok: true as const,
