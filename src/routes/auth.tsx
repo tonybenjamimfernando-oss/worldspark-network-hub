@@ -27,7 +27,7 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-function AuthPage() {
+export function AuthPage() {
   const navigate = useNavigate();
   const { next } = Route.useSearch();
   const [mode, setMode] = useState<"in" | "up" | "reset">("in");
@@ -71,6 +71,11 @@ function AuthPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    const normalizedEmail = email.trim().toLowerCase();
+    if (mode === "up" && !recovery && !name.trim()) {
+      toast.error("Indica o teu nome.");
+      return;
+    }
     setBusy(true);
     try {
       if (recovery) {
@@ -81,28 +86,40 @@ function AuthPage() {
         toast.success("Palavra-passe alterada. Já podes continuar.");
         navigateAfterAuth();
       } else if (mode === "reset") {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
           redirectTo: `${window.location.origin}/auth?next=${next ?? "panel"}`,
         });
         if (error) throw error;
         toast.success("Se existir uma conta com esse email, receberás instruções para recuperar o acesso.");
         setMode("in");
       } else if (mode === "in") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({ email: normalizedEmail, password });
         if (error) throw error;
-        navigateAfterAuth();
       } else {
         const { data, error } = await supabase.auth.signUp({
-          email,
+          email: normalizedEmail,
           password,
-          options: { emailRedirectTo: `${window.location.origin}/auth?next=${next ?? "panel"}`, data: { full_name: name } },
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth?next=${next ?? "panel"}`,
+            data: { full_name: name.trim() },
+          },
         });
         if (error) throw error;
-        if (data.session) navigateAfterAuth();
-        else toast.success("Conta criada. Confirma o teu email para entrar.");
+        if (!data.session) toast.success("Conta criada. Confirma o teu email para entrar.");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Não foi possível concluir a operação.");
+      const message = err instanceof Error ? err.message : "";
+      if (/invalid login credentials/i.test(message)) {
+        toast.error("Email ou palavra-passe incorretos.");
+      } else if (/user already registered|already been registered/i.test(message)) {
+        toast.error("Já existe uma conta com este email. Entra ou recupera a palavra-passe.");
+      } else if (/password.*(characters|length|short)|weak password/i.test(message)) {
+        toast.error("A palavra-passe deve cumprir os requisitos de segurança.");
+      } else if (/email not confirmed/i.test(message)) {
+        toast.error("Confirma o teu email antes de entrar.");
+      } else {
+        toast.error(message || "Não foi possível concluir a operação. Tenta novamente.");
+      }
     } finally {
       setBusy(false);
     }
@@ -132,7 +149,7 @@ function AuthPage() {
           {mode === "up" && !recovery && (
             <div>
               <Label htmlFor="n">Nome</Label>
-              <Input id="n" required value={name} onChange={(e) => setName(e.target.value)} />
+              <Input id="n" autoComplete="name" required value={name} onChange={(e) => setName(e.target.value)} />
             </div>
           )}
           {!recovery && (
@@ -155,7 +172,7 @@ function AuthPage() {
                 id="p"
                 type="password"
                 autoComplete={recovery ? "new-password" : mode === "in" ? "current-password" : "new-password"}
-                minLength={8}
+                minLength={recovery || mode === "up" ? 8 : undefined}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -178,6 +195,7 @@ function AuthPage() {
           <Button
             variant="link"
             className="mt-2 h-auto w-full whitespace-normal text-sm"
+            disabled={busy}
             onClick={() => setMode("reset")}
           >
             Esqueci-me da palavra-passe
@@ -187,6 +205,7 @@ function AuthPage() {
           <Button
             variant="link"
             className="mt-4 h-auto w-full whitespace-normal text-sm"
+            disabled={busy}
             onClick={() => setMode("in")}
           >
             Voltar a entrar
@@ -196,6 +215,7 @@ function AuthPage() {
           <Button
             variant="link"
             className="mt-2 h-auto w-full whitespace-normal text-sm"
+            disabled={busy}
             onClick={() => setMode("up")}
           >
             Ainda não tens conta? Regista-te
