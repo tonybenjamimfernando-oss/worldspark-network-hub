@@ -71,6 +71,11 @@ export function AuthPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    const normalizedEmail = email.trim().toLowerCase();
+    if (mode === "up" && !recovery && !name.trim()) {
+      toast.error("Indica o teu nome.");
+      return;
+    }
     setBusy(true);
     try {
       if (recovery) {
