@@ -44,43 +44,43 @@
 
 :root {
   --radius: 0.5rem;
-  --background: oklch(0.985 0.002 250);
-  --foreground: oklch(0.25 0.035 255);
+  --background: oklch(0.975 0.012 225);
+  --foreground: oklch(0.22 0.045 250);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.26 0.07 265);
+  --card-foreground: oklch(0.22 0.045 250);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.26 0.07 265);
-  --primary: oklch(0.61 0.19 43);
+  --popover-foreground: oklch(0.22 0.045 250);
+  --primary: oklch(0.58 0.19 225);
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.957 0.006 250);
-  --secondary-foreground: oklch(0.26 0.07 265);
-  --muted: oklch(0.957 0.006 250);
-  --muted-foreground: oklch(0.5 0.03 265);
-  --accent: oklch(0.95 0.04 55);
-  --accent-foreground: oklch(0.5 0.17 45);
+  --secondary: oklch(0.94 0.018 225);
+  --secondary-foreground: oklch(0.22 0.045 250);
+  --muted: oklch(0.94 0.018 225);
+  --muted-foreground: oklch(0.48 0.035 245);
+  --accent: oklch(0.92 0.045 210);
+  --accent-foreground: oklch(0.42 0.14 225);
   --destructive: oklch(0.58 0.22 27);
   --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.915 0.006 250);
-  --input: oklch(0.86 0.01 250);
+  --border: oklch(0.89 0.018 230);
+  --input: oklch(0.84 0.02 230);
   --ring: var(--primary);
-  --navy: oklch(0.25 0.08 265);
+  --navy: oklch(0.19 0.055 250);
   --navy-foreground: oklch(0.98 0.005 85);
-  --navy-soft: oklch(0.33 0.07 265);
-  --brand-soft: oklch(0.95 0.04 55);
+  --navy-soft: oklch(0.29 0.065 245);
+  --brand-soft: oklch(0.91 0.055 210);
   --success: oklch(0.6 0.13 160);
   --star: oklch(0.78 0.16 75);
-  --globe-gold: #f2b84b;
-  --globe-illumination: rgba(242, 184, 75, 0.28);
-  --globe-transparent: rgba(242, 184, 75, 0);
+  --globe-gold: #20d4e8;
+  --globe-illumination: rgba(32, 212, 232, 0.28);
+  --globe-transparent: rgba(32, 212, 232, 0);
   --shadow-mobile-navigation: 0 -8px 24px oklch(0.25 0.035 255 / 0.08);
-  --gold: oklch(0.79 0.13 80);
+  --gold: oklch(0.82 0.14 82);
   --overlay: oklch(0.15 0.03 255 / 0.65);
   --shadow-elevated: 0 14px 36px oklch(0.25 0.035 255 / 0.09);
   --hero-overlay: linear-gradient(
     90deg,
-    oklch(0.19 0.045 250 / 0.94),
-    oklch(0.19 0.045 250 / 0.65) 50%,
-    oklch(0.19 0.045 250 / 0.08)
+    oklch(0.16 0.055 250 / 0.96),
+    oklch(0.16 0.055 250 / 0.72) 50%,
+    oklch(0.16 0.055 250 / 0.16)
   );
 }
 
@@ -194,11 +194,11 @@
 }
 .listing-card {
   box-shadow: 0 1px 2px oklch(0.25 0.035 255 / 0.035);
-  border-color: oklch(0.9 0.01 250);
+  border-color: oklch(0.88 0.025 225);
 }
 .listing-card:hover {
   transform: translateY(-3px);
-  border-color: oklch(0.78 0.06 45);
+  border-color: oklch(0.72 0.12 220);
   box-shadow: var(--shadow-elevated);
 }
 .listing-card:focus-visible,
@@ -252,7 +252,7 @@ input, textarea, select {
     min-height: 470px;
   }
   .commerce-hero::after {
-    background: oklch(0.19 0.045 250 / 0.82);
+    background: oklch(0.16 0.055 250 / 0.88);
   }
   .market-section {
     padding-top: 28px;
