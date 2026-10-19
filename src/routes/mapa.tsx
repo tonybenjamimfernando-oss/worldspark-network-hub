@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LocateFixed, Minus, Plus, MapPin, Compass } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -37,11 +37,22 @@ function worldPoint(latitude: number, longitude: number, zoom: number) {
   return { x, y };
 }
 
+function geoPoint(x: number, y: number, zoom: number): Center {
+  const scale = 2 ** zoom;
+  const wrappedX = ((x % scale) + scale) % scale;
+  const boundedY = Math.max(0, Math.min(scale, y));
+  const longitude = (wrappedX / scale) * 360 - 180;
+  const n = Math.PI - (2 * Math.PI * boundedY) / scale;
+  const latitude = (180 / Math.PI) * Math.atan(Math.sinh(n));
+  return { latitude, longitude };
+}
+
 function GlobalMap() {
   const [center, setCenter] = useState<Center>({ latitude: 0, longitude: 20 });
   const [zoom, setZoom] = useState(2);
   const [customCenter, setCustomCenter] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const dragRef = useRef<{ x: number; y: number; center: Center; pointerId: number } | null>(null);
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["map-listings"],
     queryFn: async (): Promise<GeoListing[]> => {
@@ -129,7 +140,26 @@ function GlobalMap() {
         </div>
       </div>
 
-      <div className="relative h-[430px] overflow-hidden rounded-2xl border bg-muted sm:h-[520px]" aria-label="Mapa de anúncios">
+      <div
+        className="relative h-[430px] touch-none cursor-grab overflow-hidden rounded-2xl border bg-muted active:cursor-grabbing sm:h-[520px]"
+        aria-label="Mapa de anúncios"
+        onPointerDown={(event) => {
+          if (event.button !== 0 || (event.target as HTMLElement).closest("button")) return;
+          event.currentTarget.setPointerCapture(event.pointerId);
+          dragRef.current = { x: event.clientX, y: event.clientY, center, pointerId: event.pointerId };
+        }}
+        onPointerMove={(event) => {
+          const drag = dragRef.current;
+          if (!drag || drag.pointerId !== event.pointerId) return;
+          const origin = worldPoint(drag.center.latitude, drag.center.longitude, zoom);
+          setCenter(geoPoint(origin.x - (event.clientX - drag.x) / 256, origin.y - (event.clientY - drag.y) / 256, zoom));
+          setCustomCenter(true);
+        }}
+        onPointerUp={(event) => {
+          if (dragRef.current?.pointerId === event.pointerId) dragRef.current = null;
+        }}
+        onPointerCancel={() => { dragRef.current = null; }}
+      >
         {tileData.map((tile) => (
           <img key={tile.key} src={`https://tile.openstreetmap.org/${zoom}/${tile.x}/${tile.y}.png`} alt="" draggable={false} className="pointer-events-none absolute h-64 w-64 max-w-none select-none" style={{ left: `calc(50% + ${tile.left}px)`, top: `calc(50% + ${tile.top}px)` }} />
         ))}
