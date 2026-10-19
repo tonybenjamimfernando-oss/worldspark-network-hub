@@ -119,7 +119,7 @@ function MessagesPage() {
         <MessageCircle className="mx-auto h-10 w-10 text-primary" />
         <h1 className="mt-4 text-2xl font-bold">As tuas mensagens</h1>
         <p className="mt-2 text-muted-foreground">Entra na tua conta para conversar com compradores e vendedores.</p>
-        <Button className="mt-5" onClick={() => navigate({ to: "/auth" })}>Entrar</Button>
+        <Button className="mt-5" onClick={() => navigate({ to: "/auth", search: { next: "messages" } })}>Entrar</Button>
       </div>
     );
   }
