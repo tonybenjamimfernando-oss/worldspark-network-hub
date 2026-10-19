@@ -150,3 +150,10 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 - [ ] Confirmar no ambiente alvo que o provider Google e os URLs de redirecionamento estão configurados no Supabase; o código não fornece credenciais de OAuth.
 - [ ] Mitigar abuso das RPCs públicas `track_listing` e `track_affiliate_click`. A verificação ao advisor em 2026-10-19 confirma que ambas continuam `SECURITY DEFINER` e executáveis por `anon` e `authenticated`; não foram tratadas como resolvidas.
 - [ ] Aguardar resultado do CI disparado na `main` após o merge do PR #29.
+
+
+## Proteção das métricas — PR #31
+- A Edge Function `track-metrics` valida os eventos, resolve a identidade a partir do token assinado, aplica limites atómicos por IP anonimizado e só então actualiza os contadores.
+- A migração `0015_rate_limit_public_metrics.sql` cria o armazenamento privado de limites e restringe RPCs privilegiadas.
+- O frontend deixa de invocar directamente RPCs de contagem e passa a usar a Edge Function.
+- Aceitação final: deploy da função, migração aplicada e verificada, CI verde e advisor sem avisos de execução pública destas funções.
