@@ -3,7 +3,6 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ListingGrid, type ListingRow } from "@/components/ListingCard";
 import { rankListingMatches, type MatchCandidate } from "@/lib/matching";
 
 type RequestContext = {
@@ -82,18 +81,6 @@ export function RequestMatches({ request }: { request: RequestContext }) {
     );
   }
 
-  const items: ListingRow[] = data.map(({ listing }) => ({
-    id: listing.id,
-    kind: listing.kind,
-    title: listing.title,
-    category: listing.category,
-    images: listing.images,
-    price: listing.price,
-    currency: listing.currency,
-    city: listing.city,
-    country: listing.country,
-  }));
-
   return (
     <section className="mt-8 border-t pt-6">
       <div className="mb-4">
@@ -116,7 +103,6 @@ export function RequestMatches({ request }: { request: RequestContext }) {
           </article>
         ))}
       </div>
-      <div className="mt-4"><ListingGrid items={items} /></div>
     </section>
   );
 }
