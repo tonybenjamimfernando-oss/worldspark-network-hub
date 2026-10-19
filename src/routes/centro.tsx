@@ -40,8 +40,8 @@ const commands = [
     label: "Explorar produtos",
   },
   {
-    title: "Publicar uma oferta",
-    description: "Apresenta um produto, serviço ou oportunidade ao mercado.",
+    title: "Publicar um produto",
+    description: "Apresenta um produto ao mercado e mantém a origem da oferta identificada quando é partilhada a partir de outra loja.",
     to: "/publicar",
     search: { kind: "product" },
     icon: Store,
