@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { readLimitedText } from "@/lib/limited-response";
 
 const PRIVATE_HOST = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|0\.|169\.254\.|\[?::1\]?)/i;
 const NON_PUBLIC_SUFFIX = /\.(local|internal|localhost|test|invalid)$/i;
@@ -51,7 +52,11 @@ export const fetchUrlMeta = createServerFn({ method: "POST" })
         return { ok: false as const, platform, error: "A loja redireccionou o link. Por segurança, preencha os dados manualmente com o endereço final." };
       }
       if (!res.ok) return { ok: false as const, platform, error: `A loja respondeu com o estado ${res.status}. Preencha os dados manualmente.` };
-      const html = (await res.text()).slice(0, 400_000);
+      const contentType = res.headers.get("content-type");
+      if (contentType && !/^(text\/html|application\/xhtml\+xml)(?:;|$)/i.test(contentType.trim())) {
+        return { ok: false as const, platform, error: "A página não devolveu HTML compatível. Preencha os dados manualmente." };
+      }
+      const html = await readLimitedText(res, 400_000);
       return {
         ok: true as const,
         platform,
