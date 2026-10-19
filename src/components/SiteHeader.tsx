@@ -16,6 +16,7 @@ import {
   Menu,
   ArrowUpRight,
   MessageSquare,
+  Command,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +36,7 @@ const NAV = [
   { to: "/empresas", label: "Empresas", icon: Building2 },
   { to: "/freelancers", label: "Freelancers", icon: Users },
   { to: "/mapa", label: "Mapa", icon: Map },
+  { to: "/centro", label: "Centro de comando", icon: Command },
   { to: "/planos", label: "Planos", icon: CreditCard },
 ] as const;
 
@@ -183,11 +185,12 @@ export function SiteHeader() {
         ))}
       </nav>
     </header>
-    <nav aria-label="Atalhos móveis" className="mobile-shortcuts fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t bg-card/95 px-1 pb-[env(safe-area-inset-bottom)] pt-1 backdrop-blur-md md:hidden">
+    <nav aria-label="Atalhos móveis" className="mobile-shortcuts fixed inset-x-0 bottom-0 z-50 grid grid-cols-6 border-t bg-card/95 px-1 pb-[env(safe-area-inset-bottom)] pt-1 backdrop-blur-md md:hidden">
       {([
         { label: "Início", to: "/", icon: Home },
         { label: "Comprar", to: "/explorar", search: { kind: "product" }, icon: ShoppingBag },
         { label: "Pedidos", to: "/explorar", search: { kind: "request" }, icon: Megaphone },
+        { label: "Centro", to: "/centro", icon: Command },
         { label: "Publicar", to: "/publicar", search: { kind: "product" }, icon: Plus },
         { label: user ? "Painel" : "Entrar", to: user ? "/painel" : "/auth", icon: UserIcon },
       ] as const).map((item) => (
