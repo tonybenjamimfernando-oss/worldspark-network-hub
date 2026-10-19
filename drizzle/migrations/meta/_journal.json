@@ -92,6 +92,13 @@
       "when": 1792410600000,
       "tag": "0012_ensure_media_bucket",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792410660000,
+      "tag": "0013_harden_function_access_and_indexes",
+      "breakpoints": true
     }
   ]
 }
