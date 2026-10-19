@@ -203,7 +203,6 @@ export type Database = {
           public_email: string | null
           public_phone: string | null
           services: string[]
-          tax_id: string | null
           updated_at: string
           username: string | null
           website: string | null
@@ -223,7 +222,6 @@ export type Database = {
           public_email?: string | null
           public_phone?: string | null
           services?: string[]
-          tax_id?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
@@ -243,12 +241,37 @@ export type Database = {
           public_email?: string | null
           public_phone?: string | null
           services?: string[]
-          tax_id?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
         }
         Relationships: []
+      }
+      profile_private: {
+        Row: {
+          tax_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          tax_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          tax_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_private_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       proposals: {
         Row: {
