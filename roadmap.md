@@ -1,11 +1,12 @@
 # GCNM Roadmap
 
 ## Current — Integral visual redesign (18 Oct)
-- [ ] Audit all existing pages and functional contracts
-- [ ] Renew shared visual system, navigation and discovery pages
-- [ ] Apply presentation updates to details, profiles, forms and informational pages
-- [ ] Validate existing tests, navigation, authenticated pages and mobile/desktop layouts
-- [ ] Document verified flows and pre-existing limitations
+- [x] Audit all existing pages and functional contracts
+- [x] Renew shared visual system, navigation and discovery pages
+- [x] Apply presentation updates to details, profiles, forms and informational pages
+- [x] Validate existing routing test, public navigation, search, registration form toggle and mobile/desktop layouts
+- [ ] Validate authenticated publication, profile saving and populated detail flows — blocked: no auth users or active session; requesting user must sign in
+- [x] Document verified flows and pre-existing limitations in REDESIGN-REPORT.md
 
 ## Stage 1 (in progress)
 - [x] Design base, header/nav, home, explore
