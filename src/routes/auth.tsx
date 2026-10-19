@@ -38,6 +38,8 @@ function AuthPage() {
         setRecovery(true);
         setMode("in");
         setPassword("");
+      } else if (event === "SIGNED_IN") {
+        navigate({ to: "/painel" });
       }
     });
     return () => data.subscription.unsubscribe();
