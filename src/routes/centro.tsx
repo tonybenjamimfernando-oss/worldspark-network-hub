@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import {
   ArrowRight,
   Building2,
@@ -105,7 +105,7 @@ function CommandCenter() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
-  function runSearch(event: React.FormEvent<HTMLFormElement>) {
+  function runSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const q = query.trim();
     if (!q) return;
@@ -170,7 +170,8 @@ function CommandCenter() {
             const Icon = command.icon;
             const isPublish = command.to === "/publicar";
             const isExplore = command.to === "/explorar";
-            const target = command.to === "/painel" && !user ? "/auth" : command.to;
+            const requiresAuth = command.to === "/painel" || command.to === "/publicar";
+            const target = requiresAuth && !user ? "/auth" : command.to;
             return (
               <article key={command.title} className="group flex min-h-52 flex-col rounded-xl border bg-card p-5 transition duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
                 <div className={`grid h-11 w-11 place-items-center rounded-xl ${command.tone}`}>
