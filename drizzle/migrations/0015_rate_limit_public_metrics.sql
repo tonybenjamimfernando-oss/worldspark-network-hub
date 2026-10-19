@@ -45,8 +45,7 @@ begin
     and l.affiliate_enabled = true and l.owner_id is distinct from _viewer_id and a.affiliate_id is distinct from _viewer_id;
 end; $$;
 
-revoke all on function public.track_listing(uuid, text) from public, anon, authenticated;
-revoke all on function public.track_affiliate_click(text) from public, anon, authenticated;
+-- Legacy two-argument RPCs are revoked by migration 0016 after the frontend rollout.
 revoke all on function public.track_listing(uuid, text, uuid) from public, anon, authenticated;
 revoke all on function public.track_affiliate_click(text, uuid) from public, anon, authenticated;
 grant execute on function public.track_listing(uuid, text, uuid) to service_role;
