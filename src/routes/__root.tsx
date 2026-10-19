@@ -137,7 +137,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col pb-16 md:pb-0">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-card focus:p-4"
@@ -145,7 +145,7 @@ function RootComponent() {
           Saltar para o conteúdo
         </a>
         <SiteHeader />
-        <main id="main-content" className="flex-1 pb-16 md:pb-0">
+        <main id="main-content" className="flex-1">
           <Outlet />
         </main>
         <SiteFooter />
