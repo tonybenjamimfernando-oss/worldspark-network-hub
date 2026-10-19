@@ -1,9 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { BadgeCheck, ExternalLink, Flag, MapPin, Share2, Star, Store } from "lucide-react";
+import { BadgeCheck, ExternalLink, Flag, MapPin, MessageCircle, Share2, Star, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -44,6 +44,7 @@ function ListingPage() {
   const { id } = Route.useParams();
   const { ref } = Route.useSearch();
   const { user } = useUser();
+  const navigate = useNavigate();
   const { data: l, isLoading } = useQuery({
     queryKey: ["listing", id, user?.id],
     queryFn: async () => {
@@ -136,6 +137,18 @@ function ListingPage() {
     void supabase.functions.invoke("track-metrics", { body: { kind: "out", id: l.id } });
     window.open(l.source_url!, "_blank", "noopener,noreferrer");
   };
+  const messageSeller = async () => {
+    if (!user) {
+      navigate({ to: "/auth" });
+      return;
+    }
+    const { data, error } = await supabase.rpc("start_listing_conversation", { _listing_id: l.id });
+    if (error) {
+      toast.error(error.message || "Não foi possível iniciar a conversa.");
+      return;
+    }
+    navigate({ to: "/mensagens", search: { conversation: data } });
+  };
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-10">
@@ -220,11 +233,17 @@ function ListingPage() {
             </div>
           )}
 
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button variant="outline" onClick={share}>
               <Share2 className="h-4 w-4" />
               Partilhar
             </Button>
+            {!isOwner && l.owner && (
+              <Button onClick={messageSeller}>
+                <MessageCircle className="h-4 w-4" />
+                Enviar mensagem
+              </Button>
+            )}
           </div>
 
           <SellerCard

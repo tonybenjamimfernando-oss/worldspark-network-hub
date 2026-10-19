@@ -14,6 +14,8 @@ export type ListingRow = {
   currency: string;
   city: string | null;
   country: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   is_external?: boolean | null;
   source_platform?: string | null;
 };

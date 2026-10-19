@@ -120,6 +120,20 @@
       "when": 1792410840000,
       "tag": "0016_revoke_legacy_metrics_rpc",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1792410900000,
+      "tag": "0017_realtime_marketplace_chat",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1792410960000,
+      "tag": "0018_listing_approximate_coordinates",
+      "breakpoints": true
     }
   ]
 }
