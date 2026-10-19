@@ -49,6 +49,15 @@ const commands = [
     label: "Criar publicação",
   },
   {
+    title: "Publicar um serviço",
+    description: "Apresenta as tuas competências, condições e disponibilidade a potenciais clientes.",
+    to: "/publicar",
+    search: { kind: "service" },
+    icon: Wrench,
+    tone: "bg-sky-500/10 text-sky-600",
+    label: "Publicar serviço",
+  },
+  {
     title: "Criar um pedido de compra",
     description: "Explica o que procuras e facilita propostas de fornecedores relevantes.",
     to: "/publicar",
