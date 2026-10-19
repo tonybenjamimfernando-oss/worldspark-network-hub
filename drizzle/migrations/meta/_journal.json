@@ -78,6 +78,13 @@
       "when": 1792410480000,
       "tag": "0010_restrict_review_moderation_updates",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792410540000,
+      "tag": "0011_harden_review_rate_limit",
+      "breakpoints": true
     }
   ]
 }
