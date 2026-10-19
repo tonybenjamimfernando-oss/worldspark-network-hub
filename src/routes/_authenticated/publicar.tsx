@@ -72,7 +72,7 @@ function Publish() {
   const navigate = useNavigate();
   const fetchMeta = useServerFn(fetchUrlMeta);
   const [kind, setKind] = useState<Kind>(search.kind ?? "product");
-  const [external, setExternal] = useState(!!search.external);
+  const [external, setExternal] = useState(search.kind !== "request" && !!search.external);
   const [relation, setRelation] = useState<"owner" | "representative" | "sharer">("owner");
   const [contactVis, setContactVis] = useState<"public" | "proposers" | "private">("proposers");
   const [f, setF] = useState(empty);
@@ -286,7 +286,15 @@ function Publish() {
             type="button"
             variant={kind === k ? "default" : "outline"}
             aria-pressed={kind === k}
-            onClick={() => setKind(k)}
+            onClick={() => {
+              setKind(k);
+              // A purchase request is not an external store listing or an affiliate offer.
+              // Clear hidden options when switching modes so stale state cannot be submitted.
+              if (k === "request") {
+                setExternal(false);
+                setAffiliate(false);
+              }
+            }}
           >
             {KINDS[k]}
           </Button>
