@@ -22,9 +22,7 @@ function NotFoundComponent() {
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Página não encontrada</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Esta página não existe ou foi movida.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">Esta página não existe ou foi movida.</p>
         <div className="mt-6">
           <Link
             to="/"
@@ -51,9 +49,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
           Não foi possível abrir esta página
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Tenta novamente ou volta ao início.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">Tenta novamente ou volta ao início.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -82,16 +78,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "GCNM — Global Commerce Network Map" },
-      { name: "description", content: "Produtos, serviços, empresas e profissionais perto de ti ou em qualquer parte do mundo." },
+      {
+        name: "description",
+        content:
+          "Produtos, serviços, empresas e profissionais perto de ti ou em qualquer parte do mundo.",
+      },
       { property: "og:title", content: "GCNM — Global Commerce Network Map" },
-      { property: "og:description", content: "Produtos, serviços, empresas e profissionais perto de ti ou em qualquer parte do mundo." },
+      {
+        property: "og:description",
+        content:
+          "Produtos, serviços, empresas e profissionais perto de ti ou em qualquer parte do mundo.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap",
+      },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -131,7 +138,12 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-card focus:p-4">Saltar para o conteúdo</a>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-card focus:p-4"
+        >
+          Saltar para o conteúdo
+        </a>
         <SiteHeader />
         <main id="main-content" className="flex-1">
           <Outlet />
