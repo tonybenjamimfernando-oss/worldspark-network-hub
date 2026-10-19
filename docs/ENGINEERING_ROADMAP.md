@@ -130,7 +130,7 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 - [x] Optimizar políticas RLS com `(select auth.uid())` via migração `0014_optimize_rls_auth_uid.sql`; o advisor deixou de apresentar `auth_rls_initplan`.
 - [ ] Rever os avisos das RPCs de métricas `track_listing` e `track_affiliate_click`, que permanecem como funções `SECURITY DEFINER` acessíveis para tracking público.
 - [ ] Reavaliar índices assinalados como não utilizados após haver tráfego real; a base recém-inicializada ainda não permite concluir se são desnecessários.
-- [ ] Executar lint, testes e build na branch e validar CI do pull request.
+- [x] CI do PR #29 passou em ESLint, testes unitários e build de produção; a validação pós-merge da `main` deve ser acompanhada separadamente.
 - [ ] Rever a compatibilidade dos tipos TypeScript gerados com o schema real.
 
 
@@ -139,4 +139,14 @@ Completar o produto por etapas verificáveis, mantendo as funcionalidades existe
 - [x] Adicionada migração forward-only para substituir chamadas directas a `auth.uid()` em políticas RLS por `(select auth.uid())`, preservando as condições e permissões existentes.
 - [x] Aplicada ao projecto Supabase e validada com o advisor de desempenho; o aviso `auth_rls_initplan` deixou de aparecer.
 - [x] O pipeline de CI da branch de origem passou em ESLint, testes unitários e build de produção.
-- [ ] A migração e o journal precisam de permanecer integrados na branch principal para que o repositório reflicta o esquema remoto.
+- [x] Migração `0014` e journal integrados na branch principal pelo PR #28.
+
+
+### Validação adicional — autenticação OAuth (PR #29)
+
+- [x] Substituído o wrapper OAuth da Lovable pelo fluxo nativo `supabase.auth.signInWithOAuth` para Google, com retorno para `/auth` e navegação após `SIGNED_IN`.
+- [x] PR #29 integrado na `main` (commit `97c0cb91383d3fcc187ff90be4212acbb5952eb4`).
+- [x] CI do PR #29 passou: ESLint, testes unitários e build de produção.
+- [ ] Confirmar no ambiente alvo que o provider Google e os URLs de redirecionamento estão configurados no Supabase; o código não fornece credenciais de OAuth.
+- [ ] Mitigar abuso das RPCs públicas `track_listing` e `track_affiliate_click`. A verificação ao advisor em 2026-10-19 confirma que ambas continuam `SECURITY DEFINER` e executáveis por `anon` e `authenticated`; não foram tratadas como resolvidas.
+- [ ] Aguardar resultado do CI disparado na `main` após o merge do PR #29.
