@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { validateImageFile } from "@/lib/image-validation";
 
-function file(type: string, bytes: number[]) {
-  const blob = new Blob([new Uint8Array(bytes)], { type });
-  return Object.assign(blob, { name: "image.bin", lastModified: 0 }) as File;
+function file(type: string, bytes: number[], size = bytes.length): File {
+  const data = new Uint8Array(bytes);
+  return {
+    type,
+    size,
+    slice: () => ({ arrayBuffer: async () => data.buffer }),
+  } as unknown as File;
 }
 
 describe("validateImageFile", () => {
@@ -23,11 +27,7 @@ describe("validateImageFile", () => {
   });
 
   it("rejects files over 10 MB before reading their contents", async () => {
-    const large = Object.assign(new Blob(["x"]), {
-      size: 10 * 1024 * 1024 + 1,
-      type: "image/png",
-      slice: () => { throw new Error("should not read"); },
-    });
+    const large = file("image/png", [0x89], 10 * 1024 * 1024 + 1);
     await expect(validateImageFile(large)).rejects.toThrow(/10 MB/);
   });
 });
