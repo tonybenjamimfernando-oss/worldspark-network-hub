@@ -3,9 +3,11 @@ name: Validate application
 on:
   push:
     branches:
+      - main
       - "feature/**"
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
