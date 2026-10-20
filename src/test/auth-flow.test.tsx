@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
   signInWithPassword: vi.fn(),
   signUp: vi.fn(),
   resetPasswordForEmail: vi.fn(),
+  resend: vi.fn(),
   updateUser: vi.fn(),
   toastSuccess: vi.fn(),
   toastError: vi.fn(),
@@ -31,6 +32,7 @@ vi.mock("@/integrations/supabase/client", () => ({
       signInWithPassword: mocks.signInWithPassword,
       signUp: mocks.signUp,
       resetPasswordForEmail: mocks.resetPasswordForEmail,
+      resend: mocks.resend,
       updateUser: mocks.updateUser,
     },
   },
@@ -50,6 +52,7 @@ describe("authentication flow", () => {
     });
     mocks.signUp.mockResolvedValue({ data: { session: null }, error: null });
     mocks.resetPasswordForEmail.mockResolvedValue({ error: null });
+    mocks.resend.mockResolvedValue({ error: null });
     mocks.updateUser.mockResolvedValue({ error: null });
   });
 
@@ -91,7 +94,7 @@ describe("authentication flow", () => {
 
     await waitFor(() => {
       expect(mocks.resetPasswordForEmail).toHaveBeenCalledWith("person@example.com", {
-        redirectTo: expect.stringContaining("/auth?next=panel"),
+        redirectTo: expect.stringContaining("/reset-password"),
       });
     });
     expect(mocks.toastSuccess).toHaveBeenCalledWith(
