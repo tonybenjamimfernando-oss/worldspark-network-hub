@@ -21,12 +21,16 @@ function traduzirErroAuth(error: AuthErrorLike): string {
 
   if (
     code === "over_email_send_rate_limit" ||
+    message.includes("email rate limit exceeded")
+  ) {
+    return "O serviço de envio de emails atingiu o limite do Supabase. Não é um erro da tua palavra-passe. O administrador deve configurar um serviço SMTP próprio; tenta novamente quando o limite de envio for reposto.";
+  }
+  if (
     code === "over_request_rate_limit" ||
-    message.includes("email rate limit exceeded") ||
     message.includes("rate limit") ||
     error.status === 429
   ) {
-    return "Muitas tentativas. Aguarda alguns minutos e tenta novamente.";
+    return "Muitas tentativas em pouco tempo. Aguarda alguns minutos antes de repetir.";
   }
   if (
     code === "user_already_exists" ||
@@ -159,7 +163,8 @@ export function AuthPage() {
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (busy || cooldown > 0) return;
+    // A signup/resend cooldown must not block an existing user from logging in.
+    if (busy || (cooldown > 0 && mode !== "in" && !recovery)) return;
 
     // Honeypot: silently ignore automated submissions without calling Auth.
     if (website.trim()) return;
@@ -308,7 +313,7 @@ export function AuthPage() {
                 />
               </div>
             )}
-            <Button type="submit" className="w-full" disabled={busy || cooldown > 0}>
+            <Button type="submit" className="w-full" disabled={busy || (cooldown > 0 && mode !== "in" && !recovery)}>
               {busy
                 ? "A processar…"
                 : cooldown > 0
