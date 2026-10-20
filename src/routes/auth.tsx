@@ -36,6 +36,45 @@ export function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [confirmationEmail, setConfirmationEmail] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  const [resendBusy, setResendBusy] = useState(false);
+  const [authError, setAuthError] = useState("");
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = window.setTimeout(() => setCooldown((seconds) => Math.max(0, seconds - 1)), 1000);
+    return () => window.clearTimeout(timer);
+  }, [cooldown]);
+
+  function traduzirErroAuth(error: { message?: string; status?: number; code?: string }) {
+    const m = (error?.message || "").toLowerCase();
+    if (m.includes("rate limit") || error?.status === 429 || error?.code === "over_email_send_rate_limit") return "Muitos pedidos de e-mail. Aguarda alguns minutos e tenta novamente.";
+    if (m.includes("invalid login credentials")) return "Email ou palavra-passe incorretos, ou a conta ainda não foi confirmada.";
+    if (m.includes("email not confirmed")) return "Confirma o teu e-mail antes de entrar. Verifica a caixa de entrada e o spam.";
+    if (m.includes("already registered") || m.includes("already been registered")) return "Este e-mail já tem conta. Tenta entrar.";
+    if (m.includes("password")) return "A palavra-passe deve ter pelo menos 8 caracteres.";
+    return "Ocorreu um erro. Tenta novamente.";
+  }
+
+  async function reenviarConfirmacao(targetEmail = confirmationEmail || email.trim().toLowerCase()) {
+    if (!targetEmail || cooldown > 0 || resendBusy) return;
+    setResendBusy(true);
+    setAuthError("");
+    try {
+      const { error } = await supabase.auth.resend({ type: "signup", email: targetEmail, options: { emailRedirectTo: window.location.origin + "/" } });
+      if (error) throw error;
+      setConfirmationEmail(targetEmail); setCooldown(60);
+      toast.success("E-mail de confirmação reenviado. Verifica também o spam.");
+    } catch (err) {
+      const error = err as { message?: string; status?: number; code?: string };
+      const translated = traduzirErroAuth(error);
+      setAuthError(translated);
+      toast.error(translated);
+      const raw = (error.message || "").toLowerCase();
+      if (raw.includes("rate limit") || error.status === 429 || error.code === "over_email_send_rate_limit") setCooldown(60);
+    } finally { setResendBusy(false); }
+  }
 
   const navigateAfterAuth = useCallback(() => {
     switch (next) {
@@ -87,7 +126,7 @@ export function AuthPage() {
         navigateAfterAuth();
       } else if (mode === "reset") {
         const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
-          redirectTo: `${window.location.origin}/auth?next=${next ?? "panel"}`,
+          redirectTo: window.location.origin + "/reset-password",
         });
         if (error) throw error;
         toast.success("Se existir uma conta com esse email, receberás instruções para recuperar o acesso.");
@@ -100,12 +139,12 @@ export function AuthPage() {
           email: normalizedEmail,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth?next=${next ?? "panel"}`,
+            emailRedirectTo: window.location.origin + "/",
             data: { full_name: name.trim() },
           },
         });
         if (error) throw error;
-        if (!data.session) toast.success("Conta criada. Confirma o teu email para entrar.");
+        if (!data.session) { setConfirmationEmail(normalizedEmail); setAuthError(""); }
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : "";
@@ -125,7 +164,8 @@ export function AuthPage() {
     }
   }
 
-  const heading = recovery
+  const heading = confirmationEmail && !recovery ? "Confirma o teu e-mail"
+    : recovery
     ? "Escolher nova palavra-passe"
     : mode === "reset"
       ? "Recuperar acesso"
@@ -145,7 +185,14 @@ export function AuthPage() {
               ? "Indica o email da tua conta para receberes as instruções de recuperação."
               : "Publica, avalia e liga-te a compradores e vendedores."}
         </p>
-        <form onSubmit={submit} className="space-y-4">
+        {confirmationEmail && !recovery ? (
+          <div className="mt-5 space-y-4">
+            <p className="text-sm text-muted-foreground">Enviámos um e-mail de confirmação para <strong>{confirmationEmail}</strong>. Verifica a caixa de entrada e o spam.</p>
+            {authError && <p role="alert" className="text-sm text-destructive">{authError}</p>}
+            <Button type="button" className="w-full" disabled={resendBusy || cooldown > 0} onClick={() => void reenviarConfirmacao(confirmationEmail)}>{resendBusy ? "A reenviar…" : cooldown > 0 ? "Reenviar e-mail (" + cooldown + "s)" : "Reenviar e-mail"}</Button>
+            <Button type="button" variant="link" className="w-full" onClick={() => { setConfirmationEmail(""); setMode("in"); setAuthError(""); }}>Voltar a entrar</Button>
+          </div>
+        ) : <form onSubmit={submit} className="space-y-4">
           {mode === "up" && !recovery && (
             <div>
               <Label htmlFor="n">Nome</Label>
@@ -179,7 +226,7 @@ export function AuthPage() {
               />
             </div>
           )}
-          <Button type="submit" className="w-full" disabled={busy}>
+          <Button type="submit" className="w-full" disabled={busy || (mode === "up" && cooldown > 0)}>
             {busy
               ? "A processar…"
               : recovery
@@ -188,10 +235,10 @@ export function AuthPage() {
                   ? "Enviar instruções"
                   : mode === "in"
                     ? "Entrar"
-                    : "Criar conta"}
+                    : mode === "up" && cooldown > 0 ? "Tenta novamente em " + cooldown + "s" : "Criar conta"}
           </Button>
-        </form>
-        {!recovery && mode === "in" && (
+        </form>}
+        {!recovery && !confirmationEmail && mode === "in" && (
           <Button
             variant="link"
             className="mt-2 h-auto w-full whitespace-normal text-sm"
@@ -201,7 +248,7 @@ export function AuthPage() {
             Esqueci-me da palavra-passe
           </Button>
         )}
-        {!recovery && mode !== "in" && (
+        {!recovery && !confirmationEmail && mode !== "in" && (
           <Button
             variant="link"
             className="mt-4 h-auto w-full whitespace-normal text-sm"
@@ -211,7 +258,7 @@ export function AuthPage() {
             Voltar a entrar
           </Button>
         )}
-        {!recovery && mode === "in" && (
+        {!recovery && !confirmationEmail && mode === "in" && (
           <Button
             variant="link"
             className="mt-2 h-auto w-full whitespace-normal text-sm"
@@ -221,6 +268,7 @@ export function AuthPage() {
             Ainda não tens conta? Regista-te
           </Button>
         )}
+        {authError && !confirmationEmail && <p role="alert" className="mt-3 text-sm text-destructive">{authError}</p>}
       </div>
     </div>
   );
