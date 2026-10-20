@@ -24,12 +24,8 @@ function AuthCallbackPage() {
           throw new Error("A ligação de confirmação expirou ou já foi utilizada. Solicita uma nova mensagem.");
         }
 
-        const code = query.get("code");
-        if (code) {
-          const { error } = await supabase.auth.exchangeCodeForSession(code);
-          if (error) throw error;
-        }
-
+        // Supabase Auth automatically processes the PKCE code/hash during client initialization.
+        // Calling exchangeCodeForSession here as well could consume the same code twice.
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
         if (!data.session) {
