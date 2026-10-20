@@ -269,6 +269,7 @@ export function AuthPage() {
           </Button>
         )}
         {authError && !confirmationEmail && <p role="alert" className="mt-3 text-sm text-destructive">{authError}</p>}
+        {authError.includes("Confirma o teu e-mail") && !confirmationEmail && mode === "in" && <Button type="button" variant="link" className="w-full" disabled={resendBusy || cooldown > 0} onClick={() => void reenviarConfirmacao(email.trim().toLowerCase())}>{resendBusy ? "A reenviar…" : cooldown > 0 ? "Reenviar e-mail (" + cooldown + "s)" : "Reenviar e-mail de confirmação"}</Button>}
       </div>
     </div>
   );
