@@ -217,6 +217,7 @@ export function AuthPage() {
         if (error) throw error;
         if (!data.session) {
           setConfirmationEmail(normalizedEmail);
+          setCooldown(RATE_LIMIT_COOLDOWN_SECONDS);
           setAuthError("");
         }
       }
