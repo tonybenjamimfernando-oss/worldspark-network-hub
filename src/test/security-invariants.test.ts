@@ -20,11 +20,11 @@ const sqlText = migrations
 const statements = sqlText.split(";");
 const policies = [...sqlText.matchAll(/create\s+policy[\s\S]*?;/gi)].map((match) => match[0]);
 const tables = [...sqlText.matchAll(/create\s+table\s+(?:if\s+not\s+exists\s+)?(?:public\.)?([a-z_][a-z0-9_]*)/gi)].map((match) =>
-  match[1].toLowerCase(),
+  (match[1] ?? "").toLowerCase(),
 );
 const rlsEnabled = new Set(
   [...sqlText.matchAll(/alter\s+table\s+(?:public\.)?([a-z_][a-z0-9_]*)\s+enable\s+row\s+level\s+security/gi)].map((match) =>
-    match[1].toLowerCase(),
+    (match[1] ?? "").toLowerCase(),
   ),
 );
 const definers = [...sqlText.matchAll(/security\s+definer/gi)].map((match) => match.index ?? 0);
@@ -52,7 +52,7 @@ describe("invariantes de segurança das migrações", () => {
         const end = sqlText.indexOf("$$", index);
         return !/search_path/i.test(sqlText.slice(index, end === -1 ? index + 400 : end));
       })
-      .map((index) => sqlText.slice(index, index + 80).split("\n")[0].trim());
+      .map((index) => (sqlText.slice(index, index + 80).split("\n")[0] ?? "").trim());
     expect(missing).toEqual([]);
   });
 
