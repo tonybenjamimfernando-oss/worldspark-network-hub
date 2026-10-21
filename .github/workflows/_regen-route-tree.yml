@@ -1,0 +1,29 @@
+name: Regen route tree (temporario)
+
+on:
+  push:
+    branches: [fix/pipeline-e-configuracao]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Build (regenerates the route tree)
+        run: bun run build
+      - name: Show regenerated route tree
+        run: |
+          echo "===GITSTATUS-START==="
+          git status --short
+          echo "===GITSTATUS-END==="
+          echo "===ROUTETREE-START==="
+          cat src/routeTree.gen.ts
+          echo "===ROUTETREE-END==="
