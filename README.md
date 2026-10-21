@@ -13,7 +13,7 @@ O projecto já inclui:
 - Avaliações, denúncias e links de afiliado.
 - Migrações SQL e validação automática com GitHub Actions.
 
-Algumas áreas, como chat completo, mapa com GPS, pagamentos e planos pagos, ainda dependem de implementação e/ou de serviços externos. Não presumir que estão operacionais só porque aparecem na navegação.
+O chat de texto (conversas, mensagens e actualização em tempo real) e o mapa com geolocalização e tiles OpenStreetMap estão implementados no código, mas ainda não foram validados contra dados reais. As versões completas — chat com voz, ficheiros e chamadas, e mapa com pesquisa por área e direcções — continuam pendentes, tal como pagamentos e planos pagos. Não presumir que estão operacionais só porque aparecem na navegação.
 
 ## Requisitos
 

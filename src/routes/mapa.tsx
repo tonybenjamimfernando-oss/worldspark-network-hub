@@ -71,8 +71,9 @@ function GlobalMap() {
   const listings = data ?? [];
 
   useEffect(() => {
-    if (!customCenter && listings.length) {
-      setCenter({ latitude: listings[0].latitude, longitude: listings[0].longitude });
+    const first = listings[0];
+    if (!customCenter && first) {
+      setCenter({ latitude: first.latitude, longitude: first.longitude });
     }
   }, [listings, customCenter]);
 

@@ -18,11 +18,12 @@ const EXTENSIONS: Record<string, string> = {
 export async function validateImageFile(file: Pick<File, "type" | "size" | "slice">): Promise<string> {
   if (file.size > MAX_BYTES) throw new Error("Imagem demasiado grande (máx. 10 MB).");
   const signatureCheck = IMAGE_SIGNATURES[file.type];
-  if (!signatureCheck) throw new Error("Formato não suportado. Use JPG, PNG, WEBP ou GIF.");
+  const extension = EXTENSIONS[file.type];
+  if (!signatureCheck || !extension) throw new Error("Formato não suportado. Use JPG, PNG, WEBP ou GIF.");
 
   const header = new Uint8Array(await file.slice(0, 12).arrayBuffer());
   if (!signatureCheck(header)) {
     throw new Error("O conteúdo do ficheiro não corresponde ao formato de imagem declarado.");
   }
-  return EXTENSIONS[file.type];
+  return extension;
 }

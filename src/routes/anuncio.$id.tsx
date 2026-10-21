@@ -346,8 +346,8 @@ type Owner = {
   is_verified: boolean;
   city: string | null;
   country: string | null;
-  public_phone: string | null;
-  public_email: string | null;
+  public_phone?: string | null;
+  public_email?: string | null;
 } | null;
 function SellerCard({
   owner,
