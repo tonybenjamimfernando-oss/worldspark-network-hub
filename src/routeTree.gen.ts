@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CentroRouteImport } from './routes/centro'
 import { Route as EmpresasRouteImport } from './routes/empresas'
 import { Route as ExplorarRouteImport } from './routes/explorar'
 import { Route as FreelancersRouteImport } from './routes/freelancers'
@@ -19,9 +20,12 @@ import { Route as MapaRouteImport } from './routes/mapa'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as RegrasRouteImport } from './routes/regras'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedPublicarRouteImport } from './routes/_authenticated/publicar'
 import { Route as AnuncioIdRouteImport } from './routes/anuncio.$id'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as UIdRouteImport } from './routes/u.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -36,6 +40,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CentroRoute = CentroRouteImport.update({
+  id: '/centro',
+  path: '/centro',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmpresasRoute = EmpresasRouteImport.update({
@@ -73,6 +82,16 @@ const RegrasRoute = RegrasRouteImport.update({
   path: '/regras',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   id: '/painel',
   path: '/painel',
@@ -88,6 +107,11 @@ const AnuncioIdRoute = AnuncioIdRouteImport.update({
   path: '/anuncio/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => AuthRoute,
+} as any)
 const UIdRoute = UIdRouteImport.update({
   id: '/u/$id',
   path: '/u/$id',
@@ -96,7 +120,8 @@ const UIdRoute = UIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/centro': typeof CentroRoute
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
   '/freelancers': typeof FreelancersRoute
@@ -104,14 +129,18 @@ export interface FileRoutesByFullPath {
   '/mensagens': typeof MensagensRoute
   '/planos': typeof PlanosRoute
   '/regras': typeof RegrasRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/publicar': typeof AuthenticatedPublicarRoute
   '/anuncio/$id': typeof AnuncioIdRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/centro': typeof CentroRoute
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
   '/freelancers': typeof FreelancersRoute
@@ -119,16 +148,20 @@ export interface FileRoutesByTo {
   '/mensagens': typeof MensagensRoute
   '/planos': typeof PlanosRoute
   '/regras': typeof RegrasRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/publicar': typeof AuthenticatedPublicarRoute
   '/anuncio/$id': typeof AnuncioIdRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/centro': typeof CentroRoute
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
   '/freelancers': typeof FreelancersRoute
@@ -136,9 +169,12 @@ export interface FileRoutesById {
   '/mensagens': typeof MensagensRoute
   '/planos': typeof PlanosRoute
   '/regras': typeof RegrasRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/publicar': typeof AuthenticatedPublicarRoute
   '/anuncio/$id': typeof AnuncioIdRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
 }
 export interface FileRouteTypes {
@@ -146,6 +182,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/centro'
     | '/empresas'
     | '/explorar'
     | '/freelancers'
@@ -153,14 +190,18 @@ export interface FileRouteTypes {
     | '/mensagens'
     | '/planos'
     | '/regras'
+    | '/reset-password'
+    | '/admin'
     | '/painel'
     | '/publicar'
     | '/anuncio/$id'
+    | '/auth/callback'
     | '/u/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/centro'
     | '/empresas'
     | '/explorar'
     | '/freelancers'
@@ -168,15 +209,19 @@ export interface FileRouteTypes {
     | '/mensagens'
     | '/planos'
     | '/regras'
+    | '/reset-password'
+    | '/admin'
     | '/painel'
     | '/publicar'
     | '/anuncio/$id'
+    | '/auth/callback'
     | '/u/$id'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/centro'
     | '/empresas'
     | '/explorar'
     | '/freelancers'
@@ -184,16 +229,20 @@ export interface FileRouteTypes {
     | '/mensagens'
     | '/planos'
     | '/regras'
+    | '/reset-password'
+    | '/_authenticated/admin'
     | '/_authenticated/painel'
     | '/_authenticated/publicar'
     | '/anuncio/$id'
+    | '/auth/callback'
     | '/u/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  CentroRoute: typeof CentroRoute
   EmpresasRoute: typeof EmpresasRoute
   ExplorarRoute: typeof ExplorarRoute
   FreelancersRoute: typeof FreelancersRoute
@@ -201,6 +250,7 @@ export interface RootRouteChildren {
   MensagensRoute: typeof MensagensRoute
   PlanosRoute: typeof PlanosRoute
   RegrasRoute: typeof RegrasRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   AnuncioIdRoute: typeof AnuncioIdRoute
   UIdRoute: typeof UIdRoute
 }
@@ -226,6 +276,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/centro': {
+      id: '/centro'
+      path: '/centro'
+      fullPath: '/centro'
+      preLoaderRoute: typeof CentroRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/empresas': {
@@ -277,6 +334,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegrasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/painel': {
       id: '/_authenticated/painel'
       path: '/painel'
@@ -298,6 +369,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnuncioIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/u/$id': {
       id: '/u/$id'
       path: '/u/$id'
@@ -309,11 +387,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedPublicarRoute: typeof AuthenticatedPublicarRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedPublicarRoute: AuthenticatedPublicarRoute,
 }
@@ -321,10 +401,21 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AuthRouteChildren {
+  AuthCallbackRoute: typeof AuthCallbackRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthCallbackRoute: AuthCallbackRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
+  CentroRoute: CentroRoute,
   EmpresasRoute: EmpresasRoute,
   ExplorarRoute: ExplorarRoute,
   FreelancersRoute: FreelancersRoute,
@@ -332,6 +423,7 @@ const rootRouteChildren: RootRouteChildren = {
   MensagensRoute: MensagensRoute,
   PlanosRoute: PlanosRoute,
   RegrasRoute: RegrasRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   AnuncioIdRoute: AnuncioIdRoute,
   UIdRoute: UIdRoute,
 }
