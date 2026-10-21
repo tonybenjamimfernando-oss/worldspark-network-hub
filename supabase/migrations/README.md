@@ -1,24 +1,20 @@
 # Migrações de base de dados
 
-## Fonte de verdade
+drizzle/migrations/ é a história única e versionada: ficheiros 0000 a 0022, com entrada
+correspondente em drizzle/migrations/meta/_journal.json.
 
-`drizzle/migrations/` é a única história versionada: 21 ficheiros SQL (`0000`–`0020`) e 21 entradas correspondentes em `drizzle/migrations/meta/_journal.json`.
+## Excepção reconciliada
 
-## Excepção: `20261020000100_harden_auth_profile_trigger.sql`
+A migração de handle_new_user() que vivia aqui solta
+(20261020000100_harden_auth_profile_trigger.sql) foi comparada com a função em produção e passou
+a drizzle/migrations/0021_harden_auth_profile_trigger.sql. A definição actual confirma-se com:
 
-Esta migração foi escrita fora do histórico Drizzle e aplicada directamente no projecto Supabase referido em `supabase/config.toml`. Reescreve a função `public.handle_new_user()`: fixa `search_path`, mantém `SECURITY DEFINER` e trata falhas na criação do perfil.
+    select prosrc from pg_proc where proname = 'handle_new_user';
 
-Consequências enquanto não for reconciliada:
+Este diretório já não contém migrações fora do histórico Drizzle.
 
-- A história Drizzle continua a descrever a versão anterior da função.
-- Uma reconstrução da base de dados a partir de `drizzle/migrations/` produz um `handle_new_user()` sem este endurecimento.
-- O Drizzle não sabe que esta alteração existe.
+## Histórico remoto
 
-## Reconciliar antes da próxima migração
-
-1. Comparar a definição actual na base de dados alojada com este ficheiro:
-   `select prosrc from pg_proc where proname = 'handle_new_user';`
-2. Converter este SQL numa migração Drizzle nova (`0021_...`), sem reescrever migrações já publicadas.
-3. Confirmar qual das duas versões deve prevalecer e reaplicar a definição na base de dados alojada, se necessário.
-4. Registar a migração nova como já aplicada no histórico remoto (`drizzle.__drizzle_migrations`) em vez de a executar de novo, quando o efeito já estiver em produção.
-5. Remover este ficheiro depois de o equivalente existir no histórico Drizzle.
+O projecto alojado não mantém drizzle.__drizzle_migrations; as aplicações ficam registadas em
+supabase_migrations.schema_migrations. O endurecimento de privilégios da Fase 3 está lá
+registado como 20261022000000 (0022_least_privilege_api_grants).
