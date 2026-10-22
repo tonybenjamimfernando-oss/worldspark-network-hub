@@ -50,6 +50,9 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
           Não foi possível abrir esta página
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">Tenta novamente ou volta ao início.</p>
+        <pre className="mt-4 max-w-full overflow-auto rounded bg-muted p-3 text-left text-xs text-muted-foreground">
+          {String(error instanceof Error ? (error.stack || error.message) : error)}
+        </pre>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
