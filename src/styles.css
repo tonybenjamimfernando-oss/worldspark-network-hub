@@ -275,3 +275,89 @@ input, textarea, select {
     transform: none;
   }
 }
+
+
+/* GCNM Aurora UI — translucent layers, ascending light, accessible motion. */
+:root {
+  --aurora-cyan: oklch(0.78 0.15 205 / 0.22);
+  --aurora-blue: oklch(0.62 0.19 255 / 0.18);
+  --aurora-violet: oklch(0.72 0.14 300 / 0.13);
+  --glass-surface: oklch(1 0.015 220 / 0.78);
+  --glass-border: oklch(1 0.02 220 / 0.58);
+}
+.commerce-hero {
+  background:
+    radial-gradient(ellipse at 78% 100%, var(--aurora-cyan), transparent 46%),
+    radial-gradient(ellipse at 70% 5%, var(--aurora-violet), transparent 38%),
+    var(--navy);
+}
+.commerce-hero::before {
+  content: "";
+  position: absolute;
+  inset: -18% -8%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 22% 95%, oklch(0.66 0.17 205 / 0.3), transparent 38%),
+    radial-gradient(ellipse at 68% 78%, oklch(0.62 0.19 255 / 0.26), transparent 42%),
+    radial-gradient(ellipse at 84% 25%, oklch(0.75 0.13 300 / 0.2), transparent 36%);
+  filter: blur(34px);
+  transform: translateY(5%);
+  animation: gcnm-aurora-rise 16s ease-in-out infinite alternate;
+}
+.commerce-hero::after {
+  background:
+    linear-gradient(90deg, oklch(0.15 0.055 250 / 0.96), oklch(0.16 0.055 250 / 0.72) 48%, oklch(0.16 0.055 250 / 0.3)),
+    linear-gradient(0deg, oklch(0.18 0.07 245 / 0.22), transparent 62%);
+}
+@keyframes gcnm-aurora-rise {
+  from { transform: translate3d(-1%, 7%, 0) scale(0.98); opacity: 0.72; }
+  to { transform: translate3d(1%, -5%, 0) scale(1.06); opacity: 1; }
+}
+header.sticky {
+  background: oklch(0.99 0.012 220 / 0.86);
+  border-bottom-color: oklch(0.82 0.06 220 / 0.45);
+  box-shadow: 0 8px 28px oklch(0.22 0.05 250 / 0.055);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+}
+.category-link {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid oklch(0.84 0.045 220 / 0.7);
+  background: linear-gradient(145deg, oklch(1 0 0 / 0.86), oklch(0.93 0.035 220 / 0.78));
+  box-shadow: 0 5px 18px oklch(0.24 0.055 250 / 0.045);
+}
+.category-link::before {
+  content: "";
+  position: absolute;
+  inset: auto -20% -55% -20%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(ellipse, var(--aurora-cyan), transparent 68%);
+  opacity: 0.75;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+.category-link:hover::before {
+  transform: translateY(-24%);
+  opacity: 1;
+}
+.listing-card {
+  border-radius: 1rem;
+  background: linear-gradient(150deg, oklch(1 0 0 / 0.98), oklch(0.97 0.025 220 / 0.9));
+  box-shadow: 0 8px 24px oklch(0.22 0.05 250 / 0.055);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+.market-section {
+  border-bottom-color: oklch(0.82 0.045 220 / 0.6);
+}
+@media (max-width: 640px) {
+  .commerce-hero::after {
+    background:
+      linear-gradient(90deg, oklch(0.15 0.055 250 / 0.92), oklch(0.16 0.055 250 / 0.72)),
+      linear-gradient(0deg, oklch(0.18 0.07 245 / 0.18), transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .commerce-hero::before { animation: none; }
+}
