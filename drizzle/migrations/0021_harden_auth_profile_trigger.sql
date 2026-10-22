@@ -1,3 +1,11 @@
+-- 0021 — Reconciliação: endurecimento da criação de perfil
+--
+-- Esta migração passa para o histórico Drizzle o que vivia solto em
+-- supabase/migrations/20261020000100_harden_auth_profile_trigger.sql. O SQL é idêntico à função
+-- que está em produção no projecto alojado (o histórico remoto regista-a como 20261020001629).
+-- Reescreve handle_new_user(): fixa search_path, mantém SECURITY DEFINER e trata falhas na
+-- criação do perfil sem deixar o registo a meio.
+
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
