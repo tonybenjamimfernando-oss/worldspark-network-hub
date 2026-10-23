@@ -206,6 +206,7 @@ export interface FileRouteTypes {
     | '/anuncio/$id'
     | '/auth/callback'
     | '/u/$id'
+    | '/universo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -225,6 +226,7 @@ export interface FileRouteTypes {
     | '/anuncio/$id'
     | '/auth/callback'
     | '/u/$id'
+    | '/universo'
   id:
     | '__root__'
     | '/'
@@ -245,6 +247,7 @@ export interface FileRouteTypes {
     | '/anuncio/$id'
     | '/auth/callback'
     | '/u/$id'
+    | '/universo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -262,6 +265,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   AnuncioIdRoute: typeof AnuncioIdRoute
   UIdRoute: typeof UIdRoute
+  UniversoRoute: typeof UniversoRoute
 }
 
 declare module '@tanstack/react-router' {
