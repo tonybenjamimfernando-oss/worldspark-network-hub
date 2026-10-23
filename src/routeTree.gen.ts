@@ -27,6 +27,7 @@ import { Route as AuthenticatedPublicarRouteImport } from './routes/_authenticat
 import { Route as AnuncioIdRouteImport } from './routes/anuncio.$id'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as UIdRouteImport } from './routes/u.$id'
+import { Route as UniversoRouteImport } from './routes/universo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -112,6 +113,11 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => AuthRoute,
 } as any)
+const UniversoRoute = UniversoRouteImport.update({
+  id: '/universo',
+  path: '/universo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UIdRoute = UIdRouteImport.update({
   id: '/u/$id',
   path: '/u/$id',
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/anuncio/$id': typeof AnuncioIdRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
+  '/universo': typeof UniversoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/anuncio/$id': typeof AnuncioIdRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
+  '/universo': typeof UniversoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/anuncio/$id': typeof AnuncioIdRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
+  '/universo': typeof UniversoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/anuncio/$id'
     | '/auth/callback'
     | '/u/$id'
+    | '/universo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -216,6 +226,7 @@ export interface FileRouteTypes {
     | '/anuncio/$id'
     | '/auth/callback'
     | '/u/$id'
+    | '/universo'
   id:
     | '__root__'
     | '/'
@@ -236,6 +247,7 @@ export interface FileRouteTypes {
     | '/anuncio/$id'
     | '/auth/callback'
     | '/u/$id'
+    | '/universo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -253,6 +265,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   AnuncioIdRoute: typeof AnuncioIdRoute
   UIdRoute: typeof UIdRoute
+  UniversoRoute: typeof UniversoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -376,6 +389,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/universo': {
+      id: '/universo'
+      path: '/universo'
+      fullPath: '/universo'
+      preLoaderRoute: typeof UniversoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/u/$id': {
       id: '/u/$id'
       path: '/u/$id'
@@ -426,6 +446,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   AnuncioIdRoute: AnuncioIdRoute,
   UIdRoute: UIdRoute,
+  UniversoRoute: UniversoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

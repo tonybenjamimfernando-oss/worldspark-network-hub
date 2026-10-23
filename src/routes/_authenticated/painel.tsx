@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Eye, MousePointerClick, Plus } from "lucide-react";
+import { Eye, MousePointerClick, Plus, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -86,6 +86,8 @@ function Dashboard() {
       ).data ?? [],
   });
   const [f, setF] = useState<ProfileForm | null>(null);
+  const [listingSearch, setListingSearch] = useState("");
+  const [listingFilter, setListingFilter] = useState<"all" | "active" | "hidden">("all");
   useEffect(() => {
     if (profile && !privateProfileLoading && !privateProfileError)
       setF({
@@ -105,6 +107,12 @@ function Dashboard() {
       });
   }, [profile, privateProfile, privateProfileLoading, privateProfileError]);
   const { data: urls } = useSignedUrls([f?.avatar_url]);
+  const filteredListings = (listings ?? []).filter((listing) =>
+    listing.title.toLowerCase().includes(listingSearch.trim().toLowerCase()) &&
+    (listingFilter === "all" || listing.status === listingFilter),
+  );
+  const activeListings = (listings ?? []).filter((listing) => listing.status === "active").length;
+  const hiddenListings = (listings ?? []).filter((listing) => listing.status !== "active").length;
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -189,6 +197,66 @@ function Dashboard() {
         </div>
       </div>
 
+      <section className="mt-7 space-y-4">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[.18em] text-primary">Centro de gestão GCNM</p>
+          <h2 className="mt-1 text-2xl font-extrabold">A tua presença comercial, num só lugar</h2>
+          <p className="mt-1 max-w-3xl text-sm text-muted-foreground">Escolhe o tipo de atividade que queres desenvolver. Os atalhos levam às áreas existentes; os módulos financeiros e analíticos avançados só devem apresentar dados reais quando estiverem ligados às respetivas fontes.</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {[
+            { title: "Vendedor e catálogo", description: "Produtos, ofertas externas, estado das publicações e apresentação comercial.", href: "/publicar", label: "Gerir catálogo" },
+            { title: "Empresa e marca", description: "Presença empresarial, identidade pública, contactos e oportunidades B2B.", href: "/empresas", label: "Área empresarial" },
+            { title: "Freelancer e especialista", description: "Especialidades, serviços, portefólio e descoberta por clientes.", href: "/freelancers", label: "Área profissional" },
+            { title: "Marketing e promoção", description: "Planos, posicionamento da oferta e caminhos para ampliar o alcance.", href: "/planos", label: "Ver promoção" },
+            { title: "Clientes e conversas", description: "Acede às mensagens para dar seguimento aos contactos comerciais.", href: "/mensagens", label: "Abrir mensagens" },
+            { title: "Mercado e localização", description: "Descobre mercados e oportunidades regionais através do mapa.", href: "/mapa", label: "Explorar mapa" },
+            { title: "Pedidos e oportunidades", description: "Encontra necessidades publicadas e oportunidades comerciais.", href: "/explorar?kind=request", label: "Ver pedidos" },
+            { title: "Confiança e conta", description: "Consulta regras e mantém a tua atividade comercial transparente.", href: "/regras", label: "Ver orientações" },
+          ].map((item) => (
+            <article key={item.title} className="group rounded-2xl border border-border/70 bg-card/70 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+              <h3 className="font-bold">{item.title}</h3>
+              <p className="mt-2 min-h-12 text-sm leading-5 text-muted-foreground">{item.description}</p>
+              <Link to={item.href as never} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                {item.label} <span aria-hidden="true">→</span>
+              </Link>
+            </article>
+          ))}
+        </div>
+        <section className="mt-4 rounded-2xl border border-border/70 bg-card/60 p-4 sm:p-5">
+          <div className="flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">Desempenho por anúncio</p>
+              <h3 className="mt-1 text-lg font-bold">Alcance e intenção de compra</h3>
+            </div>
+            <span className="text-xs text-muted-foreground">Dados disponíveis da tua conta</span>
+          </div>
+          <div className="mt-4 space-y-4">
+            {[...(listings ?? [])].sort((a, b) => (b.views ?? 0) - (a.views ?? 0)).slice(0, 5).map((listing) => {
+              const maxViews = Math.max(1, ...(listings ?? []).map((item) => item.views ?? 0));
+              const views = listing.views ?? 0;
+              const clicks = listing.outbound_clicks ?? 0;
+              return <div key={listing.id} className="space-y-1.5">
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <Link to="/anuncio/$id" params={{ id: listing.id }} className="min-w-0 truncate font-medium hover:text-primary">{listing.title}</Link>
+                  <span className="shrink-0 text-xs text-muted-foreground">{views.toLocaleString()} vistas · {clicks.toLocaleString()} cliques</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-gradient-to-r from-sky-500 via-blue-500 to-amber-400" style={{ width: `${Math.min(100, (views / maxViews) * 100)}%` }} />
+                </div>
+              </div>;
+            })}
+            {(listings ?? []).length === 0 && <p className="text-sm text-muted-foreground">Quando publicares anúncios, os dados disponíveis serão apresentados aqui.</p>}
+          </div>
+          <p className="mt-4 text-xs leading-5 text-muted-foreground">Este gráfico compara visualizações registadas por anúncio. Não representa vendas, receitas ou conversões, que só podem ser calculadas quando esses eventos estiverem ligados ao sistema.</p>
+        </section>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl border border-sky-400/20 bg-sky-500/[.06] p-4"><p className="text-sm text-muted-foreground">Visualizações dos anúncios</p><p className="mt-2 text-2xl font-extrabold">{(listings ?? []).reduce((sum, item) => sum + (item.views ?? 0), 0).toLocaleString()}</p><p className="mt-1 text-xs text-muted-foreground">Total reportado pelos anúncios da tua conta</p></div>
+          <div className="rounded-2xl border border-amber-400/20 bg-amber-500/[.06] p-4"><p className="text-sm text-muted-foreground">Cliques de saída</p><p className="mt-2 text-2xl font-extrabold">{(listings ?? []).reduce((sum, item) => sum + (item.outbound_clicks ?? 0), 0).toLocaleString()}</p><p className="mt-1 text-xs text-muted-foreground">Interações de saída registadas</p></div>
+          <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/[.06] p-4"><p className="text-sm text-muted-foreground">Ofertas publicadas</p><p className="mt-2 text-2xl font-extrabold">{(listings ?? []).length.toLocaleString()}</p><p className="mt-1 text-xs text-muted-foreground">Anúncios associados à tua conta</p></div>
+        </div>
+      </section>
+
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
         {privateProfileError && (
           <p role="alert" className="text-sm text-destructive">
@@ -249,6 +317,35 @@ function Dashboard() {
                 </L>
               </div>
             )}
+            <section className="space-y-3 rounded-2xl border border-amber-400/25 bg-gradient-to-br from-amber-500/[.07] via-card/80 to-sky-500/[.06] p-4">
+              <div>
+                <h3 className="font-bold">Nichos e áreas de atividade</h3>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">Seleciona as áreas que descrevem o teu negócio. As escolhas são guardadas no campo de especialidades já existente no perfil.</p>
+              </div>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {[
+                  "Retalho e revenda", "Fabricante", "Distribuidor / grossista", "Importação e exportação",
+                  "Loja online", "Serviços profissionais", "Freelancer / consultor", "Construção e imobiliário",
+                  "Agricultura e alimentação", "Tecnologia e eletrónica", "Logística e transporte", "Educação e formação",
+                  "Artesanato e produção local", "Afiliado / parceiro", "Organização sem fins lucrativos", "Outro nicho",
+                ].map((niche) => {
+                  const selected = f.services.split(",").map((v) => v.trim()).includes(niche);
+                  return <label key={niche} className={`flex cursor-pointer items-start gap-2 rounded-xl border p-2.5 text-xs transition ${selected ? "border-amber-400/60 bg-amber-400/10 text-foreground" : "border-border/70 bg-background/40 text-muted-foreground hover:border-primary/40"}`}>
+                    <input
+                      type="checkbox"
+                      className="mt-0.5 accent-amber-400"
+                      checked={selected}
+                      onChange={(e) => {
+                        const current = f.services.split(",").map((v) => v.trim()).filter(Boolean);
+                        const next = e.target.checked ? [...current, niche] : current.filter((v) => v !== niche);
+                        setF({ ...f, services: next.join(", ") });
+                      }}
+                    />
+                    <span>{niche}</span>
+                  </label>;
+                })}
+              </div>
+            </section>
             {f.account_type !== "personal" && (
               <L label="Serviços / especialidades (separados por vírgula)">
                 <Input value={f.services} onChange={s("services")} />
@@ -305,8 +402,22 @@ function Dashboard() {
                 </Button>
               </div>
             </div>
+            <div className="mt-4 grid gap-3 rounded-xl border border-border/70 bg-muted/20 p-3 sm:grid-cols-[minmax(0,1fr)_180px]">
+              <label className="relative block">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input value={listingSearch} onChange={(e) => setListingSearch(e.target.value)} placeholder="Pesquisar as tuas ofertas..." className="pl-9" aria-label="Pesquisar ofertas" />
+              </label>
+              <label className="relative block">
+                <SlidersHorizontal className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <select value={listingFilter} onChange={(e) => setListingFilter(e.target.value as typeof listingFilter)} className="h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm" aria-label="Filtrar estado das ofertas">
+                  <option value="all">Todos os estados ({(listings ?? []).length})</option>
+                  <option value="active">Ativas ({activeListings})</option>
+                  <option value="hidden">Ocultas / outras ({hiddenListings})</option>
+                </select>
+              </label>
+            </div>
             <ul className="mt-3 divide-y">
-              {listings?.map((l) => (
+              {filteredListings.map((l) => (
                 <li key={l.id} className="flex items-center gap-3 py-3 text-sm">
                   <div className="min-w-0 flex-1">
                     <Link

@@ -40,6 +40,7 @@ const NAV = [
   { to: "/freelancers", label: "Freelancers", icon: Users },
   { to: "/mapa", label: "Mapa", icon: Map },
   { to: "/centro", label: "Centro de comando", icon: Command },
+  { to: "/universo", label: "Universo GCNM", icon: Globe },
   { to: "/planos", label: "Planos", icon: CreditCard },
 ] as const;
 

@@ -12,6 +12,10 @@ import {
   ShieldCheck,
   Link2,
   ChevronDown,
+  UserRound,
+  MessageSquare,
+  MapPinned,
+  Command,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -123,7 +127,33 @@ function Index() {
           </div>
         </div>
       </section>
-      <div className="border-b bg-card">
+      <section className="relative z-10 mx-auto -mt-5 max-w-7xl px-5 md:px-6">
+        <div className="grid grid-cols-2 gap-3 rounded-2xl border border-white/70 bg-white/80 p-3 shadow-[0_16px_44px_rgba(17,55,88,0.10)] backdrop-blur-xl sm:grid-cols-3 lg:grid-cols-6">
+          {[
+            { label: "Explorar ofertas", detail: "Produtos e oportunidades", to: "/explorar", icon: ShoppingBag },
+            { label: "Publicar", detail: "Apresenta uma oferta", to: "/publicar", icon: ArrowUpRight },
+            { label: "Mensagens", detail: "Fala com outros membros", to: "/mensagens", icon: MessageSquare },
+            { label: "O meu perfil", detail: "Conta e identidade", to: "/painel", icon: UserRound },
+            { label: "Mapa global", detail: "Descobre novos mercados", to: "/mapa", icon: MapPinned },
+            { label: "Centro de comando", detail: "Ferramentas e atalhos", to: "/centro", icon: Command },
+          ].map((item) => (
+            <Link
+              key={item.label}
+              to={item.to}
+              className="group flex min-h-28 flex-col items-start justify-between gap-4 rounded-xl border border-transparent p-3 transition hover:border-cyan-200/80 hover:bg-white/90 hover:shadow-[0_8px_24px_rgba(17,120,160,0.10)] focus-visible:outline-offset-2"
+            >
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-cyan-100/90 to-blue-100/80 text-primary transition group-hover:-translate-y-0.5">
+                <item.icon className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block text-sm font-bold text-foreground">{item.label}</span>
+                <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">{item.detail}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <div className="mt-6 border-b bg-card/75 backdrop-blur-sm">
         <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {[
             {
