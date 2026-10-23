@@ -85,7 +85,9 @@ function Dashboard() {
           .eq("affiliate_id", user.id)
       ).data ?? [],
   });
-  const [f, setF] = useState<ProfileForm | null>(null);\n  const [listingSearch, setListingSearch] = useState("");\n  const [listingFilter, setListingFilter] = useState<"all" | "active" | "hidden">("all");
+  const [f, setF] = useState<ProfileForm | null>(null);
+  const [listingSearch, setListingSearch] = useState("");
+  const [listingFilter, setListingFilter] = useState<"all" | "active" | "hidden">("all");
   useEffect(() => {
     if (profile && !privateProfileLoading && !privateProfileError)
       setF({
@@ -104,7 +106,13 @@ function Dashboard() {
         is_public: profile.is_public,
       });
   }, [profile, privateProfile, privateProfileLoading, privateProfileError]);
-  const { data: urls } = useSignedUrls([f?.avatar_url]);\n  const filteredListings = (listings ?? []).filter((listing) =>\n    listing.title.toLowerCase().includes(listingSearch.trim().toLowerCase()) &&\n    (listingFilter === "all" || listing.status === listingFilter),\n  );\n  const activeListings = (listings ?? []).filter((listing) => listing.status === "active").length;\n  const hiddenListings = (listings ?? []).filter((listing) => listing.status !== "active").length;
+  const { data: urls } = useSignedUrls([f?.avatar_url]);
+  const filteredListings = (listings ?? []).filter((listing) =>
+    listing.title.toLowerCase().includes(listingSearch.trim().toLowerCase()) &&
+    (listingFilter === "all" || listing.status === listingFilter),
+  );
+  const activeListings = (listings ?? []).filter((listing) => listing.status === "active").length;
+  const hiddenListings = (listings ?? []).filter((listing) => listing.status !== "active").length;
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
