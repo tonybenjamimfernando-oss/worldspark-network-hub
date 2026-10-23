@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Activity, ArrowRight, BadgePercent, Banknote, Bell, Building2, ChartNoAxesCombined,
-  CheckCircle2, CircleDollarSign, Compass, CreditCard, Globe2, Heart, LifeBuoy,
-  MapPinned, MessageSquare, Package, Search, ShieldCheck, ShoppingBag, Sparkles,
-  Store, Truck, UserRound, Users, Wallet, Wrench, Zap, Megaphone, Languages,
-  ClipboardList, Star, Settings, Handshake, FileText, Bookmark, BarChart3,
+  Activity, ArrowRight, BadgePercent, ChartNoAxesCombined, CheckCircle2, CircleDollarSign,
+  Compass, CreditCard, Globe2, Heart, LifeBuoy, MapPinned, MessageSquare, Package, Search,
+  ShieldCheck, Sparkles, Store, Truck, UserRound, Wallet, Wrench, Zap, Megaphone,
+  ClipboardList, Handshake,
 } from "lucide-react";
 import { meta } from "@/components/InfoPage";
 
