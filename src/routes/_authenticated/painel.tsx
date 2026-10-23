@@ -189,6 +189,39 @@ function Dashboard() {
         </div>
       </div>
 
+      <section className="mt-7 space-y-4">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[.18em] text-primary">Centro de gestão GCNM</p>
+          <h2 className="mt-1 text-2xl font-extrabold">A tua presença comercial, num só lugar</h2>
+          <p className="mt-1 max-w-3xl text-sm text-muted-foreground">Escolhe o tipo de atividade que queres desenvolver. Os atalhos levam às áreas existentes; os módulos financeiros e analíticos avançados só devem apresentar dados reais quando estiverem ligados às respetivas fontes.</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {[
+            { title: "Vendedor e catálogo", description: "Produtos, ofertas externas, estado das publicações e apresentação comercial.", href: "/publicar", label: "Gerir catálogo" },
+            { title: "Empresa e marca", description: "Presença empresarial, identidade pública, contactos e oportunidades B2B.", href: "/empresas", label: "Área empresarial" },
+            { title: "Freelancer e especialista", description: "Especialidades, serviços, portefólio e descoberta por clientes.", href: "/freelancers", label: "Área profissional" },
+            { title: "Marketing e promoção", description: "Planos, posicionamento da oferta e caminhos para ampliar o alcance.", href: "/planos", label: "Ver promoção" },
+            { title: "Clientes e conversas", description: "Acede às mensagens para dar seguimento aos contactos comerciais.", href: "/mensagens", label: "Abrir mensagens" },
+            { title: "Mercado e localização", description: "Descobre mercados e oportunidades regionais através do mapa.", href: "/mapa", label: "Explorar mapa" },
+            { title: "Pedidos e oportunidades", description: "Encontra necessidades publicadas e oportunidades comerciais.", href: "/explorar?kind=request", label: "Ver pedidos" },
+            { title: "Confiança e conta", description: "Consulta regras e mantém a tua atividade comercial transparente.", href: "/regras", label: "Ver orientações" },
+          ].map((item) => (
+            <article key={item.title} className="group rounded-2xl border border-border/70 bg-card/70 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+              <h3 className="font-bold">{item.title}</h3>
+              <p className="mt-2 min-h-12 text-sm leading-5 text-muted-foreground">{item.description}</p>
+              <Link to={item.href as never} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                {item.label} <span aria-hidden="true">→</span>
+              </Link>
+            </article>
+          ))}
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl border border-sky-400/20 bg-sky-500/[.06] p-4"><p className="text-sm text-muted-foreground">Visualizações dos anúncios</p><p className="mt-2 text-2xl font-extrabold">{(listings ?? []).reduce((sum, item) => sum + (item.views ?? 0), 0).toLocaleString()}</p><p className="mt-1 text-xs text-muted-foreground">Total reportado pelos anúncios da tua conta</p></div>
+          <div className="rounded-2xl border border-amber-400/20 bg-amber-500/[.06] p-4"><p className="text-sm text-muted-foreground">Cliques de saída</p><p className="mt-2 text-2xl font-extrabold">{(listings ?? []).reduce((sum, item) => sum + (item.outbound_clicks ?? 0), 0).toLocaleString()}</p><p className="mt-1 text-xs text-muted-foreground">Interações de saída registadas</p></div>
+          <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/[.06] p-4"><p className="text-sm text-muted-foreground">Ofertas publicadas</p><p className="mt-2 text-2xl font-extrabold">{(listings ?? []).length.toLocaleString()}</p><p className="mt-1 text-xs text-muted-foreground">Anúncios associados à tua conta</p></div>
+        </div>
+      </section>
+
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
         {privateProfileError && (
           <p role="alert" className="text-sm text-destructive">
