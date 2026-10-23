@@ -215,6 +215,33 @@ function Dashboard() {
             </article>
           ))}
         </div>
+        <section className="mt-4 rounded-2xl border border-border/70 bg-card/60 p-4 sm:p-5">
+          <div className="flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">Desempenho por anúncio</p>
+              <h3 className="mt-1 text-lg font-bold">Alcance e intenção de compra</h3>
+            </div>
+            <span className="text-xs text-muted-foreground">Dados disponíveis da tua conta</span>
+          </div>
+          <div className="mt-4 space-y-4">
+            {[...(listings ?? [])].sort((a, b) => (b.views ?? 0) - (a.views ?? 0)).slice(0, 5).map((listing) => {
+              const maxViews = Math.max(1, ...(listings ?? []).map((item) => item.views ?? 0));
+              const views = listing.views ?? 0;
+              const clicks = listing.outbound_clicks ?? 0;
+              return <div key={listing.id} className="space-y-1.5">
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <Link to="/anuncio/$id" params={{ id: listing.id }} className="min-w-0 truncate font-medium hover:text-primary">{listing.title}</Link>
+                  <span className="shrink-0 text-xs text-muted-foreground">{views.toLocaleString()} vistas · {clicks.toLocaleString()} cliques</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-gradient-to-r from-sky-500 via-blue-500 to-amber-400" style={{ width: `${Math.min(100, (views / maxViews) * 100)}%` }} />
+                </div>
+              </div>;
+            })}
+            {(listings ?? []).length === 0 && <p className="text-sm text-muted-foreground">Quando publicares anúncios, os dados disponíveis serão apresentados aqui.</p>}
+          </div>
+          <p className="mt-4 text-xs leading-5 text-muted-foreground">Este gráfico compara visualizações registadas por anúncio. Não representa vendas, receitas ou conversões, que só podem ser calculadas quando esses eventos estiverem ligados ao sistema.</p>
+        </section>
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="rounded-2xl border border-sky-400/20 bg-sky-500/[.06] p-4"><p className="text-sm text-muted-foreground">Visualizações dos anúncios</p><p className="mt-2 text-2xl font-extrabold">{(listings ?? []).reduce((sum, item) => sum + (item.views ?? 0), 0).toLocaleString()}</p><p className="mt-1 text-xs text-muted-foreground">Total reportado pelos anúncios da tua conta</p></div>
           <div className="rounded-2xl border border-amber-400/20 bg-amber-500/[.06] p-4"><p className="text-sm text-muted-foreground">Cliques de saída</p><p className="mt-2 text-2xl font-extrabold">{(listings ?? []).reduce((sum, item) => sum + (item.outbound_clicks ?? 0), 0).toLocaleString()}</p><p className="mt-1 text-xs text-muted-foreground">Interações de saída registadas</p></div>
@@ -282,6 +309,35 @@ function Dashboard() {
                 </L>
               </div>
             )}
+            <section className="space-y-3 rounded-2xl border border-amber-400/25 bg-gradient-to-br from-amber-500/[.07] via-card/80 to-sky-500/[.06] p-4">
+              <div>
+                <h3 className="font-bold">Nichos e áreas de atividade</h3>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">Seleciona as áreas que descrevem o teu negócio. As escolhas são guardadas no campo de especialidades já existente no perfil.</p>
+              </div>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {[
+                  "Retalho e revenda", "Fabricante", "Distribuidor / grossista", "Importação e exportação",
+                  "Loja online", "Serviços profissionais", "Freelancer / consultor", "Construção e imobiliário",
+                  "Agricultura e alimentação", "Tecnologia e eletrónica", "Logística e transporte", "Educação e formação",
+                  "Artesanato e produção local", "Afiliado / parceiro", "Organização sem fins lucrativos", "Outro nicho",
+                ].map((niche) => {
+                  const selected = f.services.split(",").map((v) => v.trim()).includes(niche);
+                  return <label key={niche} className={`flex cursor-pointer items-start gap-2 rounded-xl border p-2.5 text-xs transition ${selected ? "border-amber-400/60 bg-amber-400/10 text-foreground" : "border-border/70 bg-background/40 text-muted-foreground hover:border-primary/40"}`}>
+                    <input
+                      type="checkbox"
+                      className="mt-0.5 accent-amber-400"
+                      checked={selected}
+                      onChange={(e) => {
+                        const current = f.services.split(",").map((v) => v.trim()).filter(Boolean);
+                        const next = e.target.checked ? [...current, niche] : current.filter((v) => v !== niche);
+                        setF({ ...f, services: next.join(", ") });
+                      }}
+                    />
+                    <span>{niche}</span>
+                  </label>;
+                })}
+              </div>
+            </section>
             {f.account_type !== "personal" && (
               <L label="Serviços / especialidades (separados por vírgula)">
                 <Input value={f.services} onChange={s("services")} />
