@@ -143,8 +143,6 @@ export interface FileRoutesByFullPath {
   '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
   '/universo': typeof UniversoRoute
-  '/universo': typeof UniversoRoute
-  '/universo': typeof UniversoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -164,6 +162,7 @@ export interface FileRoutesByTo {
   '/anuncio/$id': typeof AnuncioIdRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
+  '/universo': typeof UniversoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -185,6 +184,7 @@ export interface FileRoutesById {
   '/anuncio/$id': typeof AnuncioIdRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
+  '/universo': typeof UniversoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
