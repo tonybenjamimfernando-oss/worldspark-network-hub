@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Eye, MousePointerClick, Plus } from "lucide-react";
+import { Eye, MousePointerClick, Plus, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -85,7 +85,7 @@ function Dashboard() {
           .eq("affiliate_id", user.id)
       ).data ?? [],
   });
-  const [f, setF] = useState<ProfileForm | null>(null);
+  const [f, setF] = useState<ProfileForm | null>(null);\n  const [listingSearch, setListingSearch] = useState("");\n  const [listingFilter, setListingFilter] = useState<"all" | "active" | "hidden">("all");
   useEffect(() => {
     if (profile && !privateProfileLoading && !privateProfileError)
       setF({
@@ -104,7 +104,7 @@ function Dashboard() {
         is_public: profile.is_public,
       });
   }, [profile, privateProfile, privateProfileLoading, privateProfileError]);
-  const { data: urls } = useSignedUrls([f?.avatar_url]);
+  const { data: urls } = useSignedUrls([f?.avatar_url]);\n  const filteredListings = (listings ?? []).filter((listing) =>\n    listing.title.toLowerCase().includes(listingSearch.trim().toLowerCase()) &&\n    (listingFilter === "all" || listing.status === listingFilter),\n  );\n  const activeListings = (listings ?? []).filter((listing) => listing.status === "active").length;\n  const hiddenListings = (listings ?? []).filter((listing) => listing.status !== "active").length;
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -394,8 +394,22 @@ function Dashboard() {
                 </Button>
               </div>
             </div>
+            <div className="mt-4 grid gap-3 rounded-xl border border-border/70 bg-muted/20 p-3 sm:grid-cols-[minmax(0,1fr)_180px]">
+              <label className="relative block">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input value={listingSearch} onChange={(e) => setListingSearch(e.target.value)} placeholder="Pesquisar as tuas ofertas..." className="pl-9" aria-label="Pesquisar ofertas" />
+              </label>
+              <label className="relative block">
+                <SlidersHorizontal className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <select value={listingFilter} onChange={(e) => setListingFilter(e.target.value as typeof listingFilter)} className="h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm" aria-label="Filtrar estado das ofertas">
+                  <option value="all">Todos os estados ({(listings ?? []).length})</option>
+                  <option value="active">Ativas ({activeListings})</option>
+                  <option value="hidden">Ocultas / outras ({hiddenListings})</option>
+                </select>
+              </label>
+            </div>
             <ul className="mt-3 divide-y">
-              {listings?.map((l) => (
+              {filteredListings.map((l) => (
                 <li key={l.id} className="flex items-center gap-3 py-3 text-sm">
                   <div className="min-w-0 flex-1">
                     <Link
