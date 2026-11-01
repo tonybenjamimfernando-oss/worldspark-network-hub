@@ -162,6 +162,13 @@
       "when": 1792620843000,
       "tag": "0022_least_privilege_api_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1793509146628,
+      "tag": "0023_ensure_profile_private",
+      "breakpoints": true
     }
   ]
 }

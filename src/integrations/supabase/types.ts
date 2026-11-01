@@ -14,98 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-
-      conversations: {
-        Row: {
-          created_at: string;
-          id: string;
-          last_message_at: string;
-          listing_id: string;
-          participant_a: string;
-          participant_b: string;
-          updated_at: string;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          last_message_at?: string;
-          listing_id: string;
-          participant_a: string;
-          participant_b: string;
-          updated_at?: string;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          last_message_at?: string;
-          listing_id?: string;
-          participant_a?: string;
-          participant_b?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "conversations_listing_id_fkey";
-            columns: ["listing_id"];
-            isOneToOne: false;
-            referencedRelation: "listings";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "conversations_participant_a_fkey";
-            columns: ["participant_a"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "conversations_participant_b_fkey";
-            columns: ["participant_b"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          }
-        ];
-      }
-      messages: {
-        Row: {
-          body: string;
-          conversation_id: string;
-          created_at: string;
-          id: string;
-          sender_id: string;
-        };
-        Insert: {
-          body: string;
-          conversation_id: string;
-          created_at?: string;
-          id?: string;
-          sender_id: string;
-        };
-        Update: {
-          body?: string;
-          conversation_id?: string;
-          created_at?: string;
-          id?: string;
-          sender_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "messages_conversation_id_fkey";
-            columns: ["conversation_id"];
-            isOneToOne: false;
-            referencedRelation: "conversations";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "messages_sender_id_fkey";
-            columns: ["sender_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          }
-        ];
-      }
       affiliate_links: {
         Row: {
           affiliate_id: string
@@ -148,6 +56,58 @@ export type Database = {
           },
         ]
       }
+      conversations: {
+        Row: {
+          created_at: string
+          id: string
+          last_message_at: string
+          listing_id: string
+          participant_a: string
+          participant_b: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          listing_id: string
+          participant_a: string
+          participant_b: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          listing_id?: string
+          participant_a?: string
+          participant_b?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_participant_a_fkey"
+            columns: ["participant_a"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_participant_b_fkey"
+            columns: ["participant_b"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listings: {
         Row: {
           affiliate_commission: number | null
@@ -167,10 +127,10 @@ export type Database = {
           features: string | null
           id: string
           images: string[]
-          latitude: number | null
-          longitude: number | null
           is_external: boolean
           kind: Database["public"]["Enums"]["listing_kind"]
+          latitude: number | null
+          longitude: number | null
           outbound_clicks: number
           owner_id: string
           price: number | null
@@ -209,10 +169,10 @@ export type Database = {
           features?: string | null
           id?: string
           images?: string[]
-          latitude?: number | null
-          longitude?: number | null
           is_external?: boolean
           kind?: Database["public"]["Enums"]["listing_kind"]
+          latitude?: number | null
+          longitude?: number | null
           outbound_clicks?: number
           owner_id: string
           price?: number | null
@@ -251,10 +211,10 @@ export type Database = {
           features?: string | null
           id?: string
           images?: string[]
-          latitude?: number | null
-          longitude?: number | null
           is_external?: boolean
           kind?: Database["public"]["Enums"]["listing_kind"]
+          latitude?: number | null
+          longitude?: number | null
           outbound_clicks?: number
           owner_id?: string
           price?: number | null
@@ -280,6 +240,95 @@ export type Database = {
             foreignKeyName: "listings_owner_id_fkey"
             columns: ["owner_id"]
             isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      metrics_rate_limits: {
+        Row: {
+          hits: number
+          ip_hash: string
+          scope: string
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          hits?: number
+          ip_hash: string
+          scope: string
+          updated_at?: string
+          window_start: string
+        }
+        Update: {
+          hits?: number
+          ip_hash?: string
+          scope?: string
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
+      profile_private: {
+        Row: {
+          tax_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          tax_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          tax_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_private_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -344,32 +393,6 @@ export type Database = {
           website?: string | null
         }
         Relationships: []
-      }
-      profile_private: {
-        Row: {
-          tax_id: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          tax_id?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          tax_id?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profile_private_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       proposals: {
         Row: {
@@ -529,7 +552,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      start_listing_conversation: { Args: { _listing_id: string }; Returns: string }
+      consume_metrics_rate_limit: {
+        Args: {
+          _ip_hash: string
+          _max_hits: number
+          _scope: string
+          _window_start: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -537,11 +568,19 @@ export type Database = {
         }
         Returns: boolean
       }
-      track_affiliate_click: { Args: { _code: string }; Returns: undefined }
-      track_listing: {
-        Args: { _id: string; _kind: string }
-        Returns: undefined
+      start_listing_conversation: {
+        Args: { _listing_id: string }
+        Returns: string
       }
+      track_affiliate_click:
+        | { Args: { _code: string }; Returns: undefined }
+        | { Args: { _code: string; _viewer_id: string }; Returns: undefined }
+      track_listing:
+        | { Args: { _id: string; _kind: string }; Returns: undefined }
+        | {
+            Args: { _id: string; _kind: string; _viewer_id: string }
+            Returns: undefined
+          }
     }
     Enums: {
       account_type: "personal" | "business" | "provider"
