@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CentroRouteImport } from './routes/centro'
+import { Route as ConversorRouteImport } from './routes/conversor'
 import { Route as EmpresasRouteImport } from './routes/empresas'
 import { Route as ExplorarRouteImport } from './routes/explorar'
 import { Route as FreelancersRouteImport } from './routes/freelancers'
@@ -45,6 +46,11 @@ const AuthRoute = AuthRouteImport.update({
 const CentroRoute = CentroRouteImport.update({
   id: '/centro',
   path: '/centro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConversorRoute = ConversorRouteImport.update({
+  id: '/conversor',
+  path: '/conversor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmpresasRoute = EmpresasRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/centro': typeof CentroRoute
+  '/conversor': typeof ConversorRoute
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
   '/freelancers': typeof FreelancersRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/centro': typeof CentroRoute
+  '/conversor': typeof ConversorRoute
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
   '/freelancers': typeof FreelancersRoute
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/centro': typeof CentroRoute
+  '/conversor': typeof ConversorRoute
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
   '/freelancers': typeof FreelancersRoute
@@ -183,6 +192,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/centro'
+    | '/conversor'
     | '/empresas'
     | '/explorar'
     | '/freelancers'
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/centro'
+    | '/conversor'
     | '/empresas'
     | '/explorar'
     | '/freelancers'
@@ -222,6 +233,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/centro'
+    | '/conversor'
     | '/empresas'
     | '/explorar'
     | '/freelancers'
@@ -243,6 +255,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   CentroRoute: typeof CentroRoute
+  ConversorRoute: typeof ConversorRoute
   EmpresasRoute: typeof EmpresasRoute
   ExplorarRoute: typeof ExplorarRoute
   FreelancersRoute: typeof FreelancersRoute
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       path: '/centro'
       fullPath: '/centro'
       preLoaderRoute: typeof CentroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conversor': {
+      id: '/conversor'
+      path: '/conversor'
+      fullPath: '/conversor'
+      preLoaderRoute: typeof ConversorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/empresas': {
@@ -416,6 +436,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   CentroRoute: CentroRoute,
+  ConversorRoute: ConversorRoute,
   EmpresasRoute: EmpresasRoute,
   ExplorarRoute: ExplorarRoute,
   FreelancersRoute: FreelancersRoute,
