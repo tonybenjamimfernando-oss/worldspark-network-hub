@@ -12,6 +12,7 @@ import { useUser } from "@/lib/auth";
 import { KINDS, categoryLabel, formatPrice } from "@/lib/catalog";
 import { useSignedUrls } from "@/lib/media";
 import { RequestMatches } from "@/components/RequestMatches";
+import { ConvertedPrice } from "@/components/CurrencyConverter";
 
 export const Route = createFileRoute("/anuncio/$id")({
   validateSearch: z.object({ ref: z.string().max(20).optional() }),
@@ -201,6 +202,9 @@ function ListingPage() {
                   : "Orçamento aberto"
                 : formatPrice(l.price, l.currency)}
             </p>
+            {(l.kind === "request" ? l.budget_max : l.price) != null && (
+              <ConvertedPrice amount={Number(l.kind === "request" ? l.budget_max : l.price)} currency={l.currency} />
+            )}
             {(l.city || l.country) && (
               <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4" />

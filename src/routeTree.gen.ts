@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CentroRouteImport } from './routes/centro'
+import { Route as ConversorRouteImport } from './routes/conversor'
 import { Route as EmpresasRouteImport } from './routes/empresas'
 import { Route as ExplorarRouteImport } from './routes/explorar'
 import { Route as FreelancersRouteImport } from './routes/freelancers'
@@ -21,7 +22,6 @@ import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as RegrasRouteImport } from './routes/regras'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as UniversoRouteImport } from './routes/universo'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedPublicarRouteImport } from './routes/_authenticated/publicar'
@@ -46,6 +46,11 @@ const AuthRoute = AuthRouteImport.update({
 const CentroRoute = CentroRouteImport.update({
   id: '/centro',
   path: '/centro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConversorRoute = ConversorRouteImport.update({
+  id: '/conversor',
+  path: '/conversor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmpresasRoute = EmpresasRouteImport.update({
@@ -88,11 +93,6 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const UniversoRoute = UniversoRouteImport.update({
-  id: '/universo',
-  path: '/universo',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -128,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/centro': typeof CentroRoute
+  '/conversor': typeof ConversorRoute
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
   '/freelancers': typeof FreelancersRoute
@@ -136,7 +137,6 @@ export interface FileRoutesByFullPath {
   '/planos': typeof PlanosRoute
   '/regras': typeof RegrasRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/universo': typeof UniversoRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/publicar': typeof AuthenticatedPublicarRoute
@@ -148,6 +148,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/centro': typeof CentroRoute
+  '/conversor': typeof ConversorRoute
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
   '/freelancers': typeof FreelancersRoute
@@ -156,7 +157,6 @@ export interface FileRoutesByTo {
   '/planos': typeof PlanosRoute
   '/regras': typeof RegrasRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/universo': typeof UniversoRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/publicar': typeof AuthenticatedPublicarRoute
@@ -170,6 +170,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/centro': typeof CentroRoute
+  '/conversor': typeof ConversorRoute
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
   '/freelancers': typeof FreelancersRoute
@@ -178,7 +179,6 @@ export interface FileRoutesById {
   '/planos': typeof PlanosRoute
   '/regras': typeof RegrasRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/universo': typeof UniversoRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/publicar': typeof AuthenticatedPublicarRoute
@@ -192,6 +192,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/centro'
+    | '/conversor'
     | '/empresas'
     | '/explorar'
     | '/freelancers'
@@ -200,7 +201,6 @@ export interface FileRouteTypes {
     | '/planos'
     | '/regras'
     | '/reset-password'
-    | '/universo'
     | '/admin'
     | '/painel'
     | '/publicar'
@@ -212,6 +212,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/centro'
+    | '/conversor'
     | '/empresas'
     | '/explorar'
     | '/freelancers'
@@ -220,7 +221,6 @@ export interface FileRouteTypes {
     | '/planos'
     | '/regras'
     | '/reset-password'
-    | '/universo'
     | '/admin'
     | '/painel'
     | '/publicar'
@@ -233,6 +233,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/centro'
+    | '/conversor'
     | '/empresas'
     | '/explorar'
     | '/freelancers'
@@ -241,7 +242,6 @@ export interface FileRouteTypes {
     | '/planos'
     | '/regras'
     | '/reset-password'
-    | '/universo'
     | '/_authenticated/admin'
     | '/_authenticated/painel'
     | '/_authenticated/publicar'
@@ -255,6 +255,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   CentroRoute: typeof CentroRoute
+  ConversorRoute: typeof ConversorRoute
   EmpresasRoute: typeof EmpresasRoute
   ExplorarRoute: typeof ExplorarRoute
   FreelancersRoute: typeof FreelancersRoute
@@ -263,7 +264,6 @@ export interface RootRouteChildren {
   PlanosRoute: typeof PlanosRoute
   RegrasRoute: typeof RegrasRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  UniversoRoute: typeof UniversoRoute
   AnuncioIdRoute: typeof AnuncioIdRoute
   UIdRoute: typeof UIdRoute
 }
@@ -296,6 +296,13 @@ declare module '@tanstack/react-router' {
       path: '/centro'
       fullPath: '/centro'
       preLoaderRoute: typeof CentroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conversor': {
+      id: '/conversor'
+      path: '/conversor'
+      fullPath: '/conversor'
+      preLoaderRoute: typeof ConversorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/empresas': {
@@ -352,13 +359,6 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/universo': {
-      id: '/universo'
-      path: '/universo'
-      fullPath: '/universo'
-      preLoaderRoute: typeof UniversoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -436,6 +436,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   CentroRoute: CentroRoute,
+  ConversorRoute: ConversorRoute,
   EmpresasRoute: EmpresasRoute,
   ExplorarRoute: ExplorarRoute,
   FreelancersRoute: FreelancersRoute,
@@ -444,7 +445,6 @@ const rootRouteChildren: RootRouteChildren = {
   PlanosRoute: PlanosRoute,
   RegrasRoute: RegrasRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  UniversoRoute: UniversoRoute,
   AnuncioIdRoute: AnuncioIdRoute,
   UIdRoute: UIdRoute,
 }

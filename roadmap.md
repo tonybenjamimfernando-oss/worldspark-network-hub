@@ -41,3 +41,9 @@
 - [x] GitHub Actions: `bun run test`
 - [x] GitHub Actions: `bun run build`
 - [ ] Authenticated end-to-end verification against live Supabase data
+
+## Audit & improvements (1 Nov)
+- [x] Remove redundant "Universo" page; header links to the currency converter instead
+- [x] Currency converter page + converted price on listing pages (real rates, source and date shown)
+- [x] Plans page restructured as a comparison (paid tiers disabled until a payment provider is connected)
+- [ ] Chat attachments/voice notes, verification requests, multilingual UI — next steps
