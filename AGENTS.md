@@ -16,3 +16,4 @@
 - Counters (views, clicks, affiliate clicks) change only through security-definer functions, never direct updates. Why: prevents tampering.
 - Presentation uses centralized CSS tokens, shared shadcn controls and reusable page sections; redesigns preserve route/data contracts. Why: consistent visuals without changing operational behavior.
 - Reuse the canvas globe for brand signatures and keep category selection in an accessible drawer backed by existing search parameters. Why: preserve brand continuity and search contracts without adding dependencies.
+- vite.config.ts injects the public backend URL/publishable key as a fallback when the build env lacks them. Why: hosted builds without .env otherwise ship a blank app ('Missing Supabase environment variable(s)').
