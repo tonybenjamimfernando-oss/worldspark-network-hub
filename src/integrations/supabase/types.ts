@@ -14,98 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-
-      conversations: {
-        Row: {
-          created_at: string;
-          id: string;
-          last_message_at: string;
-          listing_id: string;
-          participant_a: string;
-          participant_b: string;
-          updated_at: string;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          last_message_at?: string;
-          listing_id: string;
-          participant_a: string;
-          participant_b: string;
-          updated_at?: string;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          last_message_at?: string;
-          listing_id?: string;
-          participant_a?: string;
-          participant_b?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "conversations_listing_id_fkey";
-            columns: ["listing_id"];
-            isOneToOne: false;
-            referencedRelation: "listings";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "conversations_participant_a_fkey";
-            columns: ["participant_a"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "conversations_participant_b_fkey";
-            columns: ["participant_b"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          }
-        ];
-      }
-      messages: {
-        Row: {
-          body: string;
-          conversation_id: string;
-          created_at: string;
-          id: string;
-          sender_id: string;
-        };
-        Insert: {
-          body: string;
-          conversation_id: string;
-          created_at?: string;
-          id?: string;
-          sender_id: string;
-        };
-        Update: {
-          body?: string;
-          conversation_id?: string;
-          created_at?: string;
-          id?: string;
-          sender_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "messages_conversation_id_fkey";
-            columns: ["conversation_id"];
-            isOneToOne: false;
-            referencedRelation: "conversations";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "messages_sender_id_fkey";
-            columns: ["sender_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          }
-        ];
-      }
       affiliate_links: {
         Row: {
           affiliate_id: string
@@ -167,8 +75,6 @@ export type Database = {
           features: string | null
           id: string
           images: string[]
-          latitude: number | null
-          longitude: number | null
           is_external: boolean
           kind: Database["public"]["Enums"]["listing_kind"]
           outbound_clicks: number
@@ -209,8 +115,6 @@ export type Database = {
           features?: string | null
           id?: string
           images?: string[]
-          latitude?: number | null
-          longitude?: number | null
           is_external?: boolean
           kind?: Database["public"]["Enums"]["listing_kind"]
           outbound_clicks?: number
@@ -251,8 +155,6 @@ export type Database = {
           features?: string | null
           id?: string
           images?: string[]
-          latitude?: number | null
-          longitude?: number | null
           is_external?: boolean
           kind?: Database["public"]["Enums"]["listing_kind"]
           outbound_clicks?: number
@@ -301,6 +203,7 @@ export type Database = {
           public_email: string | null
           public_phone: string | null
           services: string[]
+          tax_id: string | null
           updated_at: string
           username: string | null
           website: string | null
@@ -320,6 +223,7 @@ export type Database = {
           public_email?: string | null
           public_phone?: string | null
           services?: string[]
+          tax_id?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
@@ -339,37 +243,12 @@ export type Database = {
           public_email?: string | null
           public_phone?: string | null
           services?: string[]
+          tax_id?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
         }
         Relationships: []
-      }
-      profile_private: {
-        Row: {
-          tax_id: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          tax_id?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          tax_id?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profile_private_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       proposals: {
         Row: {
@@ -529,7 +408,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      start_listing_conversation: { Args: { _listing_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
