@@ -21,13 +21,13 @@ import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as RegrasRouteImport } from './routes/regras'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as UniversoRouteImport } from './routes/universo'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedPublicarRouteImport } from './routes/_authenticated/publicar'
 import { Route as AnuncioIdRouteImport } from './routes/anuncio.$id'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as UIdRouteImport } from './routes/u.$id'
-import { Route as UniversoRouteImport } from './routes/universo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -88,6 +88,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UniversoRoute = UniversoRouteImport.update({
+  id: '/universo',
+  path: '/universo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -113,11 +118,6 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => AuthRoute,
 } as any)
-const UniversoRoute = UniversoRouteImport.update({
-  id: '/universo',
-  path: '/universo',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const UIdRoute = UIdRouteImport.update({
   id: '/u/$id',
   path: '/u/$id',
@@ -136,13 +136,13 @@ export interface FileRoutesByFullPath {
   '/planos': typeof PlanosRoute
   '/regras': typeof RegrasRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/universo': typeof UniversoRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/publicar': typeof AuthenticatedPublicarRoute
   '/anuncio/$id': typeof AnuncioIdRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
-  '/universo': typeof UniversoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -156,13 +156,13 @@ export interface FileRoutesByTo {
   '/planos': typeof PlanosRoute
   '/regras': typeof RegrasRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/universo': typeof UniversoRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/publicar': typeof AuthenticatedPublicarRoute
   '/anuncio/$id': typeof AnuncioIdRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
-  '/universo': typeof UniversoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -178,13 +178,13 @@ export interface FileRoutesById {
   '/planos': typeof PlanosRoute
   '/regras': typeof RegrasRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/universo': typeof UniversoRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/publicar': typeof AuthenticatedPublicarRoute
   '/anuncio/$id': typeof AnuncioIdRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/u/$id': typeof UIdRoute
-  '/universo': typeof UniversoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -200,13 +200,13 @@ export interface FileRouteTypes {
     | '/planos'
     | '/regras'
     | '/reset-password'
+    | '/universo'
     | '/admin'
     | '/painel'
     | '/publicar'
     | '/anuncio/$id'
     | '/auth/callback'
     | '/u/$id'
-    | '/universo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -220,13 +220,13 @@ export interface FileRouteTypes {
     | '/planos'
     | '/regras'
     | '/reset-password'
+    | '/universo'
     | '/admin'
     | '/painel'
     | '/publicar'
     | '/anuncio/$id'
     | '/auth/callback'
     | '/u/$id'
-    | '/universo'
   id:
     | '__root__'
     | '/'
@@ -241,13 +241,13 @@ export interface FileRouteTypes {
     | '/planos'
     | '/regras'
     | '/reset-password'
+    | '/universo'
     | '/_authenticated/admin'
     | '/_authenticated/painel'
     | '/_authenticated/publicar'
     | '/anuncio/$id'
     | '/auth/callback'
     | '/u/$id'
-    | '/universo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -263,9 +263,9 @@ export interface RootRouteChildren {
   PlanosRoute: typeof PlanosRoute
   RegrasRoute: typeof RegrasRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  UniversoRoute: typeof UniversoRoute
   AnuncioIdRoute: typeof AnuncioIdRoute
   UIdRoute: typeof UIdRoute
-  UniversoRoute: typeof UniversoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -354,6 +354,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/universo': {
+      id: '/universo'
+      path: '/universo'
+      fullPath: '/universo'
+      preLoaderRoute: typeof UniversoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -388,13 +395,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/callback'
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof AuthRoute
-    }
-    '/universo': {
-      id: '/universo'
-      path: '/universo'
-      fullPath: '/universo'
-      preLoaderRoute: typeof UniversoRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/u/$id': {
       id: '/u/$id'
@@ -444,9 +444,9 @@ const rootRouteChildren: RootRouteChildren = {
   PlanosRoute: PlanosRoute,
   RegrasRoute: RegrasRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  UniversoRoute: UniversoRoute,
   AnuncioIdRoute: AnuncioIdRoute,
   UIdRoute: UIdRoute,
-  UniversoRoute: UniversoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
