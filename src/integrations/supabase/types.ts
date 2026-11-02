@@ -247,24 +247,36 @@ export type Database = {
       }
       messages: {
         Row: {
+          attachment_name: string | null
+          attachment_path: string | null
+          attachment_type: string | null
           body: string
           conversation_id: string
           created_at: string
           id: string
+          read_at: string | null
           sender_id: string
         }
         Insert: {
-          body: string
+          attachment_name?: string | null
+          attachment_path?: string | null
+          attachment_type?: string | null
+          body?: string
           conversation_id: string
           created_at?: string
           id?: string
+          read_at?: string | null
           sender_id: string
         }
         Update: {
+          attachment_name?: string | null
+          attachment_path?: string | null
+          attachment_type?: string | null
           body?: string
           conversation_id?: string
           created_at?: string
           id?: string
+          read_at?: string | null
           sender_id?: string
         }
         Relationships: [
@@ -547,6 +559,53 @@ export type Database = {
         }
         Relationships: []
       }
+      verification_requests: {
+        Row: {
+          business_name: string
+          created_at: string
+          id: string
+          notes: string | null
+          registration_number: string | null
+          review_note: string | null
+          reviewed_at: string | null
+          status: string
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          business_name: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          registration_number?: string | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          status?: string
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          business_name?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          registration_number?: string | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          status?: string
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "verification_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -567,6 +626,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      mark_conversation_read: {
+        Args: { _conversation_id: string }
+        Returns: undefined
+      }
+      review_verification: {
+        Args: { _approve: boolean; _id: string; _note?: string }
+        Returns: undefined
       }
       start_listing_conversation: {
         Args: { _listing_id: string }

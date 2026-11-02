@@ -1,3 +1,4 @@
+import { VerificationRequest } from "@/components/Verification";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -465,6 +466,7 @@ function Dashboard() {
               )}
             </ul>
           </section>
+          <VerificationRequest userId={user.id} verified={!!profile?.is_verified} />
         </div>
       </div>
     </div>

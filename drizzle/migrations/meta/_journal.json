@@ -169,6 +169,13 @@
       "when": 1793509146628,
       "tag": "0023_ensure_profile_private",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1793647896906,
+      "tag": "0024_chat_attachments_and_verification",
+      "breakpoints": true
     }
   ]
 }
