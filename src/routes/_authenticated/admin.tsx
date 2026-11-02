@@ -1,3 +1,4 @@
+import { VerificationQueue } from "@/components/Verification";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Activity, ArrowLeft, Building2, ClipboardList, Eye, EyeOff, ShieldAlert, ShieldCheck, Users } from "lucide-react";
@@ -170,6 +171,8 @@ function AdminCenter() {
           })}
         </div>
       </section>
+
+      <VerificationQueue />
 
       <section className="mt-8 grid gap-4 lg:grid-cols-2">
         <article className="rounded-xl border bg-card p-5">
