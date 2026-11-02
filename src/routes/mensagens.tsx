@@ -1,8 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
-import { MessageCircle, Send, RefreshCw } from "lucide-react";
+import { MessageCircle, Send, RefreshCw, Paperclip, Mic, Square, Check, CheckCheck, FileText, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { attachmentKind, uploadChatFile, useChatUrl } from "@/lib/chat-media";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,6 +35,10 @@ function MessagesPage() {
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
+  const [search, setSearch] = useState("");
+  const [recording, setRecording] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const recorderRef = useRef<MediaRecorder | null>(null);
 
   const conversationsQuery = useQuery({
     queryKey: ["conversations", user?.id],
@@ -75,6 +81,57 @@ function MessagesPage() {
   });
 
   const userId = user?.id;
+  const unreadCount = (messagesQuery.data ?? []).filter((m) => m.sender_id !== userId && !m.read_at).length;
+  useEffect(() => {
+    if (!selectedId || !unreadCount) return;
+    void supabase.rpc("mark_conversation_read", { _conversation_id: selectedId });
+  }, [selectedId, unreadCount]);
+  const term = search.trim().toLowerCase();
+  const visibleMessages = (messagesQuery.data ?? []).filter((m) => !term || m.body.toLowerCase().includes(term) || (m.attachment_name ?? "").toLowerCase().includes(term));
+
+  async function sendAttachment(blob: Blob, name: string) {
+    if (!user || !selectedId) return;
+    setSending(true);
+    try {
+      const path = await uploadChatFile(selectedId, user.id, blob);
+      const { error } = await supabase.from("messages").insert({
+        conversation_id: selectedId, sender_id: user.id, body: draft.trim(),
+        attachment_path: path, attachment_type: blob.type.split(";")[0], attachment_name: name.slice(0, 200),
+      });
+      if (error) throw error;
+      setDraft("");
+      await queryClient.invalidateQueries({ queryKey: ["messages", selectedId] });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível enviar o ficheiro.");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  async function toggleRecording() {
+    if (recording) { recorderRef.current?.stop(); return; }
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      toast.error("Este navegador não permite gravar áudio."); return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mime = ["audio/webm", "audio/mp4", "audio/ogg"].find((t) => MediaRecorder.isTypeSupported(t)) ?? "";
+      const rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+      const chunks: Blob[] = [];
+      rec.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
+      rec.onstop = () => {
+        stream.getTracks().forEach((t) => t.stop());
+        setRecording(false);
+        const blob = new Blob(chunks, { type: rec.mimeType || "audio/webm" });
+        if (blob.size) void sendAttachment(blob, `nota-de-voz-${new Date().toISOString().slice(0, 19)}`);
+      };
+      recorderRef.current = rec;
+      rec.start();
+      setRecording(true);
+    } catch {
+      toast.error("Permite o acesso ao microfone para gravar uma nota de voz.");
+    }
+  }
   useEffect(() => {
     if (!userId) return;
     const channel = supabase
@@ -155,6 +212,10 @@ function MessagesPage() {
               <header className="border-b px-5 py-4">
                 <p className="font-semibold">{active.otherName}</p>
                 <p className="mt-1 text-xs text-muted-foreground">{active.listingTitle}</p>
+                <label className="relative mt-3 block">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input aria-label="Pesquisar nesta conversa" placeholder="Pesquisar nesta conversa" value={search} onChange={(e) => setSearch(e.target.value)} className="h-9 pl-9" />
+                </label>
               </header>
               <div className="flex-1 space-y-3 overflow-y-auto p-4">
                 {messagesQuery.isLoading ? <p className="text-sm text-muted-foreground">A carregar mensagens…</p> :
@@ -190,4 +251,15 @@ function MessagesPage() {
       </div>
     </main>
   );
+}
+
+function Attachment({ path, type, name }: { path: string; type: string | null; name: string | null }) {
+  const { data: url, isError } = useChatUrl(path);
+  const kind = attachmentKind(type);
+  if (isError) return <p className="mb-2 text-xs opacity-80">Anexo indisponível</p>;
+  if (!url) return <p className="mb-2 text-xs opacity-80">A carregar anexo…</p>;
+  if (kind === "image") return <a href={url} target="_blank" rel="noreferrer"><img src={url} alt={name ?? "Imagem enviada"} className="mb-2 max-h-64 rounded-lg" loading="lazy" /></a>;
+  if (kind === "video") return <video src={url} controls className="mb-2 max-h-64 rounded-lg" />;
+  if (kind === "audio") return <audio src={url} controls className="mb-2 w-60 max-w-full" />;
+  return <a href={url} target="_blank" rel="noreferrer" download={name ?? undefined} className="mb-2 flex items-center gap-2 underline"><FileText className="h-4 w-4 shrink-0" />{name ?? "Ficheiro"}</a>;
 }
