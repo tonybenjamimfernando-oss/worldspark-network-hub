@@ -159,17 +159,29 @@ function MessagesPage() {
               <div className="flex-1 space-y-3 overflow-y-auto p-4">
                 {messagesQuery.isLoading ? <p className="text-sm text-muted-foreground">A carregar mensagens…</p> :
                   messagesQuery.isError ? <Button variant="outline" onClick={() => void messagesQuery.refetch()}>Tentar novamente</Button> :
-                  messagesQuery.data?.length ? messagesQuery.data.map((message) => (
-                    <div key={message.id} className={`flex ${message.sender_id === user.id ? "justify-end" : "justify-start"}`}>
-                      <div className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm ${message.sender_id === user.id ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
-                        {message.body}
-                        <p className={`mt-1 text-[10px] opacity-70 ${message.sender_id === user.id ? "text-right" : ""}`}>{new Date(message.created_at).toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" })}</p>
+                  visibleMessages.length ? visibleMessages.map((message) => {
+                    const mine = message.sender_id === user.id;
+                    return (
+                      <div key={message.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+                        <div className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm ${mine ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
+                          {message.attachment_path && <Attachment path={message.attachment_path} type={message.attachment_type} name={message.attachment_name} />}
+                          {message.body}
+                          <p className={`mt-1 flex items-center gap-1 text-[10px] opacity-70 ${mine ? "justify-end" : ""}`}>
+                            {new Date(message.created_at).toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" })}
+                            {mine && (message.read_at ? <CheckCheck className="h-3 w-3" aria-label="Lida" /> : <Check className="h-3 w-3" aria-label="Entregue" />)}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  )) : <p className="py-8 text-center text-sm text-muted-foreground">Diz olá para iniciar a conversa.</p>}
+                    );
+                  }) : <p className="py-8 text-center text-sm text-muted-foreground">{search ? "Nenhuma mensagem corresponde à pesquisa." : "Diz olá para iniciar a conversa."}</p>}
               </div>
               <form onSubmit={sendMessage} className="flex items-end gap-2 border-t p-3">
-                <Textarea value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Escreve a tua mensagem…" rows={2} maxLength={4000} className="min-h-12 resize-none" />
+                <input ref={fileRef} type="file" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void sendAttachment(f, f.name); }} />
+                <Button type="button" variant="ghost" size="icon" aria-label="Anexar ficheiro" disabled={sending || recording} onClick={() => fileRef.current?.click()}><Paperclip className="h-4 w-4" /></Button>
+                <Button type="button" variant={recording ? "destructive" : "ghost"} size="icon" aria-label={recording ? "Parar e enviar nota de voz" : "Gravar nota de voz"} disabled={sending} onClick={() => void toggleRecording()}>
+                  {recording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </Button>
+                <Textarea value={draft} onChange={(event) => setDraft(event.target.value)} placeholder={recording ? "A gravar… toca no quadrado para enviar" : "Escreve a tua mensagem…"} rows={2} maxLength={4000} className="min-h-12 resize-none" />
                 <Button type="submit" disabled={!draft.trim() || sending} aria-label="Enviar mensagem"><Send className="h-4 w-4" /></Button>
               </form>
             </>
